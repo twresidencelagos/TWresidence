@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>T.W Residence — Luxury Shortlet, Iponri Lagos</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: linear-gradient(160deg, #C8A96E 0%, #A07840 40%, #7A5228 100%);
+      font-family: 'Jost', sans-serif;
+      min-height: 100vh;
+      padding: 32px 16px;
+    }
+
+    .container { max-width: 560px; margin: 0 auto; }
+
+    /* Header */
+    .header { text-align: center; margin-bottom: 28px; }
+    .header-ornament { display: flex; align-items: center; gap: 12px; margin-bottom: 14px; }
+    .header-ornament .line { flex: 1; height: 1px; background: linear-gradient(90deg, transparent, rgba(255,248,230,0.6)); }
+    .header-ornament .line.r { background: linear-gradient(90deg, rgba(255,248,230,0.6), transparent); }
+    .header-ornament span { color: #FFF3D0; font-size: 16px; }
+    .brand-name { font-family: 'Cormorant Garamond', serif; color: #FFF8E8; font-size: 36px; font-weight: 700; letter-spacing: 0.08em; margin-bottom: 6px; text-shadow: 0 2px 8px rgba(0,0,0,0.15); }
+    .brand-tag { display: inline-block; background: rgba(255,248,220,0.2); border: 1px solid rgba(255,248,220,0.4); color: #FFF3D0; font-size: 9px; letter-spacing: 0.22em; text-transform: uppercase; padding: 4px 16px; border-radius: 20px; margin-bottom: 6px; }
+    .brand-sub { color: rgba(255,240,200,0.7); font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; }
+
+    /* Tabs */
+    .tabs { display: grid; grid-template-columns: 1fr 1fr; gap: 3px; margin-bottom: 20px; background: rgba(0,0,0,0.15); border-radius: 30px; padding: 4px; }
+    .tab-btn { background: transparent; border: none; border-radius: 26px; padding: 11px; color: rgba(255,240,200,0.7); font-size: 12px; font-family: 'Jost', sans-serif; letter-spacing: 0.12em; text-transform: uppercase; cursor: pointer; font-weight: 400; transition: all 0.25s; }
+    .tab-btn.active { background: #FFF8E8; color: #7A5228; font-weight: 600; box-shadow: 0 2px 12px rgba(0,0,0,0.2); }
+
+    /* Card */
+    .card {
+      background: #FFF8E8;
+      border-radius: 12px;
+      padding: 32px;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 8px 40px rgba(0,0,0,0.2);
+    }
+    .card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 4px;
+      background: linear-gradient(90deg, #7A5228, #C4933F, #7A5228);
+    }
+
+    .corner { position: absolute; width: 18px; height: 18px; border-color: rgba(122,82,40,0.3); border-style: solid; }
+    .corner.tl { top: 14px; left: 14px; border-width: 1px 0 0 1px; }
+    .corner.tr { top: 14px; right: 14px; border-width: 1px 1px 0 0; }
+    .corner.bl { bottom: 14px; left: 14px; border-width: 0 0 1px 1px; }
+    .corner.br { bottom: 14px; right: 14px; border-width: 0 1px 1px 0; }
+
+    /* Rate Card */
+    .card-header { text-align: center; margin-bottom: 24px; }
+    .card-location { font-size: 10px; letter-spacing: 0.22em; color: #A07840; text-transform: uppercase; margin-bottom: 8px; }
+    .card-title { font-family: 'Cormorant Garamond', serif; color: #3C2010; font-size: 26px; font-weight: 700; margin-bottom: 4px; }
+    .card-subtitle { font-size: 12px; color: #8B6535; }
+    .divider-gold { height: 1px; background: linear-gradient(90deg, transparent, #C4933F, transparent); margin: 18px 0; }
+
+    .rate-row { display: flex; justify-content: space-between; align-items: center; padding: 15px 12px; border-radius: 8px; margin-bottom: 4px; }
+    .rate-row:hover { background: rgba(122,82,40,0.05); }
+    .rate-label { font-size: 14px; color: #2C1A08; font-weight: 500; }
+    .rate-sub { font-size: 11px; color: #A07840; margin-top: 2px; }
+    .rate-right { text-align: right; }
+    .rate-amount { font-family: 'Cormorant Garamond', serif; color: #7A5228; font-size: 20px; font-weight: 700; }
+    .rate-unit { font-size: 11px; color: #A07840; margin-left: 3px; }
+    .rate-divider { height: 1px; background: rgba(122,82,40,0.1); margin: 0 12px; }
+
+    .terms-box { margin-top: 20px; background: linear-gradient(135deg, rgba(122,82,40,0.06), rgba(196,147,63,0.06)); border: 1px solid rgba(122,82,40,0.15); border-radius: 8px; padding: 18px 20px; }
+    .terms-title { font-size: 10px; letter-spacing: 0.18em; color: #A07840; text-transform: uppercase; margin-bottom: 12px; font-weight: 600; }
+    .term-item { display: flex; gap: 10px; align-items: flex-start; margin-bottom: 8px; }
+    .term-item:last-child { margin-bottom: 0; }
+    .term-dot { color: #C4933F; font-size: 8px; margin-top: 4px; flex-shrink: 0; }
+    .term-text { font-size: 12.5px; color: #3C2010; line-height: 1.5; }
+
+    /* Form */
+    .form-header { margin-bottom: 24px; }
+    .form-tag { font-size: 10px; letter-spacing: 0.22em; color: #A07840; text-transform: uppercase; margin-bottom: 6px; }
+    .form-title { font-family: 'Cormorant Garamond', serif; color: #3C2010; font-size: 26px; font-weight: 700; margin-bottom: 4px; }
+    .form-note { font-size: 12px; color: #8B6535; }
+    .form-grid { display: grid; gap: 16px; }
+    .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+
+    .field { display: flex; flex-direction: column; gap: 5px; }
+    .field label { font-size: 11px; font-family: 'Cormorant Garamond', serif; letter-spacing: 0.14em; text-transform: uppercase; color: #7A5228; font-weight: 600; }
+    .field label .req { color: #C4933F; }
+    .field input, .field select, .field textarea {
+      background: #FFFDF5;
+      border: 1.5px solid rgba(122,82,40,0.2);
+      border-radius: 8px;
+      padding: 12px 14px;
+      color: #2C1A08;
+      font-size: 14px;
+      font-family: 'Jost', sans-serif;
+      outline: none;
+      width: 100%;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    .field select { cursor: pointer; }
+    .field select option { background: #FFF8E8; color: #2C1A08; }
+    .field input:focus, .field select:focus, .field textarea:focus {
+      border-color: #C4933F;
+      box-shadow: 0 0 0 3px rgba(196,147,63,0.12);
+    }
+    .field textarea { resize: vertical; }
+    input[type="date"]::-webkit-calendar-picker-indicator { cursor: pointer; opacity: 0.5; }
+
+    .estimate-box { background: linear-gradient(135deg, rgba(122,82,40,0.06), rgba(196,147,63,0.06)); border: 1.5px solid rgba(196,147,63,0.25); border-radius: 10px; padding: 18px 20px; display: none; }
+    .estimate-box.visible { display: block; }
+    .estimate-title { font-size: 10px; color: #A07840; text-transform: uppercase; letter-spacing: 0.15em; margin-bottom: 12px; font-weight: 600; }
+    .estimate-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+    .estimate-row:last-child { margin-bottom: 0; padding-top: 8px; border-top: 1px solid rgba(122,82,40,0.12); }
+    .estimate-label { font-size: 12px; color: #8B6535; }
+    .estimate-value { font-size: 13px; color: #3C2010; font-weight: 500; }
+    .estimate-total { font-family: 'Cormorant Garamond', serif; color: #7A5228; font-size: 22px; font-weight: 700; }
+
+    .submit-btn { background: linear-gradient(135deg, #7A5228, #C4933F); border: none; border-radius: 10px; padding: 16px; color: #FFF8E8; font-size: 12px; font-family: 'Jost', sans-serif; font-weight: 700; letter-spacing: 0.2em; text-transform: uppercase; cursor: pointer; width: 100%; transition: all 0.2s; box-shadow: 0 4px 16px rgba(122,82,40,0.3); }
+    .submit-btn:hover { opacity: 0.9; transform: translateY(-1px); box-shadow: 0 6px 20px rgba(122,82,40,0.4); }
+    .form-disclaimer { text-align: center; font-size: 11px; color: #A07840; line-height: 1.5; }
+
+    .success-box { text-align: center; padding: 40px 24px; }
+    .success-icon { font-size: 36px; margin-bottom: 16px; color: #C4933F; }
+    .success-title { font-family: 'Cormorant Garamond', serif; color: #3C2010; font-size: 26px; margin-bottom: 12px; }
+    .success-msg { color: #5C3A18; font-size: 14px; line-height: 1.7; max-width: 320px; margin: 0 auto 24px; }
+    .success-summary { background: linear-gradient(135deg, rgba(122,82,40,0.06), rgba(196,147,63,0.06)); border: 1px solid rgba(122,82,40,0.15); border-radius: 10px; padding: 18px; margin-bottom: 24px; display: inline-block; min-width: 240px; }
+    .reset-btn { background: transparent; border: 1.5px solid rgba(122,82,40,0.3); color: #7A5228; padding: 10px 28px; border-radius: 8px; cursor: pointer; font-family: 'Jost', sans-serif; font-size: 12px; letter-spacing: 0.1em; text-transform: uppercase; transition: all 0.2s; }
+    .reset-btn:hover { background: rgba(122,82,40,0.06); }
+
+    .hidden { display: none; }
+    @media (max-width: 480px) { .two-col { grid-template-columns: 1fr; } }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <div class="header-ornament">
+        <div class="line"></div><span>✦</span><div class="line r"></div>
+      </div>
+      <h1 class="brand-name">T.W Residence</h1>
+      <div class="brand-tag">Luxury Short Let</div>
+      <p class="brand-sub">Iponri Estate · Surulere · Lagos</p>
+    </div>
+
+    <div class="tabs">
+      <button class="tab-btn active" onclick="switchTab('rates')">Rate Card</button>
+      <button class="tab-btn" onclick="switchTab('book')">Book Now</button>
+    </div>
+
+    <div id="rates-panel">
+      <div class="card">
+        <div class="corner tl"></div><div class="corner tr"></div>
+        <div class="corner bl"></div><div class="corner br"></div>
+
+        <div class="card-header">
+          <p class="card-location">Iponri Estate · Surulere · Lagos</p>
+          <h2 class="card-title">Rate Card</h2>
+          <p class="card-subtitle">3-Bedroom Apartment · All Rooms En-Suite</p>
+          <div class="divider-gold"></div>
+        </div>
+
+        <!-- Apartment Images -->
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:24px;">
+          <div style="border-radius:8px;overflow:hidden;position:relative;">
+            <img src="https://res.cloudinary.com/e7nfhf76/image/upload/v1783348785/IMG_8793_mump7x.jpg" alt="TW Unit 1" style="width:100%;height:160px;object-fit:cover;display:block;" />
+            <div style="position:absolute;bottom:0;left:0;right:0;background:linear-gradient(transparent,rgba(60,32,8,0.75));padding:10px 12px;">
+              <p style="color:#FFF8E8;font-family:'Cormorant Garamond',serif;font-size:14px;font-weight:600;letter-spacing:0.06em;">T.W Unit 1</p>
+            </div>
+          </div>
+          <div style="border-radius:8px;overflow:hidden;position:relative;">
+            <img src="https://res.cloudinary.com/e7nfhf76/image/upload/f_auto,q_auto/IMG_8794_hcvhiq" alt="TW Unit 2" style="width:100%;height:160px;object-fit:cover;display:block;" />
+            <div style="position:absolute;bottom:0;left:0;right:0;background:linear-gradient(transparent,rgba(60,32,8,0.75));padding:10px 12px;">
+              <p style="color:#FFF8E8;font-family:'Cormorant Garamond',serif;font-size:14px;font-weight:600;letter-spacing:0.06em;">T.W Unit 2</p>
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <div class="rate-row">
+            <div><p class="rate-label">Standard Rate</p><p class="rate-sub">Mon – Thu</p></div>
+            <div class="rate-right"><span class="rate-amount">₦200,000</span><span class="rate-unit">/ night</span></div>
+          </div>
+          <div class="rate-divider"></div>
+          <div class="rate-row">
+            <div><p class="rate-label">Weekend Rate</p><p class="rate-sub">Fri – Sun</p></div>
+            <div class="rate-right"><span class="rate-amount">₦230,000</span><span class="rate-unit">/ night</span></div>
+          </div>
+          <div class="rate-divider"></div>
+          <div class="rate-row">
+            <div><p class="rate-label">Holiday Rate</p><p class="rate-sub">Public Holidays</p></div>
+            <div class="rate-right"><span class="rate-amount">₦230,000</span><span class="rate-unit">/ night</span></div>
+          </div>
+          <div class="rate-divider"></div>
+          <div class="rate-row">
+            <div><p class="rate-label">Weekly Stay</p><p class="rate-sub">7 consecutive nights</p></div>
+            <div class="rate-right"><span class="rate-amount">₦1,200,000</span><span class="rate-unit">/ week</span></div>
+          </div>
+        </div>
+
+        <div class="terms-box">
+          <p class="terms-title">Booking Terms</p>
+          <div class="term-item"><span class="term-dot">◆</span><p class="term-text">Full payment required to confirm booking</p></div>
+          <div class="term-item"><span class="term-dot">◆</span><p class="term-text">Refundable caution fee: ₦100,000</p></div>
+          <div class="term-item"><span class="term-dot">◆</span><p class="term-text">Check-in: 3:00 PM · Check-out: 11:00 AM</p></div>
+          <div class="term-item"><span class="term-dot">◆</span><p class="term-text">No pets · Non-smoking indoors</p></div>
+        </div>
+      </div>
+    </div>
+
+    <div id="book-panel" class="hidden">
+      <div class="card" id="form-card">
+        <div class="form-header">
+          <p class="form-tag">Booking Request</p>
+          <h2 class="form-title">Reserve Your Stay</h2>
+          <p class="form-note">All fields marked * are required</p>
+          <div class="divider-gold"></div>
+        </div>
+
+        <div class="form-grid">
+          <div class="two-col">
+            <div class="field">
+              <label>Full Name <span class="req">*</span></label>
+              <input type="text" id="name" placeholder="e.g. Amaka Johnson" />
+            </div>
+            <div class="field">
+              <label>Phone <span class="req">*</span></label>
+              <input type="tel" id="phone" placeholder="+234 800 000 0000" />
+            </div>
+          </div>
+          <div class="field">
+            <label>Email Address</label>
+            <input type="email" id="email" placeholder="your@email.com" />
+          </div>
+          <div class="two-col">
+            <div class="field">
+              <label>Check-In <span class="req">*</span></label>
+              <input type="date" id="checkin" onchange="updateEstimate()" />
+            </div>
+            <div class="field">
+              <label>Check-Out <span class="req">*</span></label>
+              <input type="date" id="checkout" onchange="updateEstimate()" />
+            </div>
+          </div>
+          <div class="two-col">
+            <div class="field">
+              <label>Guests <span class="req">*</span></label>
+              <select id="guests">
+                <option value="">Select...</option>
+                <option>1 guest</option><option>2 guests</option><option>3 guests</option>
+                <option>4 guests</option><option>5 guests</option><option>6 guests</option>
+                <option>7 guests</option><option>8 guests</option>
+              </select>
+            </div>
+            <div class="field">
+              <label>Purpose of Stay</label>
+              <select id="purpose">
+                <option value="">Select...</option>
+                <option>Leisure / Holiday</option>
+                <option>Business Trip</option>
+                <option>Family Visit</option>
+                <option>Event / Celebration</option>
+                <option>Temporary Relocation</option>
+                <option>Other</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="estimate-box" id="estimate">
+            <p class="estimate-title">Estimated Cost</p>
+            <div class="estimate-row">
+              <span class="estimate-label" id="nights-label"></span>
+              <span class="estimate-total" id="total-amount"></span>
+            </div>
+            <div class="estimate-row">
+              <span class="estimate-label">Full payment to confirm</span>
+              <span class="estimate-value" id="full-amount"></span>
+            </div>
+            <div class="estimate-row">
+              <span class="estimate-label">Refundable caution fee</span>
+              <span class="estimate-value">₦100,000</span>
+            </div>
+          </div>
+
+          <div class="field">
+            <label>How Did You Hear About Us?</label>
+            <select id="howheard">
+              <option value="">Select...</option>
+              <option>Friend / Family Referral</option>
+              <option>Instagram</option>
+              <option>Airbnb</option>
+              <option>Booking.com</option>
+              <option>Google Search</option>
+              <option>Other</option>
+            </select>
+          </div>
+          <div class="field">
+            <label>Additional Notes</label>
+            <textarea id="notes" rows="3" placeholder="Any special requests, late check-in, etc."></textarea>
+          </div>
+
+          <button class="submit-btn" onclick="submitForm()">Submit Booking Request</button>
+          <p class="form-disclaimer">Submitting this form does not guarantee a reservation.<br>Booking is confirmed upon receipt of full payment.</p>
+        </div>
+      </div>
+
+      <div class="card hidden" id="success-card">
+        <div class="success-box">
+          <div class="success-icon">✦</div>
+          <h3 class="success-title">Request Received</h3>
+          <p class="success-msg">Thank you, <strong id="success-name" style="color:#3C2010"></strong>. Your booking request has been recorded. We'll confirm availability and send payment details shortly.</p>
+          <div class="success-summary">
+            <p style="font-size:10px;color:#A07840;text-transform:uppercase;letter-spacing:0.12em;margin-bottom:8px;">Summary</p>
+            <p style="font-size:13px;color:#3C2010;margin-bottom:6px;" id="success-nights"></p>
+            <p style="font-family:'Cormorant Garamond',serif;color:#7A5228;font-size:20px;font-weight:700;margin-bottom:4px;" id="success-total"></p>
+            <p style="font-size:12px;color:#8B6535;" id="success-deposit"></p>
+          </div>
+          <button class="reset-btn" onclick="resetForm()">New Request</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const RATES = { weekday: 200000, weekend: 230000, caution: 100000 };
+
+    function fmt(n) { return '₦' + n.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ','); }
+
+    function calcTotal(checkIn, checkOut) {
+      if (!checkIn || !checkOut) return null;
+      const start = new Date(checkIn), end = new Date(checkOut);
+      const nights = Math.round((end - start) / 86400000);
+      if (nights <= 0) return null;
+      let total = 0;
+      for (let i = 0; i < nights; i++) {
+        const d = new Date(start);
+        d.setDate(d.getDate() + i);
+        const day = d.getDay();
+        total += (day === 5 || day === 6 || day === 0) ? RATES.weekend : RATES.weekday;
+      }
+      return { nights, total };
+    }
+
+    function updateEstimate() {
+      const ci = document.getElementById('checkin').value;
+      const co = document.getElementById('checkout').value;
+      const box = document.getElementById('estimate');
+      const result = calcTotal(ci, co);
+      if (result) {
+        document.getElementById('nights-label').textContent = result.nights + ' night' + (result.nights > 1 ? 's' : '');
+        document.getElementById('total-amount').textContent = fmt(result.total);
+        document.getElementById('full-amount').textContent = fmt(result.total);
+        box.classList.add('visible');
+      } else { box.classList.remove('visible'); }
+    }
+
+    function switchTab(tab) {
+      document.getElementById('rates-panel').classList.toggle('hidden', tab !== 'rates');
+      document.getElementById('book-panel').classList.toggle('hidden', tab !== 'book');
+      document.querySelectorAll('.tab-btn').forEach((btn, i) => {
+        btn.classList.toggle('active', (i === 0 && tab === 'rates') || (i === 1 && tab === 'book'));
+      });
+    }
+
+    function submitForm() {
+      const name = document.getElementById('name').value;
+      const phone = document.getElementById('phone').value;
+      const ci = document.getElementById('checkin').value;
+      const co = document.getElementById('checkout').value;
+      const guests = document.getElementById('guests').value;
+      if (!name || !phone || !ci || !co || !guests) { alert('Please fill in all required fields.'); return; }
+      const result = calcTotal(ci, co);
+      document.getElementById('success-name').textContent = name;
+      if (result) {
+        document.getElementById('success-nights').textContent = result.nights + ' night' + (result.nights > 1 ? 's' : '') + ' · ' + guests;
+        document.getElementById('success-total').textContent = 'Total: ' + fmt(result.total);
+        document.getElementById('success-deposit').textContent = 'Full payment + ₦100,000 caution fee';
+      }
+      document.getElementById('form-card').classList.add('hidden');
+      document.getElementById('success-card').classList.remove('hidden');
+    }
+
+    function resetForm() {
+      ['name','phone','email','checkin','checkout','notes'].forEach(id => document.getElementById(id).value = '');
+      ['guests','purpose','howheard'].forEach(id => document.getElementById(id).selectedIndex = 0);
+      document.getElementById('estimate').classList.remove('visible');
+      document.getElementById('form-card').classList.remove('hidden');
+      document.getElementById('success-card').classList.add('hidden');
+    }
+  </script>
+</body>
+</html>
