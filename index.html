@@ -371,16 +371,50 @@
       const ci = document.getElementById('checkin').value;
       const co = document.getElementById('checkout').value;
       const guests = document.getElementById('guests').value;
+      const email = document.getElementById('email').value;
+      const purpose = document.getElementById('purpose').value;
+      const howheard = document.getElementById('howheard').value;
+      const notes = document.getElementById('notes').value;
+
       if (!name || !phone || !ci || !co || !guests) { alert('Please fill in all required fields.'); return; }
+
       const result = calcTotal(ci, co);
-      document.getElementById('success-name').textContent = name;
+
+      const formData = new FormData();
+      formData.append('Name', name);
+      formData.append('Phone', phone);
+      formData.append('Email', email);
+      formData.append('Check-In', ci);
+      formData.append('Check-Out', co);
+      formData.append('Guests', guests);
+      formData.append('Purpose', purpose);
+      formData.append('How Heard', howheard);
+      formData.append('Notes', notes);
       if (result) {
-        document.getElementById('success-nights').textContent = result.nights + ' night' + (result.nights > 1 ? 's' : '') + ' · ' + guests;
-        document.getElementById('success-total').textContent = 'Total: ' + fmt(result.total);
-        document.getElementById('success-deposit').textContent = 'Full payment + ₦100,000 caution fee';
+        formData.append('Total Amount', '₦' + result.total.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ','));
+        formData.append('Nights', result.nights + ' night(s)');
       }
-      document.getElementById('form-card').classList.add('hidden');
-      document.getElementById('success-card').classList.remove('hidden');
+
+      fetch('https://formspree.io/f/mjgqzkay', {
+        method: 'POST',
+        body: formData,
+        headers: { 'Accept': 'application/json' }
+      }).then(response => {
+        if (response.ok) {
+          document.getElementById('success-name').textContent = name;
+          if (result) {
+            document.getElementById('success-nights').textContent = result.nights + ' night' + (result.nights > 1 ? 's' : '') + ' · ' + guests;
+            document.getElementById('success-total').textContent = 'Total: ' + fmt(result.total);
+            document.getElementById('success-deposit').textContent = 'Full payment + ₦100,000 caution fee';
+          }
+          document.getElementById('form-card').classList.add('hidden');
+          document.getElementById('success-card').classList.remove('hidden');
+        } else {
+          alert('Something went wrong. Please try again or contact us directly.');
+        }
+      }).catch(() => {
+        alert('Something went wrong. Please try again or contact us directly.');
+      });
     }
 
     function resetForm() {
