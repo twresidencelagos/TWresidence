@@ -235,6 +235,15 @@
             <label>Email Address</label>
             <input type="email" id="email" placeholder="your@email.com" />
           </div>
+          <div class="field">
+            <label>Select Apartment <span class="req">*</span></label>
+            <select id="apartment">
+              <option value="">Select...</option>
+              <option>T.W Unit 1</option>
+              <option>T.W Unit 2</option>
+              <option>No preference</option>
+            </select>
+          </div>
           <div class="two-col">
             <div class="field">
               <label>Check-In <span class="req">*</span></label>
@@ -372,11 +381,12 @@
       const co = document.getElementById('checkout').value;
       const guests = document.getElementById('guests').value;
       const email = document.getElementById('email').value;
+      const apartment = document.getElementById('apartment').value;
       const purpose = document.getElementById('purpose').value;
       const howheard = document.getElementById('howheard').value;
       const notes = document.getElementById('notes').value;
 
-      if (!name || !phone || !ci || !co || !guests) { alert('Please fill in all required fields.'); return; }
+      if (!name || !phone || !ci || !co || !guests || !apartment) { alert('Please fill in all required fields.'); return; }
 
       const result = calcTotal(ci, co);
 
@@ -384,6 +394,7 @@
       formData.append('Name', name);
       formData.append('Phone', phone);
       formData.append('Email', email);
+      formData.append('Apartment', apartment);
       formData.append('Check-In', ci);
       formData.append('Check-Out', co);
       formData.append('Guests', guests);
@@ -419,7 +430,7 @@
 
     function resetForm() {
       ['name','phone','email','checkin','checkout','notes'].forEach(id => document.getElementById(id).value = '');
-      ['guests','purpose','howheard'].forEach(id => document.getElementById(id).selectedIndex = 0);
+      ['guests','purpose','howheard','apartment'].forEach(id => document.getElementById(id).selectedIndex = 0);
       document.getElementById('estimate').classList.remove('visible');
       document.getElementById('form-card').classList.remove('hidden');
       document.getElementById('success-card').classList.add('hidden');
