@@ -151,6 +151,12 @@
       <button class="tab-btn" onclick="switchTab('book')">Book Now</button>
     </div>
 
+    <div style="background:linear-gradient(135deg,#7A5228,#C4933F);border-radius:10px;padding:16px 20px;margin-bottom:20px;text-align:center;position:relative;overflow:hidden;box-shadow:0 4px 16px rgba(122,82,40,0.3);">
+      <div style="position:absolute;top:0;left:0;right:0;bottom:0;background:repeating-linear-gradient(45deg,transparent,transparent 10px,rgba(255,255,255,0.03) 10px,rgba(255,255,255,0.03) 20px);"></div>
+      <p style="font-size:8px;letter-spacing:0.25em;text-transform:uppercase;color:rgba(255,248,220,0.7);margin-bottom:6px;font-weight:600;">⏳ Limited Time Offer</p>
+      <p style="font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:700;color:#FFF8E8;margin-bottom:6px;">Exclusive Opening Rates</p>
+      <p style="font-size:12px;color:rgba(255,248,220,0.85);line-height:1.6;">All prices below are special introductory rates available for a limited time only.</p>
+    </div>
     <div id="rates-panel">
       <div class="card">
         <div class="corner tl"></div><div class="corner tr"></div>
@@ -179,25 +185,26 @@
           </div>
         </div>
 
+        
         <div>
           <div class="rate-row">
             <div><p class="rate-label">Standard Rate</p><p class="rate-sub">Mon – Thu</p></div>
-            <div class="rate-right"><span class="rate-amount">₦200,000</span><span class="rate-unit">/ night</span></div>
+            <div class="rate-right"><span class="rate-amount">₦150,000</span><span class="rate-unit">/ night</span></div>
           </div>
           <div class="rate-divider"></div>
           <div class="rate-row">
             <div><p class="rate-label">Weekend Rate</p><p class="rate-sub">Fri – Sun</p></div>
-            <div class="rate-right"><span class="rate-amount">₦230,000</span><span class="rate-unit">/ night</span></div>
+            <div class="rate-right"><span class="rate-amount">₦180,000</span><span class="rate-unit">/ night</span></div>
           </div>
           <div class="rate-divider"></div>
           <div class="rate-row">
             <div><p class="rate-label">Holiday Rate</p><p class="rate-sub">Public Holidays</p></div>
-            <div class="rate-right"><span class="rate-amount">₦230,000</span><span class="rate-unit">/ night</span></div>
+            <div class="rate-right"><span class="rate-amount">₦180,000</span><span class="rate-unit">/ night</span></div>
           </div>
           <div class="rate-divider"></div>
           <div class="rate-row">
-            <div><p class="rate-label">Weekly Stay</p><p class="rate-sub">7 consecutive nights</p></div>
-            <div class="rate-right"><span class="rate-amount">₦1,200,000</span><span class="rate-unit">/ week</span></div>
+            <div><p class="rate-label">Weekly Stay</p><p class="rate-sub">7 consecutive nights</p><p style="font-size:10px;color:#C4933F;font-weight:600;margin-top:3px;">⭐ Best value — save ₦150,000</p></div>
+            <div class="rate-right"><span class="rate-amount">₦1,050,000</span><span class="rate-unit">/ week</span></div>
           </div>
         </div>
 
@@ -334,7 +341,7 @@
   </div>
 
   <script>
-    const RATES = { weekday: 200000, weekend: 230000, caution: 100000 };
+    const RATES = { weekday: 150000, weekend: 180000, caution: 100000 };
 
     function fmt(n) { return '₦' + n.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ','); }
 
