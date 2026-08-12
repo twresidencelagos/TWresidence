@@ -134,6 +134,26 @@
     .hidden { display: none; }
     @media (max-width: 480px) { .two-col { grid-template-columns: 1fr; } }
   </style>
+<style>
+  .cal-popup { background:#FFFDF5; border:1.5px solid rgba(196,147,63,0.25); border-radius:14px; padding:16px; box-shadow:0 8px 32px rgba(122,82,40,0.15); margin-top:8px; }
+  .cal-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:14px; }
+  .cal-month-title { font-family:'Cormorant Garamond',serif; font-size:18px; font-weight:600; color:#3C2010; }
+  .cal-nav-btn { background:none; border:1px solid rgba(196,147,63,0.3); border-radius:6px; width:28px; height:28px; cursor:pointer; color:#C4933F; font-size:14px; display:flex; align-items:center; justify-content:center; }
+  .cal-days-header { display:grid; grid-template-columns:repeat(7,1fr); margin-bottom:8px; }
+  .cal-day-name { text-align:center; font-size:9px; letter-spacing:0.1em; text-transform:uppercase; color:#A07840; padding:4px 0; font-weight:500; }
+  .cal-grid { display:grid; grid-template-columns:repeat(7,1fr); gap:2px; }
+  .cal-cell { aspect-ratio:1; display:flex; align-items:center; justify-content:center; font-size:12px; font-weight:300; color:#3C2010; border-radius:6px; cursor:pointer; position:relative; }
+  .cal-cell:hover:not(.booked):not(.past):not(.empty) { background:rgba(196,147,63,0.15); }
+  .cal-cell.past { color:#D0C0A8; cursor:not-allowed; }
+  .cal-cell.booked { color:#C4A090; cursor:not-allowed; text-decoration:line-through; background:rgba(180,60,40,0.07); }
+  .cal-cell.booked::after { content:''; position:absolute; bottom:3px; left:50%; transform:translateX(-50%); width:4px; height:4px; border-radius:50%; background:#C4933F; }
+  .cal-cell.selected { background:#7A5228; color:#FFF8E8; font-weight:500; }
+  .cal-cell.in-range { background:rgba(196,147,63,0.12); border-radius:0; }
+  .cal-cell.empty { cursor:default; }
+  .cal-legend { display:flex; gap:16px; justify-content:center; margin-top:12px; padding-top:12px; border-top:1px solid rgba(196,147,63,0.15); }
+  .cal-legend-item { display:flex; align-items:center; gap:5px; font-size:9px; color:#8B6535; }
+  .cal-legend-dot { width:10px; height:10px; border-radius:3px; }
+</style>
 </head>
 <body>
   <div class="container">
@@ -474,5 +494,175 @@
       document.getElementById('success-card').classList.add('hidden');
     }
   </script>
+
+<script>
+  const CAL_API_KEY = 'AIzaSyDbtJbWEx4OJiFDupksyueop659PZCuy-8';
+  const CAL_ID = 'twresidence.lagos@gmail.com';
+  let bookedDates = [];
+  let calendarState = { field: null, year: new Date().getFullYear(), month: new Date().getMonth() };
+  let selectedCheckin = null, selectedCheckout = null;
+
+  async function fetchBookedDates() {
+    try {
+      const now = new Date().toISOString();
+      const future = new Date(Date.now() + 365*24*60*60*1000).toISOString();
+      const calEncoded = encodeURIComponent(CAL_ID);
+      const url = `https://www.googleapis.com/calendar/v3/calendars/${calEncoded}/events?key=${CAL_API_KEY}&timeMin=${encodeURIComponent(now)}&timeMax=${encodeURIComponent(future)}&singleEvents=true&orderBy=startTime&showDeleted=false`;
+      const res = await fetch(url, {
+        method: 'GET',
+        headers: { 'Accept': 'application/json' }
+      });
+      if (!res.ok) { 
+        const err = await res.json();
+        console.log('Calendar API error:', err.error?.message);
+        return;
+      }
+      const data = await res.json();
+      bookedDates = [];
+      if (data.items) {
+        data.items.forEach(event => {
+          const startStr = event.start.date || event.start.dateTime?.split('T')[0];
+          const endStr = event.end.date || event.end.dateTime?.split('T')[0];
+          if (startStr && endStr) {
+            const start = new Date(startStr);
+            const end = new Date(endStr);
+            for (let d = new Date(start); d < end; d.setDate(d.getDate() + 1)) {
+              bookedDates.push(d.toISOString().split('T')[0]);
+            }
+          }
+        });
+      }
+      console.log('Booked dates loaded:', bookedDates.length);
+    } catch(e) { console.log('Calendar fetch error', e); }
+  }
+
+  function openCalendar(field) {
+    ['checkin','checkout'].forEach(f => {
+      const el = document.getElementById('calendar-' + f);
+      if (el) el.style.display = 'none';
+    });
+    calendarState.field = field;
+    calendarState.year = new Date().getFullYear();
+    calendarState.month = new Date().getMonth();
+    renderCalendar(field);
+    document.getElementById('calendar-' + field).style.display = 'block';
+  }
+
+  function renderCalendar(field) {
+    const { year, month } = calendarState;
+    const today = new Date(); today.setHours(0,0,0,0);
+    const firstDay = new Date(year, month, 1).getDay();
+    const daysInMonth = new Date(year, month + 1, 0).getDate();
+    const monthNames = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+
+    let html = `<div class="cal-popup">
+      <div class="cal-header">
+        <button class="cal-nav-btn" onclick="changeCalMonth(-1)">&#8249;</button>
+        <div class="cal-month-title">${monthNames[month]} ${year}</div>
+        <button class="cal-nav-btn" onclick="changeCalMonth(1)">&#8250;</button>
+      </div>
+      <div class="cal-days-header">
+        <div class="cal-day-name">Su</div><div class="cal-day-name">Mo</div><div class="cal-day-name">Tu</div>
+        <div class="cal-day-name">We</div><div class="cal-day-name">Th</div><div class="cal-day-name">Fr</div><div class="cal-day-name">Sa</div>
+      </div>
+      <div class="cal-grid">`;
+
+    for (let i = 0; i < firstDay; i++) html += `<div class="cal-cell empty"></div>`;
+
+    for (let d = 1; d <= daysInMonth; d++) {
+      const dateStr = `${year}-${String(month+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+      const dateObj = new Date(year, month, d);
+      const isPast = dateObj < today;
+      const isBooked = bookedDates.includes(dateStr);
+      const isSelected = dateStr === selectedCheckin || dateStr === selectedCheckout;
+      const isInRange = selectedCheckin && selectedCheckout && dateStr > selectedCheckin && dateStr < selectedCheckout;
+
+      let cls = 'cal-cell';
+      if (isPast) cls += ' past';
+      else if (isBooked) cls += ' booked';
+      else if (isSelected) cls += ' selected';
+      else if (isInRange) cls += ' in-range';
+
+      const clickable = !isPast && !isBooked;
+      html += `<div class="${cls}" ${clickable ? `onclick="selectDate('${dateStr}')"` : ''}>${d}</div>`;
+    }
+
+    html += `</div>
+      <div class="cal-legend">
+        <div class="cal-legend-item"><div class="cal-legend-dot" style="background:rgba(196,147,63,0.15)"></div>Available</div>
+        <div class="cal-legend-item"><div class="cal-legend-dot" style="background:rgba(180,60,40,0.1)"></div>Booked</div>
+        <div class="cal-legend-item"><div class="cal-legend-dot" style="background:#7A5228"></div>Selected</div>
+      </div>
+    </div>`;
+
+    document.getElementById('calendar-' + field).innerHTML = html;
+  }
+
+  function changeCalMonth(dir) {
+    calendarState.month += dir;
+    if (calendarState.month > 11) { calendarState.month = 0; calendarState.year++; }
+    if (calendarState.month < 0) { calendarState.month = 11; calendarState.year--; }
+    renderCalendar(calendarState.field);
+  }
+
+  function selectDate(dateStr) {
+    const field = calendarState.field;
+    if (field === 'checkin') {
+      selectedCheckin = dateStr;
+      selectedCheckout = null;
+      document.getElementById('checkin').value = formatDate(dateStr);
+      document.getElementById('checkout').value = '';
+      document.getElementById('calendar-checkin').style.display = 'none';
+      setTimeout(() => openCalendar('checkout'), 100);
+    } else {
+      if (dateStr <= selectedCheckin) { alert('Check-out must be after check-in.'); return; }
+      selectedCheckout = dateStr;
+      document.getElementById('checkout').value = formatDate(dateStr);
+      document.getElementById('calendar-checkout').style.display = 'none';
+      // Update hidden date values for calculateTotal
+      document.getElementById('checkin').dataset.value = selectedCheckin;
+      document.getElementById('checkout').dataset.value = selectedCheckout;
+      calculateTotalFromDates(selectedCheckin, selectedCheckout);
+    }
+    renderCalendar(field);
+  }
+
+  function formatDate(dateStr) {
+    const d = new Date(dateStr + 'T00:00:00');
+    return d.toLocaleDateString('en-GB', { day:'numeric', month:'long', year:'numeric' });
+  }
+
+  function calculateTotalFromDates(ci, co) {
+    const start = new Date(ci), end = new Date(co);
+    let total = 0, nights = 0;
+    for (let d = new Date(start); d < end; d.setDate(d.getDate()+1)) {
+      const day = d.getDay();
+      total += (day === 5 || day === 6 || day === 0) ? 180000 : 150000;
+      nights++;
+    }
+    total += 100000;
+    const fmt = n => '₦' + n.toLocaleString();
+    const box = document.getElementById('estimate-box');
+    if (box) {
+      box.style.display = 'block';
+      document.getElementById('night-count').textContent = nights + ' night(s)';
+      document.getElementById('full-amount').textContent = fmt(total);
+      document.getElementById('pay-amount').textContent = fmt(total);
+      document.getElementById('payment-section').style.display = 'block';
+    }
+  }
+
+  // Close calendar when clicking outside
+  document.addEventListener('click', function(e) {
+    if (!e.target.closest('.cal-popup') && !e.target.closest('.form-input')) {
+      document.querySelectorAll('[id^="calendar-"]').forEach(el => el.style.display = 'none');
+    }
+  });
+
+  // Fetch booked dates on load
+  fetchBookedDates();
+</script>
+
 </body>
 </html>
+
