@@ -147,6 +147,9 @@
   .cal-cell.past { color:#D0C0A8; cursor:not-allowed; }
   .cal-cell.booked { color:#C4A090; cursor:not-allowed; text-decoration:line-through; background:rgba(180,60,40,0.07); }
   .cal-cell.booked::after { content:''; position:absolute; bottom:3px; left:50%; transform:translateX(-50%); width:4px; height:4px; border-radius:50%; background:#C4933F; }
+  .cal-cell.sunday-closed { color:#C4A090; cursor:not-allowed; font-style:italic; background:transparent; position:relative; }
+  .cal-cell.sunday-closed::after { content:''; position:absolute; bottom:3px; left:50%; transform:translateX(-50%); width:16px; height:1px; background:rgba(196,147,63,0.4); }
+  .cal-cell.sunday-closed:hover::before { content:'Not available for check-out'; position:absolute; bottom:110%; left:50%; transform:translateX(-50%); background:#3C2010; color:#FFF8E8; font-size:9px; white-space:nowrap; padding:4px 8px; border-radius:4px; z-index:10; pointer-events:none; }
   .cal-cell.selected { background:#7A5228; color:#FFF8E8; font-weight:500; }
   .cal-cell.in-range { background:rgba(196,147,63,0.12); border-radius:0; }
   .cal-cell.empty { cursor:default; }
@@ -232,7 +235,7 @@
           <p class="terms-title">Booking Terms</p>
           <div class="term-item"><span class="term-dot">◆</span><p class="term-text">Full payment required to confirm booking</p></div>
           <div class="term-item"><span class="term-dot">◆</span><p class="term-text">Refundable caution fee: ₦100,000</p></div>
-          <div class="term-item"><span class="term-dot">◆</span><p class="term-text">Check-in: 3:00 PM · Check-out: 11:00 AM</p></div>
+          <div class="term-item"><span class="term-dot">◆</span><p class="term-text">Check-in: 3:00 PM · Check-out: 10:00 AM</p></div>
           <div class="term-item"><span class="term-dot">◆</span><p class="term-text">No pets · Non-smoking indoors</p></div>
 
         <div style="margin-top:24px;text-align:center;">
@@ -315,6 +318,13 @@
             </div>
           </div>
 
+
+          <div class="field" id="id-upload-section">
+            <label>Government-Issued ID <span class="req">*</span></label>
+            <p style="font-size:11px;color:#8B6535;margin-bottom:8px;line-height:1.5;">Upload a clear photo or scan of a valid ID — National ID, Driver's Licence, or International Passport. Required before payment.</p>
+            <input type="file" id="id-upload" accept="image/*,.pdf" style="background:#FFFDF5;border:1.5px solid rgba(122,82,40,0.2);border-radius:8px;padding:10px 14px;color:#2C1A08;font-size:13px;font-family:'Jost',sans-serif;width:100%;cursor:pointer;" />
+            <p style="font-size:10px;color:#A07840;margin-top:4px;">Accepted: JPG, PNG, PDF · Max 5MB · Your ID is kept strictly confidential</p>
+          </div>
           <div class="estimate-box" id="estimate">
             <p class="estimate-title">Estimated Cost</p>
             <div class="estimate-row">
@@ -349,24 +359,10 @@
           </div>
 
 
-          <div id="payment-section" style="display:none;">
-            <div style="background:linear-gradient(135deg,rgba(122,82,40,0.06),rgba(196,147,63,0.06));border:1.5px solid rgba(196,147,63,0.3);border-radius:10px;padding:18px 20px;text-align:center;">
-              <p style="font-size:10px;letter-spacing:0.15em;text-transform:uppercase;color:#A07840;margin-bottom:6px;font-weight:600;">Ready to Confirm?</p>
-              <p style="font-size:13px;color:#3C2010;margin-bottom:4px;">Your estimated total is <strong id="pay-amount" style="color:#7A5228;font-family:'Cormorant Garamond',serif;font-size:18px;"></strong></p>
-              <p style="font-size:11px;color:#8B6535;margin-bottom:16px;">Plus ₦100,000 refundable caution fee</p>
-              <a id="pay-link" href="https://paystack.com/pay/tw-residence" target="_blank" style="display:block;background:linear-gradient(135deg,#7A5228,#C4933F);border-radius:10px;padding:16px;color:#FFF8E8;font-size:12px;font-family:'Jost',sans-serif;font-weight:700;letter-spacing:0.2em;text-transform:uppercase;text-decoration:none;box-shadow:0 4px 16px rgba(122,82,40,0.3);">Proceed to Payment</a>
-              <p style="font-size:10px;color:#A07840;margin-top:10px;">You will be redirected to our secure Paystack payment page</p>
-            </div>
-          </div>
+          <a href="https://paystack.shop/pay/twresidence" target="_blank" onclick="return validateBeforePayment()" style="display:block;background:linear-gradient(135deg,#7A5228,#C4933F);border-radius:10px;padding:16px;color:#FFF8E8;font-size:12px;font-family:'Jost',sans-serif;font-weight:700;letter-spacing:0.2em;text-transform:uppercase;text-decoration:none;box-shadow:0 4px 16px rgba(122,82,40,0.3);text-align:center;">Proceed to Payment →</a>
+          <p style="font-size:10px;color:#A07840;text-align:center;margin-top:6px;">You will be redirected to our secure Paystack payment page</p>
 
-          <div class="field">
-            <label>Government-Issued ID <span class="req">*</span></label>
-            <p style="font-size:11px;color:#8B6535;margin-bottom:8px;line-height:1.5;">Upload a clear photo or scan of a valid ID — National ID, Driver's Licence, or International Passport. This is required to confirm your booking.</p>
-            <input type="file" id="id-upload" accept="image/*,.pdf" style="background:#FFFDF5;border:1.5px solid rgba(122,82,40,0.2);border-radius:8px;padding:10px 14px;color:#2C1A08;font-size:13px;font-family:'Jost',sans-serif;width:100%;cursor:pointer;" />
-            <p style="font-size:10px;color:#A07840;margin-top:4px;">Accepted: JPG, PNG, PDF · Max 5MB · Your ID is kept strictly confidential</p>
-          </div>
-          <button class="submit-btn" onclick="submitForm()">Submit Booking Request</button>
-          <p class="form-disclaimer">Submitting this form does not guarantee a reservation.<br>Booking is confirmed upon receipt of full payment.</p>
+
         </div>
       </div>
 
@@ -502,7 +498,7 @@
   let calendarState = { field: null, year: new Date().getFullYear(), month: new Date().getMonth() };
   let selectedCheckin = null, selectedCheckout = null;
 
-  const CAL_API_KEY = 'AIzaSyDUUe8qZy-hKi9Aj5FLvtOR-w15ftXydOM';
+  const CAL_API_KEY = 'AIzaSyCUQcUIpsi3LzZ6fb8xI1qfKlyZd9dVcnw';
   const CAL_ID = 'twresidence.lagos@gmail.com';
 
   async function fetchBookedDates() {
@@ -570,21 +566,23 @@
       const isBooked = bookedDates.includes(dateStr);
       const isSelected = dateStr === selectedCheckin || dateStr === selectedCheckout;
       const isInRange = selectedCheckin && selectedCheckout && dateStr > selectedCheckin && dateStr < selectedCheckout;
+      const isSundayCheckout = calendarState.field === 'checkout' && new Date(dateStr + 'T00:00:00').getDay() === 0;
 
       let cls = 'cal-cell';
       if (isPast) cls += ' past';
       else if (isBooked) cls += ' booked';
+      else if (isSundayCheckout) cls += ' sunday-closed';
       else if (isSelected) cls += ' selected';
       else if (isInRange) cls += ' in-range';
 
-      const clickable = !isPast && !isBooked;
+      const clickable = !isPast && !isBooked && !isSundayCheckout;
       html += `<div class="${cls}" ${clickable ? `onclick="selectDate('${dateStr}')"` : ''}>${d}</div>`;
     }
 
     html += `</div>
       <div class="cal-legend">
         <div class="cal-legend-item"><div class="cal-legend-dot" style="background:rgba(196,147,63,0.15)"></div>Available</div>
-        <div class="cal-legend-item"><div class="cal-legend-dot" style="background:rgba(180,60,40,0.1)"></div>Booked</div>
+        <div class="cal-legend-item"><div class="cal-legend-dot" style="background:rgba(180,60,40,0.1)"></div>Unavailable</div>
         <div class="cal-legend-item"><div class="cal-legend-dot" style="background:#7A5228"></div>Selected</div>
       </div>
     </div>`;
@@ -601,6 +599,8 @@
 
   function selectDate(dateStr) {
     const field = calendarState.field;
+    const dayOfWeek = new Date(dateStr + 'T00:00:00').getDay();
+
     if (field === 'checkin') {
       selectedCheckin = dateStr;
       selectedCheckout = null;
@@ -609,11 +609,14 @@
       document.getElementById('calendar-checkin').style.display = 'none';
       setTimeout(() => openCalendar('checkout'), 100);
     } else {
+      if (dayOfWeek === 0) {
+        alert('Sunday check-out is not available. Please select a different date.');
+        return;
+      }
       if (dateStr <= selectedCheckin) { alert('Check-out must be after check-in.'); return; }
       selectedCheckout = dateStr;
       document.getElementById('checkout').value = formatDate(dateStr);
       document.getElementById('calendar-checkout').style.display = 'none';
-      // Update hidden date values for calculateTotal
       document.getElementById('checkin').dataset.value = selectedCheckin;
       document.getElementById('checkout').dataset.value = selectedCheckout;
       calculateTotalFromDates(selectedCheckin, selectedCheckout);
@@ -636,15 +639,67 @@
     }
     total += 100000;
     const fmt = n => '₦' + n.toLocaleString();
-    const box = document.getElementById('estimate-box');
+    const box = document.getElementById('estimate');
     if (box) {
-      box.style.display = 'block';
-      document.getElementById('night-count').textContent = nights + ' night(s)';
-      document.getElementById('full-amount').textContent = fmt(total);
-      document.getElementById('pay-amount').textContent = fmt(total);
-      document.getElementById('payment-section').style.display = 'block';
+      box.classList.add('visible');
+      document.getElementById('nights-label').textContent = nights + ' night' + (nights > 1 ? 's' : '');
+      document.getElementById('total-amount').textContent = fmt(total - 100000);
+      document.getElementById('full-amount').textContent = fmt(total - 100000);
+      document.getElementById('pay-amount').textContent = fmt(total - 100000);
+      document.getElementById('id-upload-section').style.display = 'block';
     }
   }
+
+
+  function validateBeforePayment() {
+    const name = document.getElementById('name').value;
+    const phone = document.getElementById('phone').value;
+    const apartment = document.getElementById('apartment').value;
+    const guests = document.getElementById('guests').value;
+    const idFile = document.getElementById('id-upload').files[0];
+
+    if (!name || !phone || !apartment || !guests) {
+      alert('Please fill in all required fields before proceeding to payment.');
+      return false;
+    }
+    if (!selectedCheckin || !selectedCheckout) {
+      alert('Please select your check-in and check-out dates.');
+      return false;
+    }
+    if (!idFile) {
+      alert('Please upload a valid government-issued ID before proceeding to payment.');
+      return false;
+    }
+    
+    // Submit form data to Formspree in background
+    const formData = new FormData();
+    formData.append('Name', name);
+    formData.append('Phone', phone);
+    formData.append('Email', document.getElementById('email').value);
+    formData.append('Apartment', apartment);
+    formData.append('Check-In', selectedCheckin);
+    formData.append('Check-Out', selectedCheckout);
+    formData.append('Guests', guests);
+    formData.append('Purpose', document.getElementById('purpose').value);
+    formData.append('How Heard', document.getElementById('howheard').value);
+    formData.append('Notes', document.getElementById('notes').value);
+    formData.append('ID Document', idFile, idFile.name);
+    if (selectedCheckin && selectedCheckout) {
+      const result = calcTotal(selectedCheckin, selectedCheckout);
+      if (result) {
+        formData.append('Total Amount', fmt(result.total));
+        formData.append('Nights', result.nights + ' night(s)');
+      }
+    }
+    fetch('https://formspree.io/f/mjgqzkay', {
+      method: 'POST',
+      body: formData,
+      headers: { 'Accept': 'application/json' }
+    });
+    return true;
+  }
+
+  function fmt(n) { return '₦' + n.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ','); }
 
   // Close calendar when clicking outside
   document.addEventListener('click', function(e) {
