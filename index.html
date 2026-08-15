@@ -211,23 +211,18 @@
         
         <div>
           <div class="rate-row">
-            <div><p class="rate-label">Standard Rate</p><p class="rate-sub">Mon – Thu</p></div>
-            <div class="rate-right"><span class="rate-amount">₦150,000</span><span class="rate-unit">/ night</span></div>
-          </div>
-          <div class="rate-divider"></div>
-          <div class="rate-row">
-            <div><p class="rate-label">Weekend Rate</p><p class="rate-sub">Fri – Sun</p></div>
-            <div class="rate-right"><span class="rate-amount">₦180,000</span><span class="rate-unit">/ night</span></div>
+            <div><p class="rate-label">Daily Rate</p><p class="rate-sub">Mon – Sun</p></div>
+            <div class="rate-right"><span class="rate-amount">₦200,000</span><span class="rate-unit">/ night</span></div>
           </div>
           <div class="rate-divider"></div>
           <div class="rate-row">
             <div><p class="rate-label">Holiday Rate</p><p class="rate-sub">Public Holidays</p></div>
-            <div class="rate-right"><span class="rate-amount">₦180,000</span><span class="rate-unit">/ night</span></div>
+            <div class="rate-right"><span class="rate-amount">₦230,000</span><span class="rate-unit">/ night</span></div>
           </div>
           <div class="rate-divider"></div>
           <div class="rate-row">
             <div><p class="rate-label">Weekly Stay</p><p class="rate-sub">7 consecutive nights</p><p style="font-size:10px;color:#C4933F;font-weight:600;margin-top:3px;">⭐ Best value — save ₦150,000</p></div>
-            <div class="rate-right"><span class="rate-amount">₦1,050,000</span><span class="rate-unit">/ week</span></div>
+            <div class="rate-right"><span class="rate-amount">₦1,250,000</span><span class="rate-unit">/ week</span></div>
           </div>
         </div>
 
@@ -385,7 +380,44 @@
   </div>
 
   <script>
-    const RATES = { weekday: 150000, weekend: 180000, caution: 100000 };
+    const RATES = { weekday: 200000, weekend: 200000, caution: 100000 };
+
+
+  const NIGERIAN_HOLIDAYS = [
+    // 2026
+    '2026-01-01', // New Year's Day
+    '2026-02-18', // Ramadan (estimated)
+    '2026-03-29', // Easter Sunday (estimated)
+    '2026-03-27', // Good Friday
+    '2026-03-30', // Easter Monday
+    '2026-04-18', // Eid el-Fitr (estimated)
+    '2026-04-19', // Eid el-Fitr holiday
+    '2026-05-01', // Workers Day
+    '2026-05-27', // Children Day
+    '2026-06-12', // Democracy Day
+    '2026-06-25', // Eid el-Kabir (estimated)
+    '2026-06-26', // Eid el-Kabir holiday
+    '2026-09-22', // Eid el-Maulud (estimated)
+    '2026-10-01', // Independence Day
+    '2026-12-25', // Christmas Day
+    '2026-12-26', // Boxing Day
+    // 2027
+    '2027-01-01', // New Year's Day
+    '2027-03-08', // Ramadan (estimated)
+    '2027-03-26', // Good Friday (estimated)
+    '2027-03-28', // Easter Sunday
+    '2027-03-29', // Easter Monday
+    '2027-04-07', // Eid el-Fitr (estimated)
+    '2027-04-08', // Eid el-Fitr holiday
+    '2027-05-01', // Workers Day
+    '2027-05-27', // Children Day
+    '2027-06-12', // Democracy Day
+    '2027-06-14', // Eid el-Kabir (estimated)
+    '2027-09-11', // Eid el-Maulud (estimated)
+    '2027-10-01', // Independence Day
+    '2027-12-25', // Christmas Day
+    '2027-12-26', // Boxing Day
+  ];
 
     function fmt(n) { return '₦' + n.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ','); }
 
@@ -399,7 +431,7 @@
         const d = new Date(start);
         d.setDate(d.getDate() + i);
         const day = d.getDay();
-        total += (day === 5 || day === 6 || day === 0) ? RATES.weekend : RATES.weekday;
+        total += NIGERIAN_HOLIDAYS.includes(d.toISOString().split('T')[0]) ? 230000 : RATES.weekday;
       }
       return { nights, total };
     }
@@ -635,7 +667,7 @@
     let total = 0, nights = 0;
     for (let d = new Date(start); d < end; d.setDate(d.getDate()+1)) {
       const day = d.getDay();
-      total += (day === 5 || day === 6 || day === 0) ? 180000 : 150000;
+      total += NIGERIAN_HOLIDAYS.includes(d.toISOString().split('T')[0]) ? 230000 : 200000;
       nights++;
     }
     total += 100000;
