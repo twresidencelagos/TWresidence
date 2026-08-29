@@ -10,14 +10,14 @@
 <meta property="og:type" content="website">
 <meta property="og:title" content="T.W Residence — Luxury Shortlet, Olaleye Estate, Lagos">
 <meta property="og:description" content="A fully furnished, solar-powered 3-bedroom luxury shortlet in Olaleye Estate, Surulere. All rooms ensuite. Book direct.">
-<meta property="og:image" content="https://res.cloudinary.com/e7nfhf76/image/upload/f_auto,q_auto/IMG_8793_mump7x.jpg">
+<meta property="og:image" content="https://twresidence.org/images/hero.jpg">
 <meta property="og:url" content="https://twresidence.org/">
 <meta property="og:site_name" content="T.W Residence">
 
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="T.W Residence — Luxury Shortlet, Olaleye Estate, Lagos">
 <meta name="twitter:description" content="A fully furnished, solar-powered 3-bedroom luxury shortlet in Olaleye Estate, Surulere. All rooms ensuite. Book direct.">
-<meta name="twitter:image" content="https://res.cloudinary.com/e7nfhf76/image/upload/f_auto,q_auto/IMG_8793_mump7x.jpg">
+<meta name="twitter:image" content="https://twresidence.org/images/hero.jpg">
 
 <script type="application/ld+json">
 {
@@ -26,7 +26,7 @@
   "name": "T.W Residence",
   "description": "Luxury, fully furnished 3-bedroom shortlet apartment with 24-hour solar power in Olaleye Estate, Surulere, Lagos.",
   "url": "https://twresidence.org/",
-  "image": "https://res.cloudinary.com/e7nfhf76/image/upload/f_auto,q_auto/IMG_8793_mump7x.jpg",
+  "image": "https://twresidence.org/images/hero.jpg",
   "email": "twresidence.lagos@gmail.com",
   "address": {
     "@type": "PostalAddress",
@@ -136,7 +136,7 @@
     min-height:640px;
     display:flex;align-items:flex-end;
     background:linear-gradient(180deg, rgba(59,42,28,.15), rgba(42,30,18,.74)),
-               url('https://res.cloudinary.com/e7nfhf76/image/upload/f_auto,q_auto/IMG_8793_mump7x.jpg') center/cover no-repeat;
+               url('images/hero.jpg') center/cover no-repeat;
   }
   .hero-inner{padding-top:80px;padding-bottom:64px;color:var(--cream);max-width:640px;}
   .hero .eyebrow{color:var(--brass);}
@@ -372,7 +372,31 @@
   .reset-btn:hover{background:var(--blush);}
   .hidden{display:none;}
 
+  .lightbox{
+    display:none;position:fixed;inset:0;background:rgba(20,14,9,.94);
+    z-index:100;align-items:center;justify-content:center;
+  }
+  .lightbox.open{display:flex;}
+  .lightbox img{max-width:88vw;max-height:86vh;border-radius:2px;box-shadow:0 20px 60px rgba(0,0,0,.5);}
+  .lightbox-close{
+    position:absolute;top:22px;right:28px;background:none;border:none;
+    color:#fff;font-size:36px;line-height:1;cursor:pointer;
+  }
+  .lightbox-nav{
+    position:absolute;top:50%;transform:translateY(-50%);
+    background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.35);
+    color:#fff;width:48px;height:48px;border-radius:50%;font-size:22px;cursor:pointer;
+  }
+  .lightbox-nav:hover{background:var(--brass);border-color:var(--brass);color:var(--wine-deep);}
+  .lightbox-prev{left:20px;}
+  .lightbox-next{right:20px;}
+  @media (max-width:640px){
+    .lightbox-nav{width:38px;height:38px;font-size:18px;}
+    .lightbox-close{top:14px;right:16px;font-size:30px;}
+  }
+
   @media (max-width:860px){
+    .photo-grid{grid-template-columns:1fr 1fr!important;}
     .strip-grid{grid-template-columns:repeat(2,1fr);}
     .strip-item:nth-child(2){border-right:none;}
     .feature-grid{grid-template-columns:1fr 1fr;}
@@ -490,23 +514,29 @@
       <h2>Choose your stay</h2>
     </div>
     <div class="gallery-grid" style="height:auto;grid-template-columns:1fr 1fr;">
-      <div style="position:relative;border-radius:var(--radius);overflow:hidden;">
-        <img src="https://res.cloudinary.com/e7nfhf76/image/upload/v1783348785/IMG_8794_hcvhiq" alt="T.W Unit 1" style="width:100%;height:340px;object-fit:cover;">
-        <div style="position:absolute;bottom:0;left:0;right:0;background:linear-gradient(transparent,rgba(59,42,28,.8));padding:18px 20px;">
-          <p style="color:#fff;font-family:'Fraunces',serif;font-size:18px;font-weight:600;letter-spacing:.02em;">T.W Unit 1</p>
-          <p style="color:var(--brass);font-size:12px;letter-spacing:.06em;text-transform:uppercase;margin-top:2px;">Coming Soon</p>
+      <div style="position:relative;border-radius:var(--radius);overflow:hidden;background:var(--blush);height:340px;display:flex;align-items:center;justify-content:center;">
+        <div style="text-align:center;">
+          <p style="color:var(--wine);font-family:'Fraunces',serif;font-size:18px;font-weight:600;letter-spacing:.02em;">T.W Unit 1</p>
+          <p style="color:var(--ink-soft);font-size:12px;letter-spacing:.06em;text-transform:uppercase;margin-top:4px;">Photos Coming Soon</p>
         </div>
       </div>
-      <div style="position:relative;border-radius:var(--radius);overflow:hidden;">
-        <img src="https://res.cloudinary.com/e7nfhf76/image/upload/f_auto,q_auto/IMG_8793_mump7x.jpg" alt="T.W Unit 2" style="width:100%;height:340px;object-fit:cover;">
+      <div class="unit-card" onclick="openLightbox(0)" style="position:relative;border-radius:var(--radius);overflow:hidden;cursor:pointer;">
+        <img src="images/hero.jpg" alt="T.W Unit 2" style="width:100%;height:340px;object-fit:cover;">
         <div style="position:absolute;bottom:0;left:0;right:0;background:linear-gradient(transparent,rgba(59,42,28,.8));padding:18px 20px;">
           <p style="color:#fff;font-family:'Fraunces',serif;font-size:18px;font-weight:600;letter-spacing:.02em;">T.W Unit 2</p>
-          <p style="color:var(--brass);font-size:12px;letter-spacing:.06em;text-transform:uppercase;margin-top:2px;">Available Now</p>
+          <p style="color:var(--brass);font-size:12px;letter-spacing:.06em;text-transform:uppercase;margin-top:2px;">Available Now · Tap to view photos</p>
         </div>
       </div>
     </div>
   </div>
 </section>
+
+<div id="lightbox" class="lightbox" onclick="if(event.target===this)closeLightbox()">
+  <button class="lightbox-close" onclick="closeLightbox()" aria-label="Close">&times;</button>
+  <button class="lightbox-nav lightbox-prev" onclick="lightboxStep(-1)" aria-label="Previous">&#8249;</button>
+  <img id="lightbox-img" src="" alt="">
+  <button class="lightbox-nav lightbox-next" onclick="lightboxStep(1)" aria-label="Next">&#8250;</button>
+</div>
 
 <section class="rates" id="rates">
   <div class="wrap">
@@ -948,6 +978,62 @@
   });
 
   fetchBookedDates();
+</script>
+
+<script>
+  const galleryImages = [
+    { src: "images/hero.jpg", alt: "Living room" },
+    { src: "images/living-tv.jpg", alt: "Living room, TV console" },
+    { src: "images/guest-toilet-1.jpg", alt: "Guest toilet" },
+    { src: "images/guest-toilet-2.jpg", alt: "Guest toilet detail" },
+    { src: "images/dining.jpg", alt: "Dining area" },
+    { src: "images/dining-detail.jpg", alt: "Dining table detail" },
+    { src: "images/kitchen-open.jpg", alt: "Kitchen" },
+    { src: "images/kitchen-counter.jpg", alt: "Kitchen counter" },
+    { src: "images/kitchen-2.jpg", alt: "Kitchen sink" },
+    { src: "images/kitchen-3.jpg", alt: "Kitchen, open to living" },
+    { src: "images/unit2.jpg", alt: "Master bedroom" },
+    { src: "images/master-bedroom-2.jpg", alt: "Master bedroom, dresser" },
+    { src: "images/master-bath-1.jpg", alt: "Master bathroom" },
+    { src: "images/master-bath-2.jpg", alt: "Master bathroom, water heater" },
+    { src: "images/bedroom2.jpg", alt: "Second bedroom" },
+    { src: "images/bedroom2-b.jpg", alt: "Second bedroom, TV" },
+    { src: "images/bedroom2-bath.jpg", alt: "Second bedroom, ensuite bathroom" },
+    { src: "images/bedroom2-art.jpg", alt: "Second bedroom, decor detail" },
+    { src: "images/bedroom3-a.jpg", alt: "Third bedroom" },
+    { src: "images/bedroom3-b.jpg", alt: "Third bedroom, TV" },
+    { src: "images/bedroom3-c.jpg", alt: "Third bedroom, wardrobe" },
+    { src: "images/bathroom.jpg", alt: "Third bedroom, ensuite bathroom" },
+    { src: "images/kitchen-washer.jpg", alt: "Kitchen, washing machine" }
+  ];
+  let lightboxIndex = 0;
+
+  function openLightbox(index){
+    lightboxIndex = index;
+    updateLightboxImage();
+    document.getElementById('lightbox').classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+  function closeLightbox(){
+    document.getElementById('lightbox').classList.remove('open');
+    document.body.style.overflow = '';
+  }
+  function lightboxStep(dir){
+    lightboxIndex = (lightboxIndex + dir + galleryImages.length) % galleryImages.length;
+    updateLightboxImage();
+  }
+  function updateLightboxImage(){
+    const img = galleryImages[lightboxIndex];
+    const el = document.getElementById('lightbox-img');
+    el.src = img.src;
+    el.alt = img.alt;
+  }
+  document.addEventListener('keydown', function(e){
+    if (!document.getElementById('lightbox').classList.contains('open')) return;
+    if (e.key === 'Escape') closeLightbox();
+    if (e.key === 'ArrowLeft') lightboxStep(-1);
+    if (e.key === 'ArrowRight') lightboxStep(1);
+  });
 </script>
 
 </body>
