@@ -331,6 +331,55 @@
     font-size:12.5px;color:#B99394;flex-wrap:wrap;gap:10px;
   }
 
+  /* booking wizard */
+  .progress-track{display:flex;align-items:flex-start;justify-content:center;max-width:520px;margin:0 auto 46px;}
+  .progress-step{display:flex;flex-direction:column;align-items:center;gap:9px;flex:0 0 auto;width:110px;}
+  .progress-circle{
+    width:34px;height:34px;border-radius:50%;background:#fff;
+    border:2px solid var(--line);display:flex;align-items:center;justify-content:center;
+    font-family:'Fraunces',serif;font-weight:600;color:var(--ink-soft);font-size:14px;
+    transition:border-color .2s,background .2s,color .2s;
+  }
+  .progress-step.active .progress-circle{border-color:var(--wine);color:var(--wine);background:var(--blush);}
+  .progress-step.done .progress-circle{background:var(--wine);border-color:var(--wine);color:#fff;}
+  .progress-label{font-size:11px;letter-spacing:.04em;text-transform:uppercase;color:var(--ink-soft);font-weight:600;text-align:center;}
+  .progress-step.active .progress-label{color:var(--wine-deep);}
+  .progress-line{flex:1 1 auto;height:2px;background:var(--line);margin-top:16px;transition:background .2s;}
+  .progress-line.done{background:var(--wine);}
+
+  .step-panel{display:none;}
+  .step-panel.active{display:block;}
+
+  .stay-summary{display:flex;gap:24px;flex-wrap:wrap;margin-top:14px;padding-top:14px;border-top:1px solid var(--line);}
+  .stay-summary-item{flex:1;min-width:140px;}
+  .stay-summary-item .pill-label{font-size:10px;text-transform:uppercase;letter-spacing:.08em;color:var(--ink-soft);font-weight:700;margin-bottom:3px;}
+  .stay-summary-item .pill-value{font-family:'Fraunces',serif;font-size:15.5px;color:var(--wine-deep);}
+  .stay-summary-item .pill-value.placeholder{color:var(--ink-soft);font-family:'Public Sans',sans-serif;font-size:13px;font-weight:500;}
+
+  .cal-inline-wrap{border:1px solid var(--line);border-radius:4px;padding:16px;background:var(--cream);margin-bottom:4px;}
+  .cal-panel .cal-header{margin-bottom:12px;}
+
+  .panel-nav{display:flex;justify-content:space-between;gap:14px;margin-top:30px;}
+  .btn-secondary{
+    background:none;border:1.5px solid var(--line);color:var(--wine-deep);
+    padding:13px 24px;font-weight:600;font-size:14px;border-radius:var(--radius);
+    cursor:pointer;font-family:inherit;
+  }
+  .btn-secondary:hover{border-color:var(--wine);}
+  .panel-nav .btn-primary{border:none;cursor:pointer;font-family:inherit;}
+
+  .review-card{background:var(--blush);border:1px solid var(--line);border-radius:4px;padding:8px 22px;margin-bottom:26px;}
+  .review-row{display:flex;justify-content:space-between;padding:11px 0;border-bottom:1px solid var(--line);font-size:14px;}
+  .review-row:last-child{border-bottom:none;}
+  .review-row .rlabel{color:var(--ink-soft);}
+  .review-row .rvalue{color:var(--wine-deep);font-weight:600;text-align:right;}
+
+  @media (max-width:640px){
+    .progress-track{max-width:100%;}
+    .progress-step{width:auto;}
+    .progress-label{font-size:9.5px;}
+  }
+
   /* booking widget (functional) */
   .booking-card{
     background:#fff;border:1px solid var(--line);padding:44px;max-width:760px;margin:0 auto;
@@ -582,95 +631,135 @@
     <div class="booking-head">
       <span class="eyebrow">Reserve your stay</span>
       <h2>Booking Request</h2>
-      <p style="color:var(--ink-soft);margin-top:10px;">All fields marked * are required</p>
+      <p style="color:var(--ink-soft);margin-top:10px;">Three quick steps — takes less than two minutes</p>
+    </div>
+
+    <div class="progress-track">
+      <div class="progress-step active" data-step="1">
+        <div class="progress-circle">1</div>
+        <div class="progress-label">Your Stay</div>
+      </div>
+      <div class="progress-line" data-line="1"></div>
+      <div class="progress-step" data-step="2">
+        <div class="progress-circle">2</div>
+        <div class="progress-label">Your Details</div>
+      </div>
+      <div class="progress-line" data-line="2"></div>
+      <div class="progress-step" data-step="3">
+        <div class="progress-circle">3</div>
+        <div class="progress-label">Confirm &amp; Pay</div>
+      </div>
     </div>
 
     <div class="booking-card" id="form-card">
-      <div class="field-row">
-        <div class="field"><label>Full Name *</label><input type="text" id="name" placeholder="e.g. Amaka Johnson" required></div>
-        <div class="field"><label>Phone *</label><input type="tel" id="phone" placeholder="+234 800 000 0000" required></div>
-      </div>
-      <div class="field-row">
-        <div class="field"><label>Email Address</label><input type="email" id="email"></div>
-        <div class="field">
-          <label>Select Apartment *</label>
-          <select id="apartment" required>
-            <option value="">Select...</option>
-            <option disabled>T.W Unit 1 (Coming Soon)</option>
-            <option>T.W Unit 2</option>
-            <option>No preference</option>
-          </select>
+
+      <!-- STEP 1: YOUR STAY -->
+      <div class="step-panel active" id="panel-1">
+        <div class="field-row">
+          <div class="field">
+            <label>Select Apartment *</label>
+            <select id="apartment" required>
+              <option value="">Select...</option>
+              <option disabled>T.W Unit 1 (Coming Soon)</option>
+              <option>T.W Unit 2</option>
+              <option>No preference</option>
+            </select>
+          </div>
+          <div class="field">
+            <label>Guests *</label>
+            <select id="guests" required>
+              <option value="">Select...</option>
+              <option>1 guest</option><option>2 guests</option><option>3 guests</option>
+              <option>4 guests</option><option>5 guests</option><option>6 guests</option>
+              <option>7 guests</option><option>8 guests</option>
+            </select>
+          </div>
+        </div>
+
+        <label style="font-size:12.5px;font-weight:600;color:var(--wine-deep);letter-spacing:.02em;display:block;margin-bottom:8px;">Check-in &amp; Check-out *</label>
+        <div class="cal-inline-wrap" id="stay-calendar"></div>
+        <div class="stay-summary">
+          <div class="stay-summary-item">
+            <div class="pill-label">Check-in</div>
+            <div class="pill-value placeholder" id="pill-checkin-value">Not selected</div>
+          </div>
+          <div class="stay-summary-item">
+            <div class="pill-label">Check-out</div>
+            <div class="pill-value placeholder" id="pill-checkout-value">Not selected</div>
+          </div>
+        </div>
+
+        <div class="estimate-box" id="estimate">
+          <div class="estimate-title">Estimated Cost</div>
+          <div class="estimate-row"><span id="nights-label"></span><span class="estimate-total" id="total-amount"></span></div>
+          <div class="estimate-row"><span>Refundable caution fee</span><span>₦100,000</span></div>
+        </div>
+
+        <div class="panel-nav" style="justify-content:flex-end;">
+          <button type="button" class="btn-primary" onclick="goToStep(2)">Continue →</button>
         </div>
       </div>
-      <div class="field-row">
-        <div class="field">
-          <label>Check-In *</label>
-          <input type="text" id="checkin" placeholder="Select check-in date" readonly required onclick="openCalendar('checkin')" style="cursor:pointer;">
-          <div id="calendar-checkin"></div>
+
+      <!-- STEP 2: YOUR DETAILS -->
+      <div class="step-panel" id="panel-2">
+        <div class="field-row">
+          <div class="field"><label>Full Name *</label><input type="text" id="name" placeholder="e.g. Amaka Johnson" required></div>
+          <div class="field"><label>Phone *</label><input type="tel" id="phone" placeholder="+234 800 000 0000" required></div>
         </div>
-        <div class="field">
-          <label>Check-Out *</label>
-          <input type="text" id="checkout" placeholder="Select check-out date" readonly required onclick="openCalendar('checkout')" style="cursor:pointer;">
-          <div id="calendar-checkout"></div>
+        <div class="field-row">
+          <div class="field"><label>Email Address</label><input type="email" id="email"></div>
+          <div class="field">
+            <label>Purpose of Stay</label>
+            <select id="purpose">
+              <option value="">Select...</option>
+              <option>Leisure / Holiday</option>
+              <option>Business Trip</option>
+              <option>Family Visit</option>
+              <option>Event / Celebration</option>
+              <option>Temporary Relocation</option>
+              <option>Other</option>
+            </select>
+          </div>
         </div>
-      </div>
-      <div class="field-row">
-        <div class="field">
-          <label>Guests *</label>
-          <select id="guests" required>
+        <div class="field full">
+          <label>How Did You Hear About Us?</label>
+          <select id="howheard">
             <option value="">Select...</option>
-            <option>1 guest</option><option>2 guests</option><option>3 guests</option>
-            <option>4 guests</option><option>5 guests</option><option>6 guests</option>
-            <option>7 guests</option><option>8 guests</option>
-          </select>
-        </div>
-        <div class="field">
-          <label>Purpose of Stay</label>
-          <select id="purpose">
-            <option value="">Select...</option>
-            <option>Leisure / Holiday</option>
-            <option>Business Trip</option>
-            <option>Family Visit</option>
-            <option>Event / Celebration</option>
-            <option>Temporary Relocation</option>
+            <option>Friend / Family Referral</option>
+            <option>Instagram</option>
+            <option>Airbnb</option>
+            <option>Booking.com</option>
+            <option>Google Search</option>
             <option>Other</option>
           </select>
         </div>
-      </div>
-      <div class="field full" id="id-upload-section">
-        <label>Government-Issued ID *</label>
-        <input type="file" id="id-upload" accept="image/*,.pdf" required>
-        <div class="form-note" style="text-align:left;margin-top:4px;">National ID, Driver's Licence, or International Passport. JPG, PNG or PDF, max 5MB — kept strictly confidential.</div>
-      </div>
-
-      <div class="estimate-box" id="estimate">
-        <div class="estimate-title">Estimated Cost</div>
-        <div class="estimate-row"><span id="nights-label"></span><span class="estimate-total" id="total-amount"></span></div>
-        <div class="estimate-row"><span>Full payment to confirm</span><span id="full-amount"></span></div>
-        <div class="estimate-row"><span>Refundable caution fee</span><span>₦100,000</span></div>
+        <div class="panel-nav">
+          <button type="button" class="btn-secondary" onclick="goToStep(1)">← Back</button>
+          <button type="button" class="btn-primary" onclick="goToStep(3)">Continue →</button>
+        </div>
       </div>
 
-      <div class="field full">
-        <label>How Did You Hear About Us?</label>
-        <select id="howheard">
-          <option value="">Select...</option>
-          <option>Friend / Family Referral</option>
-          <option>Instagram</option>
-          <option>Airbnb</option>
-          <option>Booking.com</option>
-          <option>Google Search</option>
-          <option>Other</option>
-        </select>
-      </div>
-      <div class="field full">
-        <label>Additional Notes</label>
-        <textarea id="notes"></textarea>
+      <!-- STEP 3: CONFIRM & PAY -->
+      <div class="step-panel" id="panel-3">
+        <div class="review-card" id="review-card"></div>
+
+        <div class="field full" id="id-upload-section">
+          <label>Government-Issued ID *</label>
+          <input type="file" id="id-upload" accept="image/*,.pdf" required>
+          <div class="form-note" style="text-align:left;margin-top:4px;">National ID, Driver's Licence, or International Passport. JPG, PNG or PDF, max 5MB — kept strictly confidential.</div>
+        </div>
+        <div class="field full">
+          <label>Additional Notes</label>
+          <textarea id="notes"></textarea>
+        </div>
+
+        <div class="panel-nav">
+          <button type="button" class="btn-secondary" onclick="goToStep(2)">← Back</button>
+          <a href="https://paystack.shop/pay/twresidence" class="btn-primary" onclick="return validateBeforePayment()">Proceed to Payment →</a>
+        </div>
+        <div class="form-note">You'll be redirected to our secure Paystack payment page. Need help? Email <a href="mailto:twresidence.lagos@gmail.com" style="text-decoration:underline;">twresidence.lagos@gmail.com</a></div>
       </div>
 
-      <div class="submit-row">
-        <a href="https://paystack.shop/pay/twresidence" class="btn-primary" onclick="return validateBeforePayment()">Proceed to Payment →</a>
-      </div>
-      <div class="form-note">You'll be redirected to our secure Paystack payment page. Need help? Email <a href="mailto:twresidence.lagos@gmail.com" style="text-decoration:underline;">twresidence.lagos@gmail.com</a></div>
     </div>
 
     <div class="booking-card hidden" id="success-card">
@@ -770,7 +859,7 @@
   }
 
   let bookedDates = [];
-  let calendarState = { field: null, year: new Date().getFullYear(), month: new Date().getMonth() };
+  let calendarState = { year: new Date().getFullYear(), month: new Date().getMonth() };
   let selectedCheckin = null, selectedCheckout = null;
 
   const CAL_API_KEY = 'AIzaSyCUQcUIpsi3LzZ6fb8xI1qfKlyZd9dVcnw';
@@ -800,26 +889,20 @@
     } catch(e){ console.log('Calendar fetch error', e); }
   }
 
-  function openCalendar(field){
-    ['checkin','checkout'].forEach(f => {
-      const el = document.getElementById('calendar-' + f);
-      if (el) el.style.display = 'none';
-    });
-    calendarState.field = field;
-    calendarState.year = new Date().getFullYear();
-    calendarState.month = new Date().getMonth();
-    renderCalendar(field);
-    document.getElementById('calendar-' + field).style.display = 'block';
+  function getMode(){
+    if (!selectedCheckin || (selectedCheckin && selectedCheckout)) return 'checkin';
+    return 'checkout';
   }
 
-  function renderCalendar(field){
+  function renderCalendar(){
     const { year, month } = calendarState;
+    const mode = getMode();
     const today = new Date(); today.setHours(0,0,0,0);
     const firstDay = new Date(year, month, 1).getDay();
     const daysInMonth = new Date(year, month + 1, 0).getDate();
     const monthNames = ['January','February','March','April','May','June','July','August','September','October','November','December'];
 
-    let html = `<div class="cal-popup">
+    let html = `<div class="cal-panel">
       <div class="cal-header">
         <button class="cal-nav-btn" type="button" onclick="changeCalMonth(-1)">&#8249;</button>
         <div class="cal-month-title">${monthNames[month]} ${year}</div>
@@ -840,7 +923,7 @@
       const isBooked = bookedDates.includes(dateStr);
       const isSelected = dateStr === selectedCheckin || dateStr === selectedCheckout;
       const isInRange = selectedCheckin && selectedCheckout && dateStr > selectedCheckin && dateStr < selectedCheckout;
-      const isSundayCheckout = calendarState.field === 'checkout' && new Date(dateStr + 'T00:00:00').getDay() === 0;
+      const isSundayCheckout = mode === 'checkout' && new Date(dateStr + 'T00:00:00').getDay() === 0;
 
       let cls = 'cal-cell';
       if (isPast) cls += ' past';
@@ -861,39 +944,48 @@
       </div>
     </div>`;
 
-    document.getElementById('calendar-' + field).innerHTML = html;
+    document.getElementById('stay-calendar').innerHTML = html;
   }
 
   function changeCalMonth(dir){
     calendarState.month += dir;
     if (calendarState.month > 11){ calendarState.month = 0; calendarState.year++; }
     if (calendarState.month < 0){ calendarState.month = 11; calendarState.year--; }
-    renderCalendar(calendarState.field);
+    renderCalendar();
+  }
+
+  function markCheckin(dateStr){
+    selectedCheckin = dateStr;
+    selectedCheckout = null;
+    document.getElementById('pill-checkin-value').textContent = formatDate(dateStr);
+    document.getElementById('pill-checkin-value').classList.remove('placeholder');
+    document.getElementById('pill-checkout-value').textContent = 'Choose a later date';
+    document.getElementById('pill-checkout-value').classList.add('placeholder');
+    document.getElementById('estimate').classList.remove('visible');
   }
 
   function selectDate(dateStr){
-    const field = calendarState.field;
+    const mode = getMode();
     const dayOfWeek = new Date(dateStr + 'T00:00:00').getDay();
 
-    if (field === 'checkin'){
-      selectedCheckin = dateStr;
-      selectedCheckout = null;
-      document.getElementById('checkin').value = formatDate(dateStr);
-      document.getElementById('checkout').value = '';
-      document.getElementById('calendar-checkin').style.display = 'none';
-      setTimeout(() => openCalendar('checkout'), 100);
+    if (mode === 'checkin'){
+      markCheckin(dateStr);
     } else {
       if (dayOfWeek === 0){
         alert('Sunday check-out is not available. Please select a different date.');
         return;
       }
-      if (dateStr <= selectedCheckin){ alert('Check-out must be after check-in.'); return; }
+      if (dateStr <= selectedCheckin){
+        markCheckin(dateStr);
+        renderCalendar();
+        return;
+      }
       selectedCheckout = dateStr;
-      document.getElementById('checkout').value = formatDate(dateStr);
-      document.getElementById('calendar-checkout').style.display = 'none';
+      document.getElementById('pill-checkout-value').textContent = formatDate(dateStr);
+      document.getElementById('pill-checkout-value').classList.remove('placeholder');
       calculateTotalFromDates(selectedCheckin, selectedCheckout);
     }
-    renderCalendar(field);
+    renderCalendar();
   }
 
   function formatDate(dateStr){
@@ -908,7 +1000,6 @@
     box.classList.add('visible');
     document.getElementById('nights-label').textContent = result.nights + ' night' + (result.nights > 1 ? 's' : '');
     document.getElementById('total-amount').textContent = fmt(result.total);
-    document.getElementById('full-amount').textContent = fmt(result.total);
   }
 
   function validateBeforePayment(){
@@ -968,21 +1059,83 @@
   }
 
   function resetForm(){
-    ['name','phone','email','checkin','checkout','notes'].forEach(id => document.getElementById(id).value = '');
+    ['name','phone','email','notes'].forEach(id => document.getElementById(id).value = '');
     ['guests','purpose','howheard','apartment'].forEach(id => document.getElementById(id).selectedIndex = 0);
     document.getElementById('estimate').classList.remove('visible');
     document.getElementById('form-card').classList.remove('hidden');
     document.getElementById('success-card').classList.add('hidden');
     selectedCheckin = null; selectedCheckout = null;
+    document.getElementById('pill-checkin-value').textContent = 'Not selected';
+    document.getElementById('pill-checkin-value').classList.add('placeholder');
+    document.getElementById('pill-checkout-value').textContent = 'Not selected';
+    document.getElementById('pill-checkout-value').classList.add('placeholder');
+    renderCalendar();
+    goToStep(1, true);
   }
 
-  document.addEventListener('click', function(e){
-    if (!e.target.closest('.cal-popup') && e.target.id !== 'checkin' && e.target.id !== 'checkout'){
-      document.querySelectorAll('[id^="calendar-"]').forEach(el => el.style.display = 'none');
+  function rowHtml(label, value){
+    return `<div class="review-row"><span class="rlabel">${label}</span><span class="rvalue">${value}</span></div>`;
+  }
+
+  function buildReviewCard(){
+    const apartment = document.getElementById('apartment').value || '—';
+    const guests = document.getElementById('guests').value || '—';
+    const result = calcTotal(selectedCheckin, selectedCheckout);
+    let html = '';
+    html += rowHtml('Apartment', apartment);
+    html += rowHtml('Guests', guests);
+    html += rowHtml('Check-in', selectedCheckin ? formatDate(selectedCheckin) : '—');
+    html += rowHtml('Check-out', selectedCheckout ? formatDate(selectedCheckout) : '—');
+    if (result){
+      html += rowHtml('Nights', result.nights);
+      html += rowHtml('Total (full payment)', fmt(result.total));
     }
-  });
+    html += rowHtml('Caution fee (refundable)', '₦100,000');
+    document.getElementById('review-card').innerHTML = html;
+  }
+
+  function validateStep1(){
+    if (!document.getElementById('apartment').value || !document.getElementById('guests').value){
+      alert('Please select an apartment and number of guests.');
+      return false;
+    }
+    if (!selectedCheckin || !selectedCheckout){
+      alert('Please select your check-in and check-out dates.');
+      return false;
+    }
+    return true;
+  }
+
+  function validateStep2(){
+    if (!document.getElementById('name').value || !document.getElementById('phone').value){
+      alert('Please enter your name and phone number.');
+      return false;
+    }
+    return true;
+  }
+
+  function goToStep(step, skipValidation){
+    if (!skipValidation){
+      if (step === 2 && !validateStep1()) return;
+      if (step === 3 && !validateStep2()) return;
+    }
+    document.querySelectorAll('.step-panel').forEach(p => p.classList.remove('active'));
+    document.getElementById('panel-' + step).classList.add('active');
+    document.querySelectorAll('.progress-step').forEach(p => {
+      const s = parseInt(p.dataset.step, 10);
+      p.classList.toggle('active', s === step);
+      p.classList.toggle('done', s < step);
+    });
+    document.querySelectorAll('.progress-line').forEach(l => {
+      const s = parseInt(l.dataset.line, 10);
+      l.classList.toggle('done', s < step);
+    });
+    if (step === 3) buildReviewCard();
+    document.getElementById('form-card').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
 
   fetchBookedDates();
+  renderCalendar();
 </script>
 
 <script>
