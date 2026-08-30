@@ -707,7 +707,6 @@
           <div class="field"><label>Phone *</label><input type="tel" id="phone" placeholder="+234 800 000 0000" required></div>
         </div>
         <div class="field-row">
-          <div class="field"><label>Email Address</label><input type="email" id="email"></div>
           <div class="field">
             <label>Purpose of Stay</label>
             <select id="purpose">
@@ -720,18 +719,18 @@
               <option>Other</option>
             </select>
           </div>
-        </div>
-        <div class="field full">
-          <label>How Did You Hear About Us?</label>
-          <select id="howheard">
-            <option value="">Select...</option>
-            <option>Friend / Family Referral</option>
-            <option>Instagram</option>
-            <option>Airbnb</option>
-            <option>Booking.com</option>
-            <option>Google Search</option>
-            <option>Other</option>
-          </select>
+          <div class="field">
+            <label>How Did You Hear About Us?</label>
+            <select id="howheard">
+              <option value="">Select...</option>
+              <option>Friend / Family Referral</option>
+              <option>Instagram</option>
+              <option>Airbnb</option>
+              <option>Booking.com</option>
+              <option>Google Search</option>
+              <option>Other</option>
+            </select>
+          </div>
         </div>
         <div class="panel-nav">
           <button type="button" class="btn-secondary" onclick="goToStep(1)">← Back</button>
@@ -1025,7 +1024,6 @@
     const formData = new FormData();
     formData.append('Name', name);
     formData.append('Phone', phone);
-    formData.append('Email', document.getElementById('email').value);
     formData.append('Apartment', apartment);
     formData.append('Check-In', selectedCheckin);
     formData.append('Check-Out', selectedCheckout);
@@ -1059,7 +1057,7 @@
   }
 
   function resetForm(){
-    ['name','phone','email','notes'].forEach(id => document.getElementById(id).value = '');
+    ['name','phone','notes'].forEach(id => document.getElementById(id).value = '');
     ['guests','purpose','howheard','apartment'].forEach(id => document.getElementById(id).selectedIndex = 0);
     document.getElementById('estimate').classList.remove('visible');
     document.getElementById('form-card').classList.remove('hidden');
@@ -1069,6 +1067,7 @@
     document.getElementById('pill-checkin-value').classList.add('placeholder');
     document.getElementById('pill-checkout-value').textContent = 'Not selected';
     document.getElementById('pill-checkout-value').classList.add('placeholder');
+    document.getElementById('id-upload').value = '';
     renderCalendar();
     goToStep(1, true);
   }
