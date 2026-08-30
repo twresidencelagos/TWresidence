@@ -1195,6 +1195,15 @@
   let currentGalleryImages = unit2Images;
   let lightboxIndex = 0;
 
+  function preloadNeighbors(){
+    const nextIdx = (lightboxIndex + 1) % currentGalleryImages.length;
+    const prevIdx = (lightboxIndex - 1 + currentGalleryImages.length) % currentGalleryImages.length;
+    [nextIdx, prevIdx].forEach(i => {
+      const preload = new Image();
+      preload.src = currentGalleryImages[i].src;
+    });
+  }
+
   function openLightbox(images, index){
     currentGalleryImages = images;
     lightboxIndex = index;
@@ -1216,6 +1225,7 @@
     el.src = img.src;
     el.alt = img.alt;
     document.getElementById('lightbox-counter').textContent = (lightboxIndex + 1) + ' / ' + currentGalleryImages.length + ' · ' + img.alt;
+    preloadNeighbors();
   }
   document.addEventListener('keydown', function(e){
     if (!document.getElementById('lightbox').classList.contains('open')) return;
