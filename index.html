@@ -7,6 +7,14 @@
 <meta name="description" content="T.W Residence is a luxury, fully furnished 3-bedroom shortlet apartment in Olaleye Estate, Surulere, Lagos. All ensuite bedrooms, 24-hour solar power, and a modern, premium finish. Book direct — no agents.">
 <link rel="canonical" href="https://twresidence.org/">
 
+<link rel="icon" type="image/x-icon" href="favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="48x48" href="favicon-48x48.png">
+<link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
+<link rel="icon" type="image/png" sizes="512x512" href="icon-512.png">
+
 <meta property="og:type" content="website">
 <meta property="og:title" content="T.W Residence — Luxury Shortlet, Olaleye Estate, Lagos">
 <meta property="og:description" content="A fully furnished, solar-powered 3-bedroom luxury shortlet in Olaleye Estate, Surulere. All rooms ensuite. Book direct.">
@@ -176,6 +184,19 @@
     border-radius:var(--radius);
     display:inline-block;
   }
+  .btn-photos{
+    background:var(--cream);
+    color:var(--wine-deep);
+    padding:14px 26px;
+    font-weight:700;
+    font-size:14px;
+    letter-spacing:.02em;
+    border-radius:var(--radius);
+    border:1px solid var(--cream);
+    display:inline-block;
+    transition:transform .2s, background .2s;
+  }
+  .btn-photos:hover{background:#fff;transform:translateY(-1px);}
   .hero-note{
     margin-top:22px;font-size:13px;color:#DEC7C6;letter-spacing:.02em;
   }
@@ -488,8 +509,9 @@
     <h1>A private stay, done properly.</h1>
     <p>Three ensuite bedrooms, solar power that never quits, and a host who actually answers. T.W Residence is Lagos hospitality the way it should be.</p>
     <div class="btn-row">
-      <a href="#book" class="btn-primary">Reserve Your Stay</a>
+      <a href="#gallery" class="btn-photos" onclick="openLightbox(0); return false;">View Photos</a>
       <a href="#rates" class="btn-ghost">See Pricing</a>
+      <a href="#book" class="btn-primary">Reserve Your Stay</a>
     </div>
     <div class="hero-note">Full payment confirms your booking · Refundable caution fee applies</div>
   </div>
