@@ -280,6 +280,22 @@
   .rates{background:#fff;border-top:1px solid var(--line);border-bottom:1px solid var(--line);}
   .rates-head{text-align:center;max-width:600px;margin:0 auto 46px;}
   .rates-head h2{font-size:clamp(26px,3.4vw,32px);margin-top:10px;}
+  .promo-banner{
+    max-width:640px;margin:0 auto 32px;background:var(--blush);
+    border:1.5px dashed var(--brass);border-radius:4px;
+    padding:14px 20px;text-align:center;font-size:14.5px;color:var(--ink);
+    display:flex;align-items:center;justify-content:center;gap:10px;flex-wrap:wrap;
+  }
+  .promo-badge{
+    background:var(--wine);color:var(--cream);font-size:11px;font-weight:700;
+    letter-spacing:.06em;padding:4px 10px;border-radius:20px;white-space:nowrap;
+  }
+  .promo-field{margin-top:4px;}
+  .promo-input-row{display:flex;gap:10px;}
+  .promo-input-row input{flex:1;}
+  .promo-input-row .btn-secondary{padding:12px 20px;white-space:nowrap;}
+  .promo-row span{color:var(--wine);}
+
   .rate-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-bottom:40px;}
   .rate-card{
     border:1px solid var(--line);padding:30px 26px;text-align:center;position:relative;
@@ -292,6 +308,10 @@
   }
   .rate-card .label{font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-soft);font-weight:600;}
   .rate-card .price{font-family:'Fraunces',serif;font-size:30px;color:var(--wine-deep);margin:14px 0 6px;}
+  .price-strike{
+    font-family:'Public Sans',sans-serif;font-size:16px;font-weight:500;
+    color:var(--ink-soft);text-decoration:line-through;margin-right:8px;
+  }
   .rate-card .sub{font-size:13px;color:var(--ink-soft);}
   .terms{
     max-width:640px;margin:0 auto;
@@ -495,6 +515,7 @@
       <a href="#why">About</a>
       <a href="#features">Amenities</a>
       <a href="#gallery">Gallery</a>
+      <a href="photos.html">All Photos</a>
       <a href="#rates">Pricing</a>
       <a href="#book">Contact</a>
     </nav>
@@ -622,22 +643,26 @@
       <h2>Pricing</h2>
       <p style="color:var(--ink-soft);margin-top:10px;">3-Bedroom Apartment · All Rooms En-Suite · Olaleye Estate, Surulere</p>
     </div>
+    <div class="promo-banner">
+      <span class="promo-badge">LAUNCH OFFER</span>
+      <span>Save 15% on every booking — applied automatically, no code needed</span>
+    </div>
     <div class="rate-grid">
       <div class="rate-card">
         <div class="label">Daily Rate</div>
-        <div class="price">₦200,000</div>
+        <div class="price"><span class="price-strike">₦200,000</span> ₦170,000</div>
         <div class="sub">per night · Mon – Sun</div>
       </div>
       <div class="rate-card">
         <div class="label">Holiday Rate</div>
-        <div class="price">₦230,000</div>
+        <div class="price"><span class="price-strike">₦230,000</span> ₦195,500</div>
         <div class="sub">per night · Public holidays</div>
       </div>
       <div class="rate-card best">
         <div class="badge">Best Value</div>
         <div class="label">Weekly Stay</div>
-        <div class="price">₦1,250,000</div>
-        <div class="sub">7 consecutive nights · Save ₦150,000</div>
+        <div class="price"><span class="price-strike">₦1,250,000</span> ₦1,062,500</div>
+        <div class="sub">7 consecutive nights</div>
       </div>
     </div>
     <div class="terms">
@@ -714,8 +739,10 @@
 
         <div class="estimate-box" id="estimate">
           <div class="estimate-title">Estimated Cost</div>
-          <div class="estimate-row"><span id="nights-label"></span><span class="estimate-total" id="total-amount"></span></div>
+          <div class="estimate-row"><span id="nights-label"></span><span class="estimate-total" id="subtotal-amount"></span></div>
+          <div class="estimate-row promo-row hidden" id="promo-row"><span>Promo (<span id="promo-code-label"></span>)</span><span id="promo-discount-amount"></span></div>
           <div class="estimate-row"><span>Refundable caution fee</span><span>₦100,000</span></div>
+          <div class="estimate-row"><strong>Total due</strong><span class="estimate-total" id="total-amount"></span></div>
         </div>
 
         <div class="panel-nav" style="justify-content:flex-end;">
@@ -1015,13 +1042,33 @@
     return d.toLocaleDateString('en-GB', { day:'numeric', month:'long', year:'numeric' });
   }
 
+  const LAUNCH_DISCOUNT = 0.15; // set to 0 to end the launch promo
+
   function calculateTotalFromDates(ci, co){
     const result = calcTotal(ci, co);
     if (!result) return;
     const box = document.getElementById('estimate');
     box.classList.add('visible');
     document.getElementById('nights-label').textContent = result.nights + ' night' + (result.nights > 1 ? 's' : '');
-    document.getElementById('total-amount').textContent = fmt(result.total);
+    document.getElementById('subtotal-amount').textContent = fmt(result.total);
+    applyPromoToDisplay(result.total);
+  }
+
+  const CAUTION_FEE = 100000;
+
+  function applyPromoToDisplay(subtotal){
+    const promoRow = document.getElementById('promo-row');
+    const totalEl = document.getElementById('total-amount');
+    if (LAUNCH_DISCOUNT > 0){
+      const discount = Math.round(subtotal * LAUNCH_DISCOUNT);
+      document.getElementById('promo-code-label').textContent = Math.round(LAUNCH_DISCOUNT*100) + '% launch offer';
+      document.getElementById('promo-discount-amount').textContent = '\u2212' + fmt(discount);
+      promoRow.classList.remove('hidden');
+      totalEl.textContent = fmt(subtotal - discount + CAUTION_FEE);
+    } else {
+      promoRow.classList.add('hidden');
+      totalEl.textContent = fmt(subtotal + CAUTION_FEE);
+    }
   }
 
   function validateBeforePayment(){
@@ -1057,8 +1104,18 @@
     formData.append('ID Document', idFile, idFile.name);
     const result = calcTotal(selectedCheckin, selectedCheckout);
     if (result){
-      formData.append('Total Amount', fmt(result.total));
+      formData.append('Subtotal', fmt(result.total));
       formData.append('Nights', result.nights + ' night(s)');
+      let roomTotal = result.total;
+      if (LAUNCH_DISCOUNT > 0){
+        const discount = Math.round(result.total * LAUNCH_DISCOUNT);
+        roomTotal = result.total - discount;
+        formData.append('Promo', Math.round(LAUNCH_DISCOUNT*100) + '% launch offer');
+        formData.append('Discount', fmt(discount));
+      }
+      formData.append('Room Total', fmt(roomTotal));
+      formData.append('Caution Fee', fmt(CAUTION_FEE));
+      formData.append('Total Amount', fmt(roomTotal + CAUTION_FEE));
     }
 
     fetch('https://formspree.io/f/mjgqzkay', {
@@ -1070,8 +1127,9 @@
         document.getElementById('success-name').textContent = name;
         if (result){
           document.getElementById('success-nights').textContent = result.nights + ' night' + (result.nights > 1 ? 's' : '') + ' · ' + guests;
-          document.getElementById('success-total').textContent = 'Total: ' + fmt(result.total);
-          document.getElementById('success-deposit').textContent = 'Full payment + ₦100,000 caution fee';
+          const roomTotal = LAUNCH_DISCOUNT > 0 ? result.total - Math.round(result.total * LAUNCH_DISCOUNT) : result.total;
+          document.getElementById('success-total').textContent = 'Total: ' + fmt(roomTotal + CAUTION_FEE);
+          document.getElementById('success-deposit').textContent = 'Includes ₦100,000 refundable caution fee';
         }
       }
     }).catch(() => {});
@@ -1091,6 +1149,7 @@
     document.getElementById('pill-checkout-value').textContent = 'Not selected';
     document.getElementById('pill-checkout-value').classList.add('placeholder');
     document.getElementById('id-upload').value = '';
+    document.getElementById('promo-row').classList.add('hidden');
     renderCalendar();
     goToStep(1, true);
   }
@@ -1110,9 +1169,19 @@
     html += rowHtml('Check-out', selectedCheckout ? formatDate(selectedCheckout) : '—');
     if (result){
       html += rowHtml('Nights', result.nights);
-      html += rowHtml('Total (full payment)', fmt(result.total));
+      let roomTotal = result.total;
+      if (LAUNCH_DISCOUNT > 0){
+        const discount = Math.round(result.total * LAUNCH_DISCOUNT);
+        roomTotal = result.total - discount;
+        html += rowHtml('Subtotal', fmt(result.total));
+        html += rowHtml('Launch offer (' + Math.round(LAUNCH_DISCOUNT*100) + '%)', '\u2212' + fmt(discount));
+        html += rowHtml('Room total (full payment)', fmt(roomTotal));
+      } else {
+        html += rowHtml('Room total (full payment)', fmt(roomTotal));
+      }
+      html += rowHtml('Caution fee (refundable)', fmt(CAUTION_FEE));
+      html += rowHtml('Total due', fmt(roomTotal + CAUTION_FEE));
     }
-    html += rowHtml('Caution fee (refundable)', '₦100,000');
     document.getElementById('review-card').innerHTML = html;
   }
 
