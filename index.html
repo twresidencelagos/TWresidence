@@ -451,10 +451,14 @@
   .cal-days-header{display:grid;grid-template-columns:repeat(7,1fr);margin-bottom:8px;}
   .cal-day-name{text-align:center;font-size:9px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-soft);padding:4px 0;font-weight:600;}
   .cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:2px;}
-  .cal-cell{aspect-ratio:1;display:flex;align-items:center;justify-content:center;font-size:12px;color:var(--ink);border-radius:4px;cursor:pointer;position:relative;}
+  .cal-cell{aspect-ratio:0.85;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;font-size:12px;color:var(--ink);border-radius:4px;cursor:pointer;position:relative;}
+  .cal-cell-day{font-weight:600;font-size:12.5px;line-height:1;}
+  .cal-cell-price{font-size:9px;color:var(--ink-soft);line-height:1;}
+  .cal-cell.selected .cal-cell-price, .cal-cell.in-range .cal-cell-price{color:inherit;opacity:0.85;}
   .cal-cell:hover:not(.booked):not(.past):not(.empty){background:var(--blush);}
   .cal-cell.past{color:#CBB99B;cursor:not-allowed;}
-  .cal-cell.booked{color:#C4A090;cursor:not-allowed;text-decoration:line-through;}
+  .cal-cell.booked{color:#C4A090;cursor:not-allowed;}
+  .cal-cell.booked .cal-cell-day{text-decoration:line-through;}
   .cal-cell.sunday-closed{color:#C4A090;cursor:not-allowed;font-style:italic;}
   .cal-cell.selected{background:var(--wine);color:#fff;font-weight:600;}
   .cal-cell.in-range{background:var(--blush);border-radius:0;}
@@ -515,7 +519,7 @@
 </head>
 <body>
 
-<div class="announce">YOUR HOME AWAY FROM HOME &nbsp;·&nbsp; <strong>15% OFF</strong> — LAUNCH OFFER ENDS SEPTEMBER 25, 2026</div>
+<div class="announce">YOUR HOME AWAY FROM HOME &nbsp;·&nbsp; Rates from <strong>₦150,000</strong>/night — see calendar for exact pricing</div>
 
 <header>
   <div class="wrap nav-row">
@@ -648,32 +652,20 @@
 <section class="rates" id="rates">
   <div class="wrap">
     <div class="rates-head">
-      <span class="eyebrow">Limited-time opening rates</span>
+      <span class="eyebrow">Pricing</span>
       <h2>Pricing</h2>
       <p style="color:var(--ink-soft);margin-top:10px;">3-Bedroom Apartment · All Rooms En-Suite · Olaleye Estate, Surulere</p>
     </div>
-    <div class="promo-banner">
-      <span class="promo-badge">LAUNCH OFFER</span>
-      <span>Save 15% on every booking — applied automatically, no code needed</span>
-    </div>
-    <div class="rate-grid">
+    <div class="rate-grid" style="grid-template-columns:1fr;max-width:420px;margin-left:auto;margin-right:auto;">
       <div class="rate-card">
-        <div class="label">Daily Rate</div>
-        <div class="price"><span class="price-strike">₦200,000</span> ₦170,000</div>
-        <div class="sub">per night · Mon – Sun</div>
-      </div>
-      <div class="rate-card">
-        <div class="label">Holiday Rate</div>
-        <div class="price"><span class="price-strike">₦230,000</span> ₦195,500</div>
-        <div class="sub">per night · Public holidays</div>
-      </div>
-      <div class="rate-card best">
-        <div class="badge">Best Value</div>
-        <div class="label">Weekly Stay</div>
-        <div class="price"><span class="price-strike">₦1,250,000</span> ₦1,062,500</div>
-        <div class="sub">7 consecutive nights</div>
+        <div class="label">Standard Rate</div>
+        <div class="price">₦170,000</div>
+        <div class="sub">per night</div>
       </div>
     </div>
+    <p style="text-align:center;color:var(--ink-soft);margin-top:24px;font-size:14.5px;max-width:520px;margin-left:auto;margin-right:auto;">
+      Rates vary during select high-demand periods throughout the year. Choose your dates in the booking calendar below to see the exact nightly rate.
+    </p>
     <div class="terms">
       <div>Full payment required to confirm booking</div>
       <div>Refundable caution fee: ₦100,000</div>
@@ -909,18 +901,38 @@
 </script>
 
 <script>
-  const RATES = { weekday: 200000, weekend: 200000, caution: 100000 };
+  const CAUTION_FEE = 100000;
 
-  const NIGERIAN_HOLIDAYS = [
-    '2026-01-01','2026-02-18','2026-03-27','2026-03-29','2026-03-30','2026-04-18','2026-04-19',
-    '2026-05-01','2026-05-27','2026-06-12','2026-06-25','2026-06-26','2026-09-22','2026-10-01',
-    '2026-12-25','2026-12-26',
-    '2027-01-01','2027-03-08','2027-03-26','2027-03-28','2027-03-29','2027-04-07','2027-04-08',
-    '2027-05-01','2027-05-27','2027-06-12','2027-06-14','2027-09-11','2027-10-01',
-    '2027-12-25','2027-12-26'
+  // Seasonal pricing calendar — ordered narrowest/most-specific range first,
+  // since overlapping ranges are checked top-to-bottom and the first match wins.
+  const SEASONAL_RATES = [
+    { start: '2026-10-01', end: '2026-10-04', price: 205000 },
+    { start: '2026-09-01', end: '2026-10-20', price: 150000 },
+    { start: '2026-10-21', end: '2026-10-31', price: 195000 },
+    { start: '2026-11-01', end: '2026-11-20', price: 200000 },
+    { start: '2026-11-21', end: '2027-01-09', price: 235000 },
+    { start: '2027-02-10', end: '2027-02-16', price: 235000 },
+    { start: '2027-03-07', end: '2027-03-13', price: 205000 },
+    { start: '2027-03-24', end: '2027-03-29', price: 220000 },
+    { start: '2027-04-29', end: '2027-05-02', price: 205000 },
+    { start: '2027-05-14', end: '2027-05-19', price: 220000 },
+    { start: '2027-06-12', end: '2027-06-14', price: 205000 },
   ];
+  const STANDARD_RATE = 170000;
+
+  function getPriceForDate(dateStr){
+    for (const range of SEASONAL_RATES){
+      if (dateStr >= range.start && dateStr <= range.end) return range.price;
+    }
+    return STANDARD_RATE;
+  }
 
   function fmt(n){ return '₦' + n.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ','); }
+
+  function fmtShort(n){
+    if (n % 1000 === 0) return (n/1000) + 'k';
+    return fmt(n);
+  }
 
   function calcTotal(checkIn, checkOut){
     if (!checkIn || !checkOut) return null;
@@ -931,40 +943,56 @@
     for (let i = 0; i < nights; i++){
       const d = new Date(start);
       d.setDate(d.getDate() + i);
-      total += NIGERIAN_HOLIDAYS.includes(d.toISOString().split('T')[0]) ? 230000 : RATES.weekday;
+      total += getPriceForDate(d.toISOString().split('T')[0]);
     }
     return { nights, total };
   }
 
   let bookedDates = [];
+
+  // Manually confirmed bookings — always blocked regardless of calendar sync status.
+  const MANUALLY_BLOCKED_RANGES = [
+    { start: '2026-10-26', end: '2026-11-06' }, // Olajide
+  ];
+
+  function isDateManuallyBlocked(dateStr){
+    // end date is checkout day — bookable for a new guest, so it's excluded (same convention as the Google Calendar sync)
+    return MANUALLY_BLOCKED_RANGES.some(r => dateStr >= r.start && dateStr < r.end);
+  }
   let calendarState = { year: new Date().getFullYear(), month: new Date().getMonth() };
   let selectedCheckin = null, selectedCheckout = null;
 
   const CAL_API_KEY = 'AIzaSyCUQcUIpsi3LzZ6fb8xI1qfKlyZd9dVcnw';
-  const CAL_ID = 'twresidence.lagos@gmail.com';
+  const CAL_IDS = [
+    'twresidence.lagos@gmail.com',
+    'm5d98779r2kllrar25f7fh35gg22nrlg@import.calendar.google.com'
+  ];
 
   async function fetchBookedDates(){
-    try{
-      const now = new Date().toISOString();
-      const future = new Date(Date.now() + 365*24*60*60*1000).toISOString();
-      const url = `https://www.googleapis.com/calendar/v3/calendars/${encodeURIComponent(CAL_ID)}/events?key=${CAL_API_KEY}&timeMin=${encodeURIComponent(now)}&timeMax=${encodeURIComponent(future)}&singleEvents=true&orderBy=startTime`;
-      const res = await fetch(url);
-      const data = await res.json();
-      bookedDates = [];
-      if (data.items){
-        data.items.forEach(event => {
-          const startStr = event.start.date || event.start.dateTime?.split('T')[0];
-          const endStr = event.end.date || event.end.dateTime?.split('T')[0];
-          if (startStr && endStr){
-            const start = new Date(startStr);
-            const end = new Date(endStr);
-            for (let d = new Date(start); d < end; d.setDate(d.getDate() + 1)){
-              bookedDates.push(d.toISOString().split('T')[0]);
+    bookedDates = [];
+    const now = new Date().toISOString();
+    const future = new Date(Date.now() + 365*24*60*60*1000).toISOString();
+
+    for (const calId of CAL_IDS){
+      try{
+        const url = `https://www.googleapis.com/calendar/v3/calendars/${encodeURIComponent(calId)}/events?key=${CAL_API_KEY}&timeMin=${encodeURIComponent(now)}&timeMax=${encodeURIComponent(future)}&singleEvents=true&orderBy=startTime`;
+        const res = await fetch(url);
+        const data = await res.json();
+        if (data.items){
+          data.items.forEach(event => {
+            const startStr = event.start.date || event.start.dateTime?.split('T')[0];
+            const endStr = event.end.date || event.end.dateTime?.split('T')[0];
+            if (startStr && endStr){
+              const start = new Date(startStr);
+              const end = new Date(endStr);
+              for (let d = new Date(start); d < end; d.setDate(d.getDate() + 1)){
+                bookedDates.push(d.toISOString().split('T')[0]);
+              }
             }
-          }
-        });
-      }
-    } catch(e){ console.log('Calendar fetch error', e); }
+          });
+        }
+      } catch(e){ console.log('Calendar fetch error for', calId, e); }
+    }
   }
 
   function getMode(){
@@ -998,7 +1026,7 @@
       const dateStr = `${year}-${String(month+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
       const dateObj = new Date(year, month, d);
       const isPast = dateObj < today;
-      const isBooked = bookedDates.includes(dateStr);
+      const isBooked = bookedDates.includes(dateStr) || isDateManuallyBlocked(dateStr);
       const isSelected = dateStr === selectedCheckin || dateStr === selectedCheckout;
       const isInRange = selectedCheckin && selectedCheckout && dateStr > selectedCheckin && dateStr < selectedCheckout;
       const isSundayCheckout = mode === 'checkout' && new Date(dateStr + 'T00:00:00').getDay() === 0;
@@ -1011,7 +1039,8 @@
       else if (isInRange) cls += ' in-range';
 
       const clickable = !isPast && !isBooked && !isSundayCheckout;
-      html += `<div class="${cls}" ${clickable ? `onclick="selectDate('${dateStr}')"` : ''}>${d}</div>`;
+      const priceLabel = isPast ? '' : `<div class="cal-cell-price">${fmtShort(getPriceForDate(dateStr))}</div>`;
+      html += `<div class="${cls}" ${clickable ? `onclick="selectDate('${dateStr}')"` : ''}><div class="cal-cell-day">${d}</div>${priceLabel}</div>`;
     }
 
     html += `</div>
@@ -1071,7 +1100,7 @@
     return d.toLocaleDateString('en-GB', { day:'numeric', month:'long', year:'numeric' });
   }
 
-  const LAUNCH_DISCOUNT = 0.15; // set to 0 to end the launch promo
+  const LAUNCH_DISCOUNT = 0; // seasonal calendar pricing now replaces the flat launch discount
 
   function calculateTotalFromDates(ci, co){
     const result = calcTotal(ci, co);
@@ -1082,8 +1111,6 @@
     document.getElementById('subtotal-amount').textContent = fmt(result.total);
     applyPromoToDisplay(result.total);
   }
-
-  const CAUTION_FEE = 100000;
 
   function applyPromoToDisplay(subtotal){
     const promoRow = document.getElementById('promo-row');
