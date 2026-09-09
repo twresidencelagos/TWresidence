@@ -295,6 +295,10 @@
   .promo-input-row input{flex:1;}
   .promo-input-row .btn-secondary{padding:12px 20px;white-space:nowrap;}
   .promo-row span{color:var(--wine);}
+  .long-stay-note{
+    margin-top:10px;padding-top:10px;border-top:1px dashed rgba(139,107,46,.3);
+    font-size:12.5px;color:var(--wine);text-align:center;
+  }
 
   .rate-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-bottom:40px;}
   .rate-card{
@@ -519,7 +523,7 @@
 </head>
 <body>
 
-<div class="announce">YOUR HOME AWAY FROM HOME &nbsp;·&nbsp; Rates from <strong>₦150,000</strong>/night — see calendar for exact pricing</div>
+<div class="announce">YOUR HOME AWAY FROM HOME &nbsp;·&nbsp; Save up to <strong>12%</strong> on longer stays — see calendar for exact pricing</div>
 
 <header>
   <div class="wrap nav-row">
@@ -656,17 +660,14 @@
       <h2>Pricing</h2>
       <p style="color:var(--ink-soft);margin-top:10px;">3-Bedroom Apartment · All Rooms En-Suite · Olaleye Estate, Surulere</p>
     </div>
-    <div class="rate-grid" style="grid-template-columns:1fr;max-width:420px;margin-left:auto;margin-right:auto;">
-      <div class="rate-card">
-        <div class="label">Standard Rate</div>
-        <div class="price">₦170,000</div>
-        <div class="sub">per night</div>
-      </div>
+    <div style="text-align:center;max-width:560px;margin:0 auto;">
+      <p style="color:var(--ink-soft);font-size:15.5px;line-height:1.6;">
+        Stay longer and save up to <strong style="color:var(--wine-deep);">12%</strong> off your nightly rate.
+        Choose your dates on the calendar below to see your exact price.
+      </p>
+      <a href="#book" class="btn-primary" style="display:inline-block;margin-top:22px;">See Live Pricing Calendar</a>
     </div>
-    <p style="text-align:center;color:var(--ink-soft);margin-top:24px;font-size:14.5px;max-width:520px;margin-left:auto;margin-right:auto;">
-      Rates vary during select high-demand periods throughout the year. Choose your dates in the booking calendar below to see the exact nightly rate.
-    </p>
-    <div class="terms">
+    <div class="terms" style="margin-top:44px;">
       <div>Full payment required to confirm booking</div>
       <div>Refundable caution fee: ₦100,000</div>
       <div>Check-in: 3:00 PM · Check-out: 10:00 AM</div>
@@ -741,6 +742,7 @@
         </div>
 
         <label style="font-size:12.5px;font-weight:600;color:var(--wine-deep);letter-spacing:.02em;display:block;margin-bottom:8px;">Check-in &amp; Check-out *</label>
+        <p style="font-size:12.5px;color:var(--ink-soft);margin-bottom:10px;">Prices shown are per night for stays under 7 nights. Book 7 nights or more and the rate drops automatically.</p>
         <div class="cal-inline-wrap" id="stay-calendar"></div>
         <div class="stay-summary">
           <div class="stay-summary-item">
@@ -759,6 +761,7 @@
           <div class="estimate-row promo-row hidden" id="promo-row"><span>Promo (<span id="promo-code-label"></span>)</span><span id="promo-discount-amount"></span></div>
           <div class="estimate-row"><span>Refundable caution fee</span><span>₦100,000</span></div>
           <div class="estimate-row"><strong>Total due</strong><span class="estimate-total" id="total-amount"></span></div>
+          <div class="long-stay-note hidden" id="long-stay-note"></div>
         </div>
 
         <div class="panel-nav" style="justify-content:flex-end;">
@@ -905,8 +908,9 @@
 
   // Seasonal pricing calendar — ordered narrowest/most-specific range first,
   // since overlapping ranges are checked top-to-bottom and the first match wins.
+  // Note: Sept 1 \u2013 Nov 6, 2026 is NOT priced here \u2014 that window uses
+  // length-of-stay pricing instead (see SHORT_LONG_WINDOW below).
   const SEASONAL_RATES = [
-    { start: '2026-09-01', end: '2026-10-31', price: 150000 },
     { start: '2026-11-01', end: '2026-11-20', price: 200000 },
     { start: '2026-11-21', end: '2027-01-09', price: 235000 },
     { start: '2027-02-10', end: '2027-02-16', price: 235000 },
@@ -918,7 +922,23 @@
   ];
   const STANDARD_RATE = 170000;
 
+  // Length-of-stay pricing window: Sept 1 \u2013 Nov 6, 2026.
+  // Under 7 nights \u2192 \u20a6170,000/night. 7+ nights \u2192 \u20a6150,000/night.
+  // The rate is decided by the TOTAL length of the stay, applied to every
+  // night that falls inside this window.
+  const SHORT_LONG_WINDOW = { start: '2026-09-01', end: '2026-11-06' };
+  const SHORT_STAY_RATE = 170000;
+  const LONG_STAY_RATE = 150000;
+  const LONG_STAY_MIN_NIGHTS = 7;
+
+  function isInShortLongWindow(dateStr){
+    return dateStr >= SHORT_LONG_WINDOW.start && dateStr <= SHORT_LONG_WINDOW.end;
+  }
+
   function getPriceForDate(dateStr){
+    // Used for calendar display (default view, before a full stay is chosen)
+    // and for any date outside the length-of-stay window.
+    if (isInShortLongWindow(dateStr)) return SHORT_STAY_RATE;
     for (const range of SEASONAL_RATES){
       if (dateStr >= range.start && dateStr <= range.end) return range.price;
     }
@@ -937,11 +957,13 @@
     const start = new Date(checkIn), end = new Date(checkOut);
     const nights = Math.round((end - start) / 86400000);
     if (nights <= 0) return null;
+    const lengthBasedRate = nights >= LONG_STAY_MIN_NIGHTS ? LONG_STAY_RATE : SHORT_STAY_RATE;
     let total = 0;
     for (let i = 0; i < nights; i++){
       const d = new Date(start);
       d.setDate(d.getDate() + i);
-      total += getPriceForDate(d.toISOString().split('T')[0]);
+      const dateStr = d.toISOString().split('T')[0];
+      total += isInShortLongWindow(dateStr) ? lengthBasedRate : getPriceForDate(dateStr);
     }
     return { nights, total };
   }
@@ -950,7 +972,7 @@
 
   // Manually confirmed bookings — always blocked regardless of calendar sync status.
   const MANUALLY_BLOCKED_RANGES = [
-    { start: '2026-10-26', end: '2026-11-06' }, // Olajide
+    { start: '2026-10-26', end: '2026-11-07' }, // Olajide, through checkout Nov 6 (Nov 6 itself also blocked)
   ];
 
   function isDateManuallyBlocked(dateStr){
@@ -1108,6 +1130,16 @@
     document.getElementById('nights-label').textContent = result.nights + ' night' + (result.nights > 1 ? 's' : '');
     document.getElementById('subtotal-amount').textContent = fmt(result.total);
     applyPromoToDisplay(result.total);
+
+    const longStayNote = document.getElementById('long-stay-note');
+    if (longStayNote){
+      if (result.nights >= LONG_STAY_MIN_NIGHTS) {
+        longStayNote.textContent = '\u2713 7+ night rate applied \u2014 \u20a6150,000/night for dates within Sept 1 \u2013 Nov 6';
+        longStayNote.classList.remove('hidden');
+      } else {
+        longStayNote.classList.add('hidden');
+      }
+    }
   }
 
   function applyPromoToDisplay(subtotal){
