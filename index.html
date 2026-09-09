@@ -278,6 +278,7 @@
 
   /* rate card */
   .rates{background:#fff;border-top:1px solid var(--line);border-bottom:1px solid var(--line);}
+  .terms-section{background:#fff;border-top:1px solid var(--line);border-bottom:1px solid var(--line);padding:70px 0;}
   .rates-head{text-align:center;max-width:600px;margin:0 auto 46px;}
   .rates-head h2{font-size:clamp(26px,3.4vw,32px);margin-top:10px;}
   .promo-banner{
@@ -323,6 +324,16 @@
     font-size:14px;color:var(--ink-soft);
   }
   .terms div::before{content:"◆ ";color:var(--brass);}
+
+  .terms-box{
+    background:var(--blush);border:1px solid rgba(139,107,46,.2);border-radius:var(--radius);
+    padding:22px 24px;margin:28px 0;
+  }
+  .terms-box-title{
+    font-family:'Jost',sans-serif;font-weight:600;font-size:13px;letter-spacing:.06em;
+    text-transform:uppercase;color:var(--wine-deep);margin-bottom:14px;text-align:center;
+  }
+  .terms-box .terms{font-size:13px;}
 
   /* booking form */
   .booking{background:var(--blush);}
@@ -519,6 +530,18 @@
     .nav-links{display:none;}
     .menu-btn{display:block;}
   }
+  .whatsapp-float{
+    position:fixed;bottom:24px;right:24px;z-index:999;
+    width:56px;height:56px;border-radius:50%;
+    background:#25D366;color:#fff;
+    display:flex;align-items:center;justify-content:center;
+    box-shadow:0 4px 16px rgba(0,0,0,.25);
+    transition:transform .2s;
+  }
+  .whatsapp-float:hover{transform:scale(1.08);}
+  @media(max-width:600px){
+    .whatsapp-float{width:50px;height:50px;bottom:18px;right:18px;}
+  }
 </style>
 </head>
 <body>
@@ -533,7 +556,7 @@
       <a href="#features">Amenities</a>
       <a href="#gallery">Gallery</a>
       <a href="photos.html">All Photos</a>
-      <a href="#rates">Pricing</a>
+      <a href="#terms">Booking Terms</a>
       <a href="#book">Contact</a>
     </nav>
     <a href="#book" class="nav-cta">Book Now</a>
@@ -548,7 +571,7 @@
     <p>Three ensuite bedrooms, solar power that never quits, and a host who actually answers. T.W Residence is Lagos hospitality the way it should be.</p>
     <div class="btn-row">
       <a href="#gallery" class="btn-photos">View Photos</a>
-      <a href="#rates" class="btn-ghost">See Pricing</a>
+      <a href="#terms" class="btn-ghost">Booking Terms</a>
       <a href="#book" class="btn-primary">Reserve Your Stay</a>
     </div>
     <div class="hero-note">Full payment confirms your booking · Refundable caution fee applies</div>
@@ -653,25 +676,19 @@
   <div class="lightbox-counter" id="lightbox-counter"></div>
 </div>
 
-<section class="rates" id="rates">
+<section class="terms-section" id="terms">
   <div class="wrap">
     <div class="rates-head">
-      <span class="eyebrow">Pricing</span>
-      <h2>Pricing</h2>
-      <p style="color:var(--ink-soft);margin-top:10px;">3-Bedroom Apartment · All Rooms En-Suite · Olaleye Estate, Surulere</p>
+      <span class="eyebrow">Before you book</span>
+      <h2>Booking Terms</h2>
     </div>
-    <div style="text-align:center;max-width:560px;margin:0 auto;">
-      <p style="color:var(--ink-soft);font-size:15.5px;line-height:1.6;">
-        Stay longer and save up to <strong style="color:var(--wine-deep);">12%</strong> off your nightly rate.
-        Choose your dates on the calendar below to see your exact price.
-      </p>
-      <a href="#book" class="btn-primary" style="display:inline-block;margin-top:22px;">See Live Pricing Calendar</a>
-    </div>
-    <div class="terms" style="margin-top:44px;">
+    <div class="terms" style="max-width:680px;">
       <div>Full payment required to confirm booking</div>
       <div>Refundable caution fee: ₦100,000</div>
       <div>Check-in: 3:00 PM · Check-out: 10:00 AM</div>
       <div>No pets · Non-smoking indoors</div>
+      <div>Valid government-issued ID required at booking</div>
+      <div>Save up to 12% on stays of 7+ nights</div>
     </div>
   </div>
 </section>
@@ -681,19 +698,21 @@
     <div class="booking-head">
       <span class="eyebrow">Reserve your stay</span>
       <h2>Booking Request</h2>
-      <p style="color:var(--ink-soft);margin-top:10px;">Three quick steps — takes less than two minutes</p>
+      <p style="color:var(--ink-soft);font-size:14.5px;margin-top:14px;">
+        Save up to <strong style="color:var(--wine-deep);">12%</strong> on stays of 7+ nights
+      </p>
       <div class="booking-contact-row">
-        <span>Prefer to book on Instagram or WhatsApp?</span>
+        <span>Need help? Reach us on Instagram or WhatsApp</span>
+        <a href="https://wa.me/message/66FIEM2EUEUKI1" target="_blank" rel="noopener" aria-label="Message T.W Residence on WhatsApp" class="social-icon">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+            <path d="M12 2C6.48 2 2 6.48 2 12c0 1.84.5 3.56 1.36 5.04L2 22l5.12-1.34A9.94 9.94 0 0012 22c5.52 0 10-4.48 10-10S17.52 2 12 2zm0 18c-1.62 0-3.13-.44-4.43-1.2l-.32-.19-3.04.8.81-2.96-.21-.31A7.94 7.94 0 014 12c0-4.41 3.59-8 8-8s8 3.59 8 8-3.59 8-8 8zm4.4-5.6c-.24-.12-1.43-.7-1.65-.79-.22-.08-.38-.12-.55.12-.16.24-.63.79-.77.95-.14.16-.28.18-.52.06-.24-.12-1.02-.38-1.94-1.2-.72-.64-1.2-1.43-1.34-1.67-.14-.24-.02-.37.11-.49.11-.11.24-.28.36-.42.12-.14.16-.24.24-.4.08-.16.04-.3-.02-.42-.06-.12-.55-1.32-.75-1.81-.2-.48-.4-.41-.55-.42-.14-.01-.3-.01-.46-.01-.16 0-.42.06-.64.3-.22.24-.84.82-.84 2s.86 2.32.98 2.48c.12.16 1.7 2.6 4.12 3.64.58.25 1.03.4 1.38.51.58.18 1.11.16 1.53.1.47-.07 1.43-.58 1.63-1.15.2-.56.2-1.04.14-1.15-.06-.1-.22-.16-.46-.28z"/>
+          </svg>
+        </a>
         <a href="https://www.instagram.com/twresidence.lagos?utm_source=qr" target="_blank" rel="noopener" aria-label="T.W Residence on Instagram" class="social-icon">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
             <rect x="2" y="2" width="20" height="20" rx="5" stroke="currentColor" stroke-width="1.6"/>
             <circle cx="12" cy="12" r="4.2" stroke="currentColor" stroke-width="1.6"/>
             <circle cx="17.3" cy="6.7" r="1.1" fill="currentColor"/>
-          </svg>
-        </a>
-        <a href="https://wa.me/message/66FIEM2EUEUKI1" target="_blank" rel="noopener" aria-label="Message T.W Residence on WhatsApp" class="social-icon">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-            <path d="M12 2C6.48 2 2 6.48 2 12c0 1.84.5 3.56 1.36 5.04L2 22l5.12-1.34A9.94 9.94 0 0012 22c5.52 0 10-4.48 10-10S17.52 2 12 2zm0 18c-1.62 0-3.13-.44-4.43-1.2l-.32-.19-3.04.8.81-2.96-.21-.31A7.94 7.94 0 014 12c0-4.41 3.59-8 8-8s8 3.59 8 8-3.59 8-8 8zm4.4-5.6c-.24-.12-1.43-.7-1.65-.79-.22-.08-.38-.12-.55.12-.16.24-.63.79-.77.95-.14.16-.28.18-.52.06-.24-.12-1.02-.38-1.94-1.2-.72-.64-1.2-1.43-1.34-1.67-.14-.24-.02-.37.11-.49.11-.11.24-.28.36-.42.12-.14.16-.24.24-.4.08-.16.04-.3-.02-.42-.06-.12-.55-1.32-.75-1.81-.2-.48-.4-.41-.55-.42-.14-.01-.3-.01-.46-.01-.16 0-.42.06-.64.3-.22.24-.84.82-.84 2s.86 2.32.98 2.48c.12.16 1.7 2.6 4.12 3.64.58.25 1.03.4 1.38.51.58.18 1.11.16 1.53.1.47-.07 1.43-.58 1.63-1.15.2-.56.2-1.04.14-1.15-.06-.1-.22-.16-.46-.28z"/>
           </svg>
         </a>
       </div>
@@ -742,7 +761,6 @@
         </div>
 
         <label style="font-size:12.5px;font-weight:600;color:var(--wine-deep);letter-spacing:.02em;display:block;margin-bottom:8px;">Check-in &amp; Check-out *</label>
-        <p style="font-size:12.5px;color:var(--ink-soft);margin-bottom:10px;">Prices shown are per night for stays under 7 nights. Book 7 nights or more and the rate drops automatically.</p>
         <div class="cal-inline-wrap" id="stay-calendar"></div>
         <div class="stay-summary">
           <div class="stay-summary-item">
@@ -821,6 +839,16 @@
           <textarea id="notes"></textarea>
         </div>
 
+        <div class="terms-box">
+          <div class="terms-box-title">Booking Terms</div>
+          <div class="terms">
+            <div>Full payment required to confirm booking</div>
+            <div>Refundable caution fee: ₦100,000</div>
+            <div>Check-in: 3:00 PM · Check-out: 10:00 AM</div>
+            <div>No pets · Non-smoking indoors</div>
+          </div>
+        </div>
+
         <div class="panel-nav">
           <button type="button" class="btn-secondary" onclick="goToStep(2)">← Back</button>
           <a href="https://paystack.shop/pay/twresidence" class="btn-primary" onclick="return validateBeforePayment()">Proceed to Payment →</a>
@@ -853,16 +881,16 @@
       <div>
         <div class="footer-logo">T.W Residence</div>
         <p>A privately hosted, solar-powered luxury shortlet in Olaleye Estate, Surulere — booked direct, no agents.</p>
+        <a href="https://wa.me/message/66FIEM2EUEUKI1" target="_blank" rel="noopener" aria-label="Message T.W Residence on WhatsApp" class="social-icon">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+            <path d="M12 2C6.48 2 2 6.48 2 12c0 1.84.5 3.56 1.36 5.04L2 22l5.12-1.34A9.94 9.94 0 0012 22c5.52 0 10-4.48 10-10S17.52 2 12 2zm0 18c-1.62 0-3.13-.44-4.43-1.2l-.32-.19-3.04.8.81-2.96-.21-.31A7.94 7.94 0 014 12c0-4.41 3.59-8 8-8s8 3.59 8 8-3.59 8-8 8zm4.4-5.6c-.24-.12-1.43-.7-1.65-.79-.22-.08-.38-.12-.55.12-.16.24-.63.79-.77.95-.14.16-.28.18-.52.06-.24-.12-1.02-.38-1.94-1.2-.72-.64-1.2-1.43-1.34-1.67-.14-.24-.02-.37.11-.49.11-.11.24-.28.36-.42.12-.14.16-.24.24-.4.08-.16.04-.3-.02-.42-.06-.12-.55-1.32-.75-1.81-.2-.48-.4-.41-.55-.42-.14-.01-.3-.01-.46-.01-.16 0-.42.06-.64.3-.22.24-.84.82-.84 2s.86 2.32.98 2.48c.12.16 1.7 2.6 4.12 3.64.58.25 1.03.4 1.38.51.58.18 1.11.16 1.53.1.47-.07 1.43-.58 1.63-1.15.2-.56.2-1.04.14-1.15-.06-.1-.22-.16-.46-.28z"/>
+          </svg>
+        </a>
         <a href="https://www.instagram.com/twresidence.lagos?utm_source=qr" target="_blank" rel="noopener" aria-label="T.W Residence on Instagram" class="social-icon">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
             <rect x="2" y="2" width="20" height="20" rx="5" stroke="currentColor" stroke-width="1.6"/>
             <circle cx="12" cy="12" r="4.2" stroke="currentColor" stroke-width="1.6"/>
             <circle cx="17.3" cy="6.7" r="1.1" fill="currentColor"/>
-          </svg>
-        </a>
-        <a href="https://wa.me/message/66FIEM2EUEUKI1" target="_blank" rel="noopener" aria-label="Message T.W Residence on WhatsApp" class="social-icon">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-            <path d="M12 2C6.48 2 2 6.48 2 12c0 1.84.5 3.56 1.36 5.04L2 22l5.12-1.34A9.94 9.94 0 0012 22c5.52 0 10-4.48 10-10S17.52 2 12 2zm0 18c-1.62 0-3.13-.44-4.43-1.2l-.32-.19-3.04.8.81-2.96-.21-.31A7.94 7.94 0 014 12c0-4.41 3.59-8 8-8s8 3.59 8 8-3.59 8-8 8zm4.4-5.6c-.24-.12-1.43-.7-1.65-.79-.22-.08-.38-.12-.55.12-.16.24-.63.79-.77.95-.14.16-.28.18-.52.06-.24-.12-1.02-.38-1.94-1.2-.72-.64-1.2-1.43-1.34-1.67-.14-.24-.02-.37.11-.49.11-.11.24-.28.36-.42.12-.14.16-.24.24-.4.08-.16.04-.3-.02-.42-.06-.12-.55-1.32-.75-1.81-.2-.48-.4-.41-.55-.42-.14-.01-.3-.01-.46-.01-.16 0-.42.06-.64.3-.22.24-.84.82-.84 2s.86 2.32.98 2.48c.12.16 1.7 2.6 4.12 3.64.58.25 1.03.4 1.38.51.58.18 1.11.16 1.53.1.47-.07 1.43-.58 1.63-1.15.2-.56.2-1.04.14-1.15-.06-.1-.22-.16-.46-.28z"/>
           </svg>
         </a>
       </div>
@@ -871,12 +899,11 @@
         <a href="#why">About</a>
         <a href="#features">Amenities</a>
         <a href="#gallery">Gallery</a>
-        <a href="#rates">Pricing</a>
       </div>
       <div class="footer-col">
         <h4>Booking</h4>
         <a href="#book">Reserve a Stay</a>
-        <a href="#rates">Booking Terms</a>
+        <a href="#terms">Booking Terms</a>
         <a href="mailto:twresidence.lagos@gmail.com">Contact Us</a>
       </div>
     </div>
@@ -975,6 +1002,11 @@
     { start: '2026-10-26', end: '2026-11-07' }, // Olajide, through checkout Nov 6 (Nov 6 itself also blocked)
   ];
 
+  // One-off exceptions to the "no Sunday checkout" rule.
+  const SUNDAY_CHECKOUT_EXCEPTIONS = [
+    '2026-09-27',
+  ];
+
   function isDateManuallyBlocked(dateStr){
     // end date is checkout day — bookable for a new guest, so it's excluded (same convention as the Google Calendar sync)
     return MANUALLY_BLOCKED_RANGES.some(r => dateStr >= r.start && dateStr < r.end);
@@ -1049,7 +1081,8 @@
       const isBooked = bookedDates.includes(dateStr) || isDateManuallyBlocked(dateStr);
       const isSelected = dateStr === selectedCheckin || dateStr === selectedCheckout;
       const isInRange = selectedCheckin && selectedCheckout && dateStr > selectedCheckin && dateStr < selectedCheckout;
-      const isSundayCheckout = mode === 'checkout' && new Date(dateStr + 'T00:00:00').getDay() === 0;
+      const isSundayException = SUNDAY_CHECKOUT_EXCEPTIONS.includes(dateStr);
+      const isSundayCheckout = mode === 'checkout' && new Date(dateStr + 'T00:00:00').getDay() === 0 && !isSundayException;
 
       let cls = 'cal-cell';
       if (isPast) cls += ' past';
@@ -1098,7 +1131,7 @@
     if (mode === 'checkin'){
       markCheckin(dateStr);
     } else {
-      if (dayOfWeek === 0){
+      if (dayOfWeek === 0 && !SUNDAY_CHECKOUT_EXCEPTIONS.includes(dateStr)){
         alert('Sunday check-out is not available. Please select a different date.');
         return;
       }
@@ -1389,6 +1422,12 @@
     if (e.key === 'ArrowRight') lightboxStep(1);
   });
 </script>
+
+<a href="https://wa.me/message/66FIEM2EUEUKI1" target="_blank" rel="noopener" aria-label="Message T.W Residence on WhatsApp" class="whatsapp-float">
+  <svg width="28" height="28" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+    <path d="M12 2C6.48 2 2 6.48 2 12c0 1.84.5 3.56 1.36 5.04L2 22l5.12-1.34A9.94 9.94 0 0012 22c5.52 0 10-4.48 10-10S17.52 2 12 2zm0 18c-1.62 0-3.13-.44-4.43-1.2l-.32-.19-3.04.8.81-2.96-.21-.31A7.94 7.94 0 014 12c0-4.41 3.59-8 8-8s8 3.59 8 8-3.59 8-8 8zm4.4-5.6c-.24-.12-1.43-.7-1.65-.79-.22-.08-.38-.12-.55.12-.16.24-.63.79-.77.95-.14.16-.28.18-.52.06-.24-.12-1.02-.38-1.94-1.2-.72-.64-1.2-1.43-1.34-1.67-.14-.24-.02-.37.11-.49.11-.11.24-.28.36-.42.12-.14.16-.24.24-.4.08-.16.04-.3-.02-.42-.06-.12-.55-1.32-.75-1.81-.2-.48-.4-.41-.55-.42-.14-.01-.3-.01-.46-.01-.16 0-.42.06-.64.3-.22.24-.84.82-.84 2s.86 2.32.98 2.48c.12.16 1.7 2.6 4.12 3.64.58.25 1.03.4 1.38.51.58.18 1.11.16 1.53.1.47-.07 1.43-.58 1.63-1.15.2-.56.2-1.04.14-1.15-.06-.1-.22-.16-.46-.28z"/>
+  </svg>
+</a>
 
 </body>
 </html>
