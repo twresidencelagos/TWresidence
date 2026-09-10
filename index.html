@@ -793,6 +793,9 @@
           <div class="field"><label>Phone *</label><input type="tel" id="phone" placeholder="+234 800 000 0000" required></div>
         </div>
         <div class="field-row">
+          <div class="field full"><label>Email (optional — to receive a confirmation)</label><input type="email" id="email" placeholder="you@example.com"></div>
+        </div>
+        <div class="field-row">
           <div class="field">
             <label>Purpose of Stay</label>
             <select id="purpose">
@@ -1200,6 +1203,7 @@
   function validateBeforePayment(){
     const name = document.getElementById('name').value;
     const phone = document.getElementById('phone').value;
+    const email = document.getElementById('email').value;
     const apartment = document.getElementById('apartment').value;
     const guests = document.getElementById('guests').value;
     const idFile = document.getElementById('id-upload').files[0];
@@ -1220,6 +1224,7 @@
     const formData = new FormData();
     formData.append('Name', name);
     formData.append('Phone', phone);
+    if (email) formData.append('email', email); // lowercase 'email' — required by Formspree to trigger the guest autoresponse
     formData.append('Apartment', apartment);
     formData.append('Check-In', selectedCheckin);
     formData.append('Check-Out', selectedCheckout);
@@ -1370,8 +1375,9 @@
     document.getElementById('form-card').scrollIntoView({ behavior: 'smooth', block: 'start' });
   }
 
-  fetchBookedDates();
-  renderCalendar();
+  fetchBookedDates().then(() => {
+    renderCalendar();
+  });
 </script>
 
 <script>
