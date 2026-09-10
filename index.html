@@ -1261,11 +1261,18 @@
     // regardless of whether either one succeeded — this avoids the earlier
     // bug (navigating away before the request even finished sending) without
     // making a single service's hiccup block a real guest from paying.
+    formData.append('access_key', 'c9eda67e-d0b9-43f3-ad92-1cf35e7a5d4e');
+
     const sheetsRequest = fetch('https://script.google.com/macros/s/AKfycbwtYaZDdtn0CNotSk8l20k_Z43Ih-8wfIOmnP7SR4R_-BLN1xzk9vi3WwYZxhQCNi8o/exec', {
       method: 'POST',
       mode: 'no-cors',
       body: formData
     }).catch(() => {});
+
+    const web3formsRequest = fetch('https://api.web3forms.com/submit', {
+      method: 'POST',
+      body: formData
+    }).catch(() => null);
 
     const formspreeRequest = fetch('https://formspree.io/f/mjgqzkay', {
       method: 'POST',
@@ -1273,7 +1280,7 @@
       headers: { 'Accept': 'application/json' }
     }).catch(() => null);
 
-    Promise.allSettled([sheetsRequest, formspreeRequest]).then(() => {
+    Promise.allSettled([sheetsRequest, web3formsRequest, formspreeRequest]).then(() => {
       document.getElementById('success-name').textContent = name;
       if (result){
         document.getElementById('success-nights').textContent = result.nights + ' night' + (result.nights > 1 ? 's' : '') + ' · ' + guests;
@@ -1288,7 +1295,7 @@
   }
 
   function resetForm(){
-    ['name','phone','notes'].forEach(id => document.getElementById(id).value = '');
+    ['name','phone','email','notes'].forEach(id => document.getElementById(id).value = '');
     ['guests','purpose','howheard','apartment'].forEach(id => document.getElementById(id).selectedIndex = 0);
     document.getElementById('estimate').classList.remove('visible');
     document.getElementById('form-card').classList.remove('hidden');
