@@ -46,6 +46,95 @@
 }
 </script>
 
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "Where is T.W Residence located?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "T.W Residence is located in Olaleye Estate, Surulere, Lagos, Nigeria."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Is T.W Residence solar-powered?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes. T.W Residence has 24-hour solar power, so guests never experience power outages during their stay."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How many bedrooms does T.W Residence have, and are they ensuite?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "T.W Residence is a 3-bedroom apartment, and all three bedrooms are ensuite."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How do I book T.W Residence?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "You can book directly at twresidence.org. T.W Residence does not work with agents or third-party bookers — pricing is fixed and the same for every guest, and bookings are confirmed directly with the host."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What are the check-in and check-out times at T.W Residence?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Check-in is at 3:00 PM and check-out is at 10:00 AM."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Is there a security deposit or caution fee?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes, a refundable caution fee of ₦100,000 applies to every booking."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Does T.W Residence offer a discount for longer stays?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes. Stays of 7 nights or more receive an automatic discount of up to 12% off the nightly rate."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Can diaspora or international guests book T.W Residence?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes. T.W Residence regularly hosts diaspora guests visiting Lagos, and bookings can be made directly online from anywhere in the world."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Is parking available at T.W Residence?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes, on-site parking is available, with additional secure outdoor parking space if needed."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Are pets or smoking allowed at T.W Residence?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "No. T.W Residence does not allow pets, and smoking is not permitted indoors."
+      }
+    }
+  ]
+}
+</script>
+
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,500&family=Jost:wght@400;500;600;700&family=Public+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -279,6 +368,25 @@
   /* rate card */
   .rates{background:#fff;border-top:1px solid var(--line);border-bottom:1px solid var(--line);}
   .terms-section{background:#fff;border-top:1px solid var(--line);border-bottom:1px solid var(--line);padding:70px 0;}
+
+  .faq-section{background:var(--cream);padding:70px 0;}
+  .faq-list{max-width:700px;margin:0 auto;}
+  .faq-item{
+    border-bottom:1px solid var(--line);padding:18px 0;
+  }
+  .faq-item summary{
+    font-family:'Jost',sans-serif;font-weight:600;font-size:16px;color:var(--wine-deep);
+    cursor:pointer;list-style:none;position:relative;padding-right:30px;
+  }
+  .faq-item summary::-webkit-details-marker{display:none;}
+  .faq-item summary::after{
+    content:"+";position:absolute;right:0;top:0;font-size:20px;color:var(--brass);
+    transition:transform .2s;
+  }
+  .faq-item[open] summary::after{content:"\2212";}
+  .faq-item p{
+    margin-top:12px;font-size:14.5px;line-height:1.6;color:var(--ink-soft);
+  }
   .rates-head{text-align:center;max-width:600px;margin:0 auto 46px;}
   .rates-head h2{font-size:clamp(26px,3.4vw,32px);margin-top:10px;}
   .promo-banner{
@@ -556,6 +664,7 @@
       <a href="#features">Amenities</a>
       <a href="#gallery">Gallery</a>
       <a href="#terms">Booking Terms</a>
+      <a href="#faq">FAQ</a>
       <a href="#book">Contact</a>
     </nav>
     <a href="#book" class="nav-cta">Book Now</a>
@@ -688,6 +797,57 @@
       <div>No pets · Non-smoking indoors</div>
       <div>Valid government-issued ID required at booking</div>
       <div>Save up to 12% on stays of 7+ nights</div>
+    </div>
+  </div>
+</section>
+
+<section class="faq-section" id="faq">
+  <div class="wrap">
+    <div class="rates-head">
+      <span class="eyebrow">Common questions</span>
+      <h2>Frequently Asked Questions</h2>
+    </div>
+    <div class="faq-list">
+      <details class="faq-item">
+        <summary>Where is T.W Residence located?</summary>
+        <p>T.W Residence is located in Olaleye Estate, Surulere, Lagos, Nigeria.</p>
+      </details>
+      <details class="faq-item">
+        <summary>Is T.W Residence solar-powered?</summary>
+        <p>Yes. T.W Residence has 24-hour solar power, so guests never experience power outages during their stay.</p>
+      </details>
+      <details class="faq-item">
+        <summary>How many bedrooms does T.W Residence have, and are they ensuite?</summary>
+        <p>T.W Residence is a 3-bedroom apartment, and all three bedrooms are ensuite.</p>
+      </details>
+      <details class="faq-item">
+        <summary>How do I book T.W Residence?</summary>
+        <p>You can book directly at twresidence.org. T.W Residence does not work with agents or third-party bookers — pricing is fixed and the same for every guest, and bookings are confirmed directly with the host.</p>
+      </details>
+      <details class="faq-item">
+        <summary>What are the check-in and check-out times?</summary>
+        <p>Check-in is at 3:00 PM and check-out is at 10:00 AM.</p>
+      </details>
+      <details class="faq-item">
+        <summary>Is there a security deposit or caution fee?</summary>
+        <p>Yes, a refundable caution fee of ₦100,000 applies to every booking.</p>
+      </details>
+      <details class="faq-item">
+        <summary>Does T.W Residence offer a discount for longer stays?</summary>
+        <p>Yes. Stays of 7 nights or more receive an automatic discount of up to 12% off the nightly rate.</p>
+      </details>
+      <details class="faq-item">
+        <summary>Can diaspora or international guests book T.W Residence?</summary>
+        <p>Yes. T.W Residence regularly hosts diaspora guests visiting Lagos, and bookings can be made directly online from anywhere in the world.</p>
+      </details>
+      <details class="faq-item">
+        <summary>Is parking available?</summary>
+        <p>Yes, on-site parking is available, with additional secure outdoor parking space if needed.</p>
+      </details>
+      <details class="faq-item">
+        <summary>Are pets or smoking allowed?</summary>
+        <p>No. T.W Residence does not allow pets, and smoking is not permitted indoors.</p>
+      </details>
     </div>
   </div>
 </section>
@@ -1009,6 +1169,7 @@
 
   // Manually confirmed bookings — always blocked regardless of calendar sync status.
   const MANUALLY_BLOCKED_RANGES = [
+    { start: '2026-09-11', end: '2026-09-16' }, // Solar repair, blocked through Tue Sept 15, reopens Wed Sept 16
     { start: '2026-09-26', end: '2026-09-27' }, // Fatima
     { start: '2026-10-26', end: '2026-11-06' }, // Olajide, checkout Nov 6 (left open for a new check-in)
   ];
