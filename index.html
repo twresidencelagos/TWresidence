@@ -104,7 +104,23 @@
       "name": "Does T.W Residence offer a discount for longer stays?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "Yes. Stays of 7 nights or more receive an automatic discount of up to 12% off the nightly rate."
+        "text": "T.W Residence uses fixed, published seasonal pricing shown on the booking calendar. Pricing is not negotiable and is not lowered for longer stays."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Are parties or events allowed at T.W Residence?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "No. T.W Residence is strictly for registered, overnight guests. Parties, events, and gatherings are not permitted, and guest numbers may not exceed what was booked. Any breach may result in deductions from the refundable caution fee."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Can I book T.W Residence for the same day or next day?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Bookings must be made at least 24 hours before check-in, so the apartment can be properly prepared for your arrival."
       }
     },
     {
@@ -654,7 +670,7 @@
 </head>
 <body>
 
-<div class="announce">YOUR HOME AWAY FROM HOME &nbsp;·&nbsp; Save up to <strong>12%</strong> on longer stays — see calendar for exact pricing</div>
+<div class="announce">YOUR HOME AWAY FROM HOME &nbsp;·&nbsp; Fixed, transparent pricing — book at least 24 hours before check-in</div>
 
 <header>
   <div class="wrap nav-row">
@@ -796,7 +812,10 @@
       <div>Check-in: 3:00 PM · Check-out: 10:00 AM</div>
       <div>No pets · Non-smoking indoors</div>
       <div>Valid government-issued ID required at booking</div>
-      <div>Save up to 12% on stays of 7+ nights</div>
+      <div>Bookings must be made at least 24 hours before check-in</div>
+      <div>Strictly for registered guests — no parties or events</div>
+      <div>Guest count may not exceed what's booked</div>
+      <div>Published pricing is fixed — not open to negotiation</div>
     </div>
   </div>
 </section>
@@ -834,7 +853,15 @@
       </details>
       <details class="faq-item">
         <summary>Does T.W Residence offer a discount for longer stays?</summary>
-        <p>Yes. Stays of 7 nights or more receive an automatic discount of up to 12% off the nightly rate.</p>
+        <p>T.W Residence uses fixed, published seasonal pricing shown on the booking calendar. Pricing is not negotiable and is not lowered for longer stays.</p>
+      </details>
+      <details class="faq-item">
+        <summary>Are parties or events allowed?</summary>
+        <p>No. T.W Residence is strictly for registered, overnight guests. Parties, events, and gatherings are not permitted, and guest numbers may not exceed what was booked. Any breach may result in deductions from the refundable caution fee.</p>
+      </details>
+      <details class="faq-item">
+        <summary>Can I book for the same day or next day?</summary>
+        <p>Bookings must be made at least 24 hours before check-in, so the apartment can be properly prepared for your arrival.</p>
       </details>
       <details class="faq-item">
         <summary>Can diaspora or international guests book T.W Residence?</summary>
@@ -858,7 +885,7 @@
       <span class="eyebrow">Reserve your stay</span>
       <h2>Booking Request</h2>
       <p style="color:var(--ink-soft);font-size:14.5px;margin-top:14px;">
-        Save up to <strong style="color:var(--wine-deep);">12%</strong> on stays of 7+ nights
+        Fixed, transparent pricing — no negotiation, no agents
       </p>
       <div class="booking-contact-row">
         <span>Need help? Reach us on Instagram or WhatsApp</span>
@@ -914,7 +941,6 @@
               <option value="">Select...</option>
               <option>1 guest</option><option>2 guests</option><option>3 guests</option>
               <option>4 guests</option><option>5 guests</option><option>6 guests</option>
-              <option>7 guests</option><option>8 guests</option>
             </select>
           </div>
         </div>
@@ -954,6 +980,13 @@
         </div>
         <div class="field-row">
           <div class="field full"><label>Email (optional — to receive a confirmation)</label><input type="email" id="email" placeholder="you@example.com"></div>
+        </div>
+        <div class="field-row">
+          <div class="field full">
+            <label>Full Names of All Guests Staying *</label>
+            <textarea id="guest-names" placeholder="List everyone who will be staying, e.g. Amaka Johnson, Tunde Johnson, Ifeoma Bello" required></textarea>
+            <div class="form-note" style="text-align:left;margin-top:4px;">This list is shared with estate security so only registered guests are allowed entry. Anyone joining later must be added before they arrive.</div>
+          </div>
         </div>
         <div class="field-row">
           <div class="field">
@@ -1008,7 +1041,14 @@
             <div>Refundable caution fee: ₦100,000</div>
             <div>Check-in: 3:00 PM · Check-out: 10:00 AM</div>
             <div>No pets · Non-smoking indoors</div>
+            <div>No parties or events</div>
+            <div>Pricing is fixed — not negotiable</div>
           </div>
+        </div>
+
+        <div class="field full" style="flex-direction:row;align-items:flex-start;gap:10px;">
+          <input type="checkbox" id="no-party-confirm" required style="margin-top:3px;width:16px;height:16px;flex:0 0 auto;">
+          <label for="no-party-confirm" style="font-size:13px;font-weight:500;color:var(--ink-soft);letter-spacing:normal;">I confirm this stay is not for a party, event, or gathering, and I will not exceed the registered guest count. I understand any breach may result in deductions from the caution fee for cleaning and damages.</label>
         </div>
 
         <div class="panel-nav">
@@ -1105,25 +1145,26 @@
 
   // Seasonal pricing calendar — ordered narrowest/most-specific range first,
   // since overlapping ranges are checked top-to-bottom and the first match wins.
-  // Note: Sept 1 \u2013 Nov 6, 2026 is NOT priced here \u2014 that window uses
-  // length-of-stay pricing instead (see SHORT_LONG_WINDOW below).
+  // Note: September 2026 is NOT priced here \u2014 that window still uses
+  // length-of-stay pricing (see SHORT_LONG_WINDOW below). From October 1
+  // onward, pricing is flat with no long-stay discount.
   const SEASONAL_RATES = [
-    { start: '2026-11-01', end: '2026-11-20', price: 200000 },
-    { start: '2026-11-21', end: '2027-01-09', price: 235000 },
-    { start: '2027-02-10', end: '2027-02-16', price: 235000 },
-    { start: '2027-03-07', end: '2027-03-13', price: 205000 },
-    { start: '2027-03-24', end: '2027-03-29', price: 220000 },
-    { start: '2027-04-29', end: '2027-05-02', price: 205000 },
-    { start: '2027-05-14', end: '2027-05-19', price: 220000 },
-    { start: '2027-06-12', end: '2027-06-14', price: 205000 },
+    { start: '2026-11-01', end: '2026-11-19', price: 200000 },
+    { start: '2026-11-20', end: '2027-01-09', price: 250000 },
+    { start: '2027-02-10', end: '2027-02-16', price: 250000 },
+    { start: '2027-03-07', end: '2027-03-13', price: 235000 },
+    { start: '2027-03-24', end: '2027-03-29', price: 235000 },
+    { start: '2027-04-29', end: '2027-05-02', price: 235000 },
+    { start: '2027-05-14', end: '2027-05-19', price: 235000 },
+    { start: '2027-06-12', end: '2027-06-14', price: 235000 },
   ];
-  const STANDARD_RATE = 170000;
+  const STANDARD_RATE = 170000; // applies to October and any other unlisted date
 
-  // Length-of-stay pricing window: Sept 1 \u2013 Nov 6, 2026.
+  // Length-of-stay pricing window: September 2026 only.
   // Under 7 nights \u2192 \u20a6170,000/night. 7+ nights \u2192 \u20a6150,000/night.
-  // The rate is decided by the TOTAL length of the stay, applied to every
-  // night that falls inside this window.
-  const SHORT_LONG_WINDOW = { start: '2026-09-01', end: '2026-11-06' };
+  // This discount ends September 30, 2026 \u2014 from October 1 it's a flat
+  // \u20a6170,000/night with no length-of-stay discount.
+  const SHORT_LONG_WINDOW = { start: '2026-09-01', end: '2026-09-30' };
   const SHORT_STAY_RATE = 170000;
   const LONG_STAY_RATE = 150000;
   const LONG_STAY_MIN_NIGHTS = 7;
@@ -1169,7 +1210,6 @@
 
   // Manually confirmed bookings — always blocked regardless of calendar sync status.
   const MANUALLY_BLOCKED_RANGES = [
-    { start: '2026-09-11', end: '2026-09-16' }, // Solar repair, blocked through Tue Sept 15, reopens Wed Sept 16
     { start: '2026-09-26', end: '2026-09-27' }, // Fatima
     { start: '2026-10-26', end: '2026-11-06' }, // Olajide, checkout Nov 6 (left open for a new check-in)
   ];
@@ -1224,10 +1264,17 @@
     return 'checkout';
   }
 
+  // Minimum advance notice required for check-in (hard-blocked on the calendar,
+  // not just stated as policy) — same-day check-in is not selectable.
+  const MIN_ADVANCE_HOURS = 24;
+
   function renderCalendar(){
     const { year, month } = calendarState;
     const mode = getMode();
     const today = new Date(); today.setHours(0,0,0,0);
+    const minCheckinDate = new Date(today);
+    minCheckinDate.setDate(minCheckinDate.getDate() + 1); // today itself is not bookable as check-in
+    const minSelectable = mode === 'checkin' ? minCheckinDate : today;
     const firstDay = new Date(year, month, 1).getDay();
     const daysInMonth = new Date(year, month + 1, 0).getDate();
     const monthNames = ['January','February','March','April','May','June','July','August','September','October','November','December'];
@@ -1249,7 +1296,7 @@
     for (let d = 1; d <= daysInMonth; d++){
       const dateStr = `${year}-${String(month+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
       const dateObj = new Date(year, month, d);
-      const isPast = dateObj < today;
+      const isPast = dateObj < minSelectable;
       const isBooked = bookedDates.includes(dateStr) || isDateManuallyBlocked(dateStr);
       const isSelected = dateStr === selectedCheckin || dateStr === selectedCheckout;
       const isInRange = selectedCheckin && selectedCheckout && dateStr > selectedCheckin && dateStr < selectedCheckout;
@@ -1274,6 +1321,7 @@
         <div class="cal-legend-item"><div class="cal-legend-dot" style="background:#E7C9BC"></div>Unavailable</div>
         <div class="cal-legend-item"><div class="cal-legend-dot" style="background:var(--wine)"></div>Selected</div>
       </div>
+      ${mode === 'checkin' ? `<div style="text-align:center;font-size:11.5px;color:var(--ink-soft);margin-top:8px;">Bookings require at least ${MIN_ADVANCE_HOURS} hours’ notice — same-day check-in isn’t available.</div>` : ''}
     </div>`;
 
     document.getElementById('stay-calendar').innerHTML = html;
@@ -1339,7 +1387,7 @@
     const longStayNote = document.getElementById('long-stay-note');
     if (longStayNote){
       if (result.nights >= LONG_STAY_MIN_NIGHTS) {
-        longStayNote.textContent = '\u2713 7+ night rate applied \u2014 \u20a6150,000/night for dates within Sept 1 \u2013 Nov 6';
+        longStayNote.textContent = '\u2713 7+ night rate applied \u2014 \u20a6150,000/night for dates within September 2026';
         longStayNote.classList.remove('hidden');
       } else {
         longStayNote.classList.add('hidden');
@@ -1369,6 +1417,7 @@
     const apartment = document.getElementById('apartment').value;
     const guests = document.getElementById('guests').value;
     const idFile = document.getElementById('id-upload').files[0];
+    const noPartyConfirmed = document.getElementById('no-party-confirm').checked;
 
     if (!name || !phone || !apartment || !guests){
       alert('Please fill in all required fields before proceeding to payment.');
@@ -1382,6 +1431,10 @@
       alert('Please upload a valid government-issued ID before proceeding to payment.');
       return false;
     }
+    if (!noPartyConfirmed){
+      alert('Please confirm the no-party / guest-limit agreement before proceeding to payment.');
+      return false;
+    }
 
     const formData = new FormData();
     formData.append('Name', name);
@@ -1391,9 +1444,11 @@
     formData.append('Check-In', selectedCheckin);
     formData.append('Check-Out', selectedCheckout);
     formData.append('Guests', guests);
+    formData.append('Guest Names', document.getElementById('guest-names').value.trim());
     formData.append('Purpose', document.getElementById('purpose').value);
     formData.append('How Heard', document.getElementById('howheard').value);
     formData.append('Notes', document.getElementById('notes').value);
+    formData.append('No-Party Confirmed', 'Yes — guest agreed at booking');
     formData.append('ID Document', idFile, idFile.name);
     const result = calcTotal(selectedCheckin, selectedCheckout);
     if (result){
@@ -1457,7 +1512,7 @@
   }
 
   function resetForm(){
-    ['name','phone','email','notes'].forEach(id => document.getElementById(id).value = '');
+    ['name','phone','email','notes','guest-names'].forEach(id => document.getElementById(id).value = '');
     ['guests','purpose','howheard','apartment'].forEach(id => document.getElementById(id).selectedIndex = 0);
     document.getElementById('estimate').classList.remove('visible');
     document.getElementById('form-card').classList.remove('hidden');
@@ -1468,6 +1523,7 @@
     document.getElementById('pill-checkout-value').textContent = 'Not selected';
     document.getElementById('pill-checkout-value').classList.add('placeholder');
     document.getElementById('id-upload').value = '';
+    document.getElementById('no-party-confirm').checked = false;
     document.getElementById('promo-row').classList.add('hidden');
     renderCalendar();
     goToStep(1, true);
@@ -1480,10 +1536,12 @@
   function buildReviewCard(){
     const apartment = document.getElementById('apartment').value || '—';
     const guests = document.getElementById('guests').value || '—';
+    const guestNames = document.getElementById('guest-names').value.trim() || '—';
     const result = calcTotal(selectedCheckin, selectedCheckout);
     let html = '';
     html += rowHtml('Apartment', apartment);
     html += rowHtml('Guests', guests);
+    html += rowHtml('Guest names', guestNames);
     html += rowHtml('Check-in', selectedCheckin ? formatDate(selectedCheckin) : '—');
     html += rowHtml('Check-out', selectedCheckout ? formatDate(selectedCheckout) : '—');
     if (result){
@@ -1519,6 +1577,10 @@
   function validateStep2(){
     if (!document.getElementById('name').value || !document.getElementById('phone').value){
       alert('Please enter your name and phone number.');
+      return false;
+    }
+    if (!document.getElementById('guest-names').value.trim()){
+      alert('Please list the full names of everyone staying.');
       return false;
     }
     return true;
