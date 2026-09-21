@@ -996,7 +996,7 @@
               <option>Leisure / Holiday</option>
               <option>Business Trip</option>
               <option>Family Visit</option>
-              <option>Event / Celebration</option>
+              <option>Small Gathering (max 6 guests)</option>
               <option>Temporary Relocation</option>
               <option>Other</option>
             </select>
@@ -1044,6 +1044,11 @@
             <div>No parties or events</div>
             <div>Pricing is fixed — not negotiable</div>
           </div>
+        </div>
+
+        <div class="field full" style="flex-direction:row;align-items:flex-start;gap:10px;">
+          <input type="checkbox" id="terms-confirm" required style="margin-top:3px;width:16px;height:16px;flex:0 0 auto;">
+          <label for="terms-confirm" style="font-size:13px;font-weight:500;color:var(--ink-soft);letter-spacing:normal;">I have read and agree to the Booking Terms above.</label>
         </div>
 
         <div class="field full" style="flex-direction:row;align-items:flex-start;gap:10px;">
@@ -1417,6 +1422,7 @@
     const apartment = document.getElementById('apartment').value;
     const guests = document.getElementById('guests').value;
     const idFile = document.getElementById('id-upload').files[0];
+    const termsConfirmed = document.getElementById('terms-confirm').checked;
     const noPartyConfirmed = document.getElementById('no-party-confirm').checked;
 
     if (!name || !phone || !apartment || !guests){
@@ -1429,6 +1435,10 @@
     }
     if (!idFile){
       alert('Please upload a valid government-issued ID before proceeding to payment.');
+      return false;
+    }
+    if (!termsConfirmed){
+      alert('Please confirm you have read and agree to the Booking Terms before proceeding to payment.');
       return false;
     }
     if (!noPartyConfirmed){
@@ -1448,6 +1458,7 @@
     formData.append('Purpose', document.getElementById('purpose').value);
     formData.append('How Heard', document.getElementById('howheard').value);
     formData.append('Notes', document.getElementById('notes').value);
+    formData.append('Terms Confirmed', 'Yes — guest agreed at booking');
     formData.append('No-Party Confirmed', 'Yes — guest agreed at booking');
     formData.append('ID Document', idFile, idFile.name);
     const result = calcTotal(selectedCheckin, selectedCheckout);
@@ -1523,6 +1534,7 @@
     document.getElementById('pill-checkout-value').textContent = 'Not selected';
     document.getElementById('pill-checkout-value').classList.add('placeholder');
     document.getElementById('id-upload').value = '';
+    document.getElementById('terms-confirm').checked = false;
     document.getElementById('no-party-confirm').checked = false;
     document.getElementById('promo-row').classList.add('hidden');
     renderCalendar();
