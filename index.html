@@ -80,7 +80,7 @@
       "name": "How do I book T.W Residence?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "You can book directly at twresidence.org. T.W Residence does not work with agents or third-party bookers — pricing is fixed and the same for every guest, and bookings are confirmed directly with the host."
+        "text": "You can book directly at twresidence.org. T.W Residence does not work with agents or third-party bookers — bookings are confirmed directly with the host."
       }
     },
     {
@@ -88,7 +88,7 @@
       "name": "What are the check-in and check-out times at T.W Residence?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "Check-in is at 3:00 PM and check-out is at 10:00 AM."
+        "text": "Check-in is at 3:00 PM and check-out is at 10:00 AM. Check-outs are not available on Sundays."
       }
     },
     {
@@ -96,7 +96,7 @@
       "name": "Is there a security deposit or caution fee?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "Yes, a refundable caution fee of ₦100,000 applies to every booking."
+        "text": "Yes, a refundable caution fee of ₦150,000 applies to every booking."
       }
     },
     {
@@ -112,7 +112,7 @@
       "name": "Are parties or events allowed at T.W Residence?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "No. T.W Residence is strictly for registered, overnight guests. Parties, events, and gatherings are not permitted, and guest numbers may not exceed what was booked. Any breach may result in deductions from the refundable caution fee."
+        "text": "No. T.W Residence is strictly for registered, overnight guests. Parties, events, and gatherings are not permitted, and guest numbers may not exceed what was booked. If more guests than booked are found at check-in or during the stay, the full refundable caution fee is forfeited, in addition to any deductions for cleaning and damages."
       }
     },
     {
@@ -125,10 +125,26 @@
     },
     {
       "@type": "Question",
+      "name": "What is T.W Residence's cancellation policy?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "It depends on when you booked. If you booked more than a day before your check-in date, you can cancel for a full refund within 24 hours of booking. If you booked the day before check-in, you can cancel for a full refund within 6 hours of booking. Outside those windows, bookings are non-refundable."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Is there a minimum age to book T.W Residence?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes. The person making the booking must be at least 21 years old."
+      }
+    },
+    {
+      "@type": "Question",
       "name": "Can diaspora or international guests book T.W Residence?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "Yes. T.W Residence regularly hosts diaspora guests visiting Lagos, and bookings can be made directly online from anywhere in the world."
+        "text": "Yes. T.W Residence regularly hosts diaspora guests visiting Lagos. Bookings can be made directly online from anywhere in the world, or through Airbnb or Booking.com."
       }
     },
     {
@@ -449,6 +465,28 @@
   }
   .terms div::before{content:"◆ ";color:var(--brass);}
 
+  .terms-groups{
+    max-width:720px;margin:0 auto;
+    display:grid;grid-template-columns:1fr 1fr;gap:22px;
+  }
+  .terms-group{
+    background:var(--cream);border:1px solid var(--line);border-radius:var(--radius);
+    padding:20px 22px;
+  }
+  .terms-group-title{
+    font-family:'Jost',sans-serif;font-weight:600;font-size:12px;letter-spacing:.08em;
+    text-transform:uppercase;color:var(--wine);margin-bottom:12px;
+    padding-bottom:8px;border-bottom:1px solid var(--line);
+  }
+  .terms-group-list{display:flex;flex-direction:column;gap:10px;}
+  .terms-group-list div{
+    font-size:13.5px;line-height:1.5;color:var(--ink-soft);
+    padding-left:20px;position:relative;
+  }
+  .terms-group-list div::before{
+    content:"✓";position:absolute;left:0;top:0;color:var(--brass);font-weight:700;
+  }
+
   .terms-box{
     background:var(--blush);border:1px solid rgba(139,107,46,.2);border-radius:var(--radius);
     padding:22px 24px;margin:28px 0;
@@ -487,6 +525,13 @@
     outline:2px solid var(--wine);outline-offset:1px;
   }
   .field textarea{resize:vertical;min-height:80px;}
+  .field input.invalid, .field select.invalid, .field textarea.invalid{
+    border:2px solid #D64545 !important;background:#FDECEC;
+  }
+  .checkbox-row.invalid label{color:#D64545 !important;}
+  .checkbox-row.invalid input[type="checkbox"]{outline:2px solid #D64545;outline-offset:2px;}
+  .stay-summary-item.invalid .pill-value{border:2px solid #D64545 !important;background:#FDECEC;border-radius:6px;padding:4px 8px;}
+  .field-error-msg{color:#D64545;font-size:12px;margin-top:2px;}
   .estimate{
     background:var(--blush);border:1px dashed var(--brass);padding:16px 18px;
     font-size:14px;margin:24px 0;display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;
@@ -649,6 +694,7 @@
     .gallery-grid{grid-template-columns:1fr;}
     .rate-grid{grid-template-columns:1fr;}
     .terms{grid-template-columns:1fr;}
+    .terms-groups{grid-template-columns:1fr;}
     .field-row{grid-template-columns:1fr;}
     .footer-grid{grid-template-columns:1fr;}
     .nav-links{display:none;}
@@ -804,18 +850,42 @@
   <div class="wrap">
     <div class="rates-head">
       <span class="eyebrow">Before you book</span>
-      <h2>Booking Terms</h2>
+      <h2>Please Read Before Booking</h2>
     </div>
-    <div class="terms" style="max-width:680px;">
-      <div>Full payment required to confirm booking</div>
-      <div>Refundable caution fee: ₦100,000</div>
-      <div>Check-in: 3:00 PM · Check-out: 10:00 AM</div>
-      <div>No pets · Non-smoking indoors</div>
-      <div>Valid government-issued ID required at booking</div>
-      <div>Bookings must be made at least 24 hours before check-in</div>
-      <div>Strictly for registered guests — no parties or events</div>
-      <div>Guest count may not exceed what's booked</div>
-      <div>Published pricing is fixed — not open to negotiation</div>
+    <div class="terms-groups">
+      <div class="terms-group">
+        <div class="terms-group-title">Payment & Pricing</div>
+        <div class="terms-group-list">
+          <div>Full payment required to confirm booking</div>
+          <div>Published pricing is fixed — not open to negotiation</div>
+          <div>Refundable caution fee: ₦150,000</div>
+        </div>
+      </div>
+      <div class="terms-group">
+        <div class="terms-group-title">Check-In & Check-Out</div>
+        <div class="terms-group-list">
+          <div>Check-in: 3:00 PM · Check-out: 10:00 AM</div>
+          <div>No checkouts available on Sundays</div>
+          <div>Bookings must be made at least 24 hours before check-in</div>
+        </div>
+      </div>
+      <div class="terms-group">
+        <div class="terms-group-title">Cancellations</div>
+        <div class="terms-group-list">
+          <div>Booked more than a day before check-in? Cancel free within 24 hours of booking.</div>
+          <div>Booked the day before check-in? Cancel free within 6 hours of booking.</div>
+          <div>Non-refundable outside these windows.</div>
+        </div>
+      </div>
+      <div class="terms-group">
+        <div class="terms-group-title">Guests & Conduct</div>
+        <div class="terms-group-list">
+          <div>The person booking must be at least 21 years old</div>
+          <div>No pets · Non-smoking indoors</div>
+          <div>Strictly for registered guests — no parties or events</div>
+          <div>Guest count may not exceed what's booked — exceeding it forfeits the full caution fee</div>
+        </div>
+      </div>
     </div>
   </div>
 </section>
@@ -841,15 +911,15 @@
       </details>
       <details class="faq-item">
         <summary>How do I book T.W Residence?</summary>
-        <p>You can book directly at twresidence.org. T.W Residence does not work with agents or third-party bookers — pricing is fixed and the same for every guest, and bookings are confirmed directly with the host.</p>
+        <p>You can book directly at twresidence.org. T.W Residence does not work with agents or third-party bookers — bookings are confirmed directly with the host.</p>
       </details>
       <details class="faq-item">
         <summary>What are the check-in and check-out times?</summary>
-        <p>Check-in is at 3:00 PM and check-out is at 10:00 AM.</p>
+        <p>Check-in is at 3:00 PM and check-out is at 10:00 AM. Please note that check-outs are not available on Sundays.</p>
       </details>
       <details class="faq-item">
         <summary>Is there a security deposit or caution fee?</summary>
-        <p>Yes, a refundable caution fee of ₦100,000 applies to every booking.</p>
+        <p>Yes, a refundable caution fee of ₦150,000 applies to every booking.</p>
       </details>
       <details class="faq-item">
         <summary>Does T.W Residence offer a discount for longer stays?</summary>
@@ -857,15 +927,23 @@
       </details>
       <details class="faq-item">
         <summary>Are parties or events allowed?</summary>
-        <p>No. T.W Residence is strictly for registered, overnight guests. Parties, events, and gatherings are not permitted, and guest numbers may not exceed what was booked. Any breach may result in deductions from the refundable caution fee.</p>
+        <p>No. T.W Residence is strictly for registered, overnight guests. Parties, events, and gatherings are not permitted, and guest numbers may not exceed what was booked. If more guests than booked are found at check-in or during the stay, the full refundable caution fee is forfeited, in addition to any deductions for cleaning and damages.</p>
       </details>
       <details class="faq-item">
         <summary>Can I book for the same day or next day?</summary>
         <p>Bookings must be made at least 24 hours before check-in, so the apartment can be properly prepared for your arrival.</p>
       </details>
       <details class="faq-item">
+        <summary>What is your cancellation policy?</summary>
+        <p>It depends on when you booked. If you booked more than a day before your check-in date, you can cancel for a full refund within 24 hours of booking. If you booked the day before check-in, you can cancel for a full refund within 6 hours of booking. Outside those windows, bookings are non-refundable.</p>
+      </details>
+      <details class="faq-item">
+        <summary>Is there a minimum age to book?</summary>
+        <p>Yes. The person making the booking must be at least 21 years old.</p>
+      </details>
+      <details class="faq-item">
         <summary>Can diaspora or international guests book T.W Residence?</summary>
-        <p>Yes. T.W Residence regularly hosts diaspora guests visiting Lagos, and bookings can be made directly online from anywhere in the world.</p>
+        <p>Yes. T.W Residence regularly hosts diaspora guests visiting Lagos. Bookings can be made directly online from anywhere in the world, or through Airbnb or Booking.com.</p>
       </details>
       <details class="faq-item">
         <summary>Is parking available?</summary>
@@ -884,9 +962,6 @@
     <div class="booking-head">
       <span class="eyebrow">Reserve your stay</span>
       <h2>Booking Request</h2>
-      <p style="color:var(--ink-soft);font-size:14.5px;margin-top:14px;">
-        Fixed, transparent pricing — no negotiation, no agents
-      </p>
       <div class="booking-contact-row">
         <span>Need help? Reach us on Instagram or WhatsApp</span>
         <a href="https://wa.me/message/66FIEM2EUEUKI1" target="_blank" rel="noopener" aria-label="Message T.W Residence on WhatsApp" class="social-icon">
@@ -962,7 +1037,7 @@
           <div class="estimate-title">Estimated Cost</div>
           <div class="estimate-row"><span id="nights-label"></span><span class="estimate-total" id="subtotal-amount"></span></div>
           <div class="estimate-row promo-row hidden" id="promo-row"><span>Promo (<span id="promo-code-label"></span>)</span><span id="promo-discount-amount"></span></div>
-          <div class="estimate-row"><span>Refundable caution fee</span><span>₦100,000</span></div>
+          <div class="estimate-row"><span>Refundable caution fee</span><span>₦150,000</span></div>
           <div class="estimate-row"><strong>Total due</strong><span class="estimate-total" id="total-amount"></span></div>
           <div class="long-stay-note hidden" id="long-stay-note"></div>
         </div>
@@ -981,17 +1056,52 @@
         <div class="field-row">
           <div class="field full"><label>Email (optional — to receive a confirmation)</label><input type="email" id="email" placeholder="you@example.com"></div>
         </div>
+
+        <div class="field-row">
+          <div class="field full">
+            <label>Who's Checking In? *</label>
+            <select id="booking-for-other" required onchange="toggleMainGuestFields()">
+              <option value="">Select...</option>
+              <option value="no">I'll be checking in myself</option>
+              <option value="yes">I'm booking for someone else</option>
+            </select>
+          </div>
+        </div>
+        <div class="field-row hidden" id="main-guest-row">
+          <div class="field"><label>Main Guest's Name *</label><input type="text" id="main-guest-name" placeholder="Who's checking in"></div>
+          <div class="field"><label>Main Guest's Phone *</label><input type="tel" id="main-guest-phone" placeholder="+234 800 000 0000"></div>
+        </div>
+
+        <div class="field-row">
+          <div class="field full">
+            <label>Caution Fee Refund Method *</label>
+            <select id="want-direct-refund" required onchange="toggleRefundFields()">
+              <option value="">Select...</option>
+              <option value="no">Automatically via Paystack (3–10 business days)</option>
+              <option value="yes">Directly to my bank account</option>
+            </select>
+          </div>
+        </div>
+        <div class="field-row hidden" id="refund-details-row">
+          <div class="field"><label>Account Number *</label><input type="text" id="refund-account-number" placeholder="0123456789" inputmode="numeric"></div>
+          <div class="field"><label>Bank Name *</label><input type="text" id="refund-bank-name" placeholder="e.g. GTBank"></div>
+        </div>
+        <div class="field-row hidden" id="refund-details-row-2">
+          <div class="field full"><label>Account Name *</label><input type="text" id="refund-account-name" placeholder="Name on account"></div>
+        </div>
+
         <div class="field-row">
           <div class="field full">
             <label>Full Names of All Guests Staying *</label>
             <textarea id="guest-names" placeholder="List everyone who will be staying, e.g. Amaka Johnson, Tunde Johnson, Ifeoma Bello" required></textarea>
-            <div class="form-note" style="text-align:left;margin-top:4px;">This list is shared with estate security so only registered guests are allowed entry. Anyone joining later must be added before they arrive.</div>
+            <div class="form-note" style="text-align:left;margin-top:4px;">Shared with estate security so only registered guests are let in.</div>
           </div>
         </div>
+
         <div class="field-row">
           <div class="field">
-            <label>Purpose of Stay</label>
-            <select id="purpose">
+            <label>Purpose of Stay *</label>
+            <select id="purpose" required>
               <option value="">Select...</option>
               <option>Leisure / Holiday</option>
               <option>Business Trip</option>
@@ -1002,8 +1112,8 @@
             </select>
           </div>
           <div class="field">
-            <label>How Did You Hear About Us?</label>
-            <select id="howheard">
+            <label>How Did You Hear About Us? *</label>
+            <select id="howheard" required>
               <option value="">Select...</option>
               <option>Friend / Family Referral</option>
               <option>Instagram</option>
@@ -1014,6 +1124,7 @@
             </select>
           </div>
         </div>
+
         <div class="panel-nav">
           <button type="button" class="btn-secondary" onclick="goToStep(1)">← Back</button>
           <button type="button" class="btn-primary" onclick="goToStep(3)">Continue →</button>
@@ -1024,11 +1135,6 @@
       <div class="step-panel" id="panel-3">
         <div class="review-card" id="review-card"></div>
 
-        <div class="field full" id="id-upload-section">
-          <label>Government-Issued ID *</label>
-          <input type="file" id="id-upload" accept="image/*,.pdf" required>
-          <div class="form-note" style="text-align:left;margin-top:4px;">National ID, Driver's Licence, or International Passport. JPG, PNG or PDF, max 5MB — kept strictly confidential.</div>
-        </div>
         <div class="field full">
           <label>Additional Notes</label>
           <textarea id="notes"></textarea>
@@ -1038,22 +1144,21 @@
           <div class="terms-box-title">Booking Terms</div>
           <div class="terms">
             <div>Full payment required to confirm booking</div>
-            <div>Refundable caution fee: ₦100,000</div>
+            <div>Refundable caution fee: ₦150,000</div>
             <div>Check-in: 3:00 PM · Check-out: 10:00 AM</div>
             <div>No pets · Non-smoking indoors</div>
             <div>No parties or events</div>
-            <div>Pricing is fixed — not negotiable</div>
           </div>
         </div>
 
-        <div class="field full" style="flex-direction:row;align-items:flex-start;gap:10px;">
+        <div class="field full checkbox-row" id="terms-confirm-row" style="flex-direction:row;align-items:flex-start;gap:10px;padding:4px;border-radius:6px;">
           <input type="checkbox" id="terms-confirm" required style="margin-top:3px;width:16px;height:16px;flex:0 0 auto;">
-          <label for="terms-confirm" style="font-size:13px;font-weight:500;color:var(--ink-soft);letter-spacing:normal;">I have read and agree to the Booking Terms above.</label>
+          <label for="terms-confirm" style="font-size:13px;font-weight:500;color:var(--ink-soft);letter-spacing:normal;">I have read and agree to the Booking Terms above. *</label>
         </div>
 
-        <div class="field full" style="flex-direction:row;align-items:flex-start;gap:10px;">
+        <div class="field full checkbox-row" id="no-party-confirm-row" style="flex-direction:row;align-items:flex-start;gap:10px;padding:4px;border-radius:6px;">
           <input type="checkbox" id="no-party-confirm" required style="margin-top:3px;width:16px;height:16px;flex:0 0 auto;">
-          <label for="no-party-confirm" style="font-size:13px;font-weight:500;color:var(--ink-soft);letter-spacing:normal;">I confirm this stay is not for a party, event, or gathering, and I will not exceed the registered guest count. I understand any breach may result in deductions from the caution fee for cleaning and damages.</label>
+          <label for="no-party-confirm" style="font-size:13px;font-weight:500;color:var(--ink-soft);letter-spacing:normal;">I confirm this stay is not for a party, event, or gathering, and I will not exceed the registered guest count. I understand that if more guests than were booked and paid for are found at check-in or during the stay, the full refundable caution fee (₦150,000) will be forfeited, in addition to any deductions for cleaning and damages. *</label>
         </div>
 
         <div class="panel-nav">
@@ -1146,7 +1251,7 @@
 </script>
 
 <script>
-  const CAUTION_FEE = 100000;
+  const CAUTION_FEE = 150000;
 
   // Seasonal pricing calendar — ordered narrowest/most-specific range first,
   // since overlapping ranges are checked top-to-bottom and the first match wins.
@@ -1155,8 +1260,8 @@
   // onward, pricing is flat with no long-stay discount.
   const SEASONAL_RATES = [
     { start: '2026-11-01', end: '2026-11-07', price: 230000 },
-    { start: '2026-11-08', end: '2026-12-05', price: 250000 },
-    { start: '2026-12-06', end: '2027-01-05', price: 300000 },
+    { start: '2026-11-08', end: '2026-11-14', price: 250000 },
+    { start: '2026-11-15', end: '2027-01-05', price: 300000 },
     { start: '2027-01-06', end: '2027-01-21', price: 250000 },
     { start: '2027-02-10', end: '2027-02-16', price: 250000 },
     { start: '2027-03-07', end: '2027-03-13', price: 250000 },
@@ -1167,14 +1272,9 @@
   ];
   const STANDARD_RATE = 200000; // applies to October and any other unlisted (non-holiday) date
 
-  // Length-of-stay pricing window: September 2026 only.
-  // Under 7 nights \u2192 \u20a6170,000/night. 7+ nights \u2192 \u20a6150,000/night.
-  // This discount ends September 30, 2026 \u2014 from October 1 it's a flat
-  // \u20a6170,000/night with no length-of-stay discount.
+  // September 2026 window \u2014 flat rate, no length-of-stay discount.
   const SHORT_LONG_WINDOW = { start: '2026-09-01', end: '2026-09-30' };
   const SHORT_STAY_RATE = 170000;
-  const LONG_STAY_RATE = 150000;
-  const LONG_STAY_MIN_NIGHTS = 7;
 
   function isInShortLongWindow(dateStr){
     return dateStr >= SHORT_LONG_WINDOW.start && dateStr <= SHORT_LONG_WINDOW.end;
@@ -1182,7 +1282,7 @@
 
   function getPriceForDate(dateStr){
     // Used for calendar display (default view, before a full stay is chosen)
-    // and for any date outside the length-of-stay window.
+    // and for any date outside the September window.
     if (isInShortLongWindow(dateStr)) return SHORT_STAY_RATE;
     for (const range of SEASONAL_RATES){
       if (dateStr >= range.start && dateStr <= range.end) return range.price;
@@ -1202,13 +1302,12 @@
     const start = new Date(checkIn), end = new Date(checkOut);
     const nights = Math.round((end - start) / 86400000);
     if (nights <= 0) return null;
-    const lengthBasedRate = nights >= LONG_STAY_MIN_NIGHTS ? LONG_STAY_RATE : SHORT_STAY_RATE;
     let total = 0;
     for (let i = 0; i < nights; i++){
       const d = new Date(start);
       d.setDate(d.getDate() + i);
       const dateStr = d.toISOString().split('T')[0];
-      total += isInShortLongWindow(dateStr) ? lengthBasedRate : getPriceForDate(dateStr);
+      total += getPriceForDate(dateStr);
     }
     return { nights, total };
   }
@@ -1329,6 +1428,7 @@
         <div class="cal-legend-item"><div class="cal-legend-dot" style="background:var(--wine)"></div>Selected</div>
       </div>
       ${mode === 'checkin' ? `<div style="text-align:center;font-size:11.5px;color:var(--ink-soft);margin-top:8px;">Bookings require at least ${MIN_ADVANCE_HOURS} hours’ notice — same-day check-in isn’t available.</div>` : ''}
+      ${mode === 'checkout' ? `<div style="text-align:center;font-size:11.5px;color:var(--ink-soft);margin-top:8px;">No checkouts available on Sundays.</div>` : ''}
     </div>`;
 
     document.getElementById('stay-calendar').innerHTML = html;
@@ -1349,6 +1449,7 @@
     document.getElementById('pill-checkout-value').textContent = 'Choose a later date';
     document.getElementById('pill-checkout-value').classList.add('placeholder');
     document.getElementById('estimate').classList.remove('visible');
+    document.querySelectorAll('.stay-summary-item').forEach(el => el.classList.remove('invalid'));
   }
 
   function selectDate(dateStr){
@@ -1393,12 +1494,7 @@
 
     const longStayNote = document.getElementById('long-stay-note');
     if (longStayNote){
-      if (result.nights >= LONG_STAY_MIN_NIGHTS) {
-        longStayNote.textContent = '\u2713 7+ night rate applied \u2014 \u20a6150,000/night for dates within September 2026';
-        longStayNote.classList.remove('hidden');
-      } else {
-        longStayNote.classList.add('hidden');
-      }
+      longStayNote.classList.add('hidden');
     }
   }
 
@@ -1417,34 +1513,101 @@
     }
   }
 
+  function toggleMainGuestFields(){
+    const isOther = document.getElementById('booking-for-other').value === 'yes';
+    document.getElementById('main-guest-row').classList.toggle('hidden', !isOther);
+    if (!isOther){
+      document.getElementById('main-guest-name').value = '';
+      document.getElementById('main-guest-phone').value = '';
+    }
+  }
+
+  function toggleRefundFields(){
+    const wantsDirect = document.getElementById('want-direct-refund').value === 'yes';
+    document.getElementById('refund-details-row').classList.toggle('hidden', !wantsDirect);
+    document.getElementById('refund-details-row-2').classList.toggle('hidden', !wantsDirect);
+    if (!wantsDirect){
+      document.getElementById('refund-account-number').value = '';
+      document.getElementById('refund-bank-name').value = '';
+      document.getElementById('refund-account-name').value = '';
+      setFieldInvalid('refund-account-number', false);
+      setFieldInvalid('refund-bank-name', false);
+      setFieldInvalid('refund-account-name', false);
+    }
+  }
+
+  function setFieldInvalid(id, isInvalid){
+    const el = document.getElementById(id);
+    if (el) el.classList.toggle('invalid', isInvalid);
+  }
+  function setRowInvalid(rowId, isInvalid){
+    const el = document.getElementById(rowId);
+    if (el) el.classList.toggle('invalid', isInvalid);
+  }
+  // Clear a field's red state as soon as the guest fixes it.
+  ['name','phone','apartment','guests','booking-for-other','want-direct-refund','main-guest-name','main-guest-phone','guest-names','purpose','howheard','refund-account-number','refund-bank-name','refund-account-name'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.addEventListener('input', () => setFieldInvalid(id, false));
+    if (el) el.addEventListener('change', () => setFieldInvalid(id, false));
+  });
+  document.getElementById('terms-confirm').addEventListener('change', () => setRowInvalid('terms-confirm-row', false));
+  document.getElementById('no-party-confirm').addEventListener('change', () => setRowInvalid('no-party-confirm-row', false));
+
   function validateBeforePayment(){
     const name = document.getElementById('name').value;
     const phone = document.getElementById('phone').value;
     const email = document.getElementById('email').value;
     const apartment = document.getElementById('apartment').value;
     const guests = document.getElementById('guests').value;
-    const idFile = document.getElementById('id-upload').files[0];
     const termsConfirmed = document.getElementById('terms-confirm').checked;
     const noPartyConfirmed = document.getElementById('no-party-confirm').checked;
+    const bookingForOtherValue = document.getElementById('booking-for-other').value;
+    const bookingForOther = bookingForOtherValue === 'yes';
+    const mainGuestName = document.getElementById('main-guest-name').value;
+    const mainGuestPhone = document.getElementById('main-guest-phone').value;
+    const refundMethodValue = document.getElementById('want-direct-refund').value;
+    const wantsDirectRefund = refundMethodValue === 'yes';
+    const guestNamesValue = document.getElementById('guest-names').value.trim();
 
-    if (!name || !phone || !apartment || !guests){
-      alert('Please fill in all required fields before proceeding to payment.');
-      return false;
-    }
+    // Reset all invalid markers, then re-check everything so every problem
+    // shows up at once, not just the first one hit.
+    ['name','phone','apartment','guests','booking-for-other','want-direct-refund','main-guest-name','main-guest-phone','guest-names','purpose','howheard','refund-account-number','refund-bank-name','refund-account-name'].forEach(id => setFieldInvalid(id, false));
+    setRowInvalid('terms-confirm-row', false);
+    setRowInvalid('no-party-confirm-row', false);
+    document.querySelectorAll('.stay-summary-item').forEach(el => el.classList.remove('invalid'));
+
+    let firstInvalidEl = null;
+    const flagInvalid = (id, isRow) => {
+      if (isRow) setRowInvalid(id, true); else setFieldInvalid(id, true);
+      if (!firstInvalidEl) firstInvalidEl = document.getElementById(isRow ? id.replace('-row','') : id);
+    };
+
+    let hasError = false;
+    if (!name){ flagInvalid('name'); hasError = true; }
+    if (!phone){ flagInvalid('phone'); hasError = true; }
+    if (!apartment){ flagInvalid('apartment'); hasError = true; }
+    if (!guests){ flagInvalid('guests'); hasError = true; }
+    if (!bookingForOtherValue){ flagInvalid('booking-for-other'); hasError = true; }
+    if (!refundMethodValue){ flagInvalid('want-direct-refund'); hasError = true; }
+    if (bookingForOther && !mainGuestName){ flagInvalid('main-guest-name'); hasError = true; }
+    if (bookingForOther && !mainGuestPhone){ flagInvalid('main-guest-phone'); hasError = true; }
+    if (wantsDirectRefund && !document.getElementById('refund-account-number').value.trim()){ flagInvalid('refund-account-number'); hasError = true; }
+    if (wantsDirectRefund && !document.getElementById('refund-bank-name').value.trim()){ flagInvalid('refund-bank-name'); hasError = true; }
+    if (wantsDirectRefund && !document.getElementById('refund-account-name').value.trim()){ flagInvalid('refund-account-name'); hasError = true; }
+    if (!guestNamesValue){ flagInvalid('guest-names'); hasError = true; }
+    if (!document.getElementById('purpose').value){ flagInvalid('purpose'); hasError = true; }
+    if (!document.getElementById('howheard').value){ flagInvalid('howheard'); hasError = true; }
+    if (!termsConfirmed){ flagInvalid('terms-confirm-row', true); hasError = true; }
+    if (!noPartyConfirmed){ flagInvalid('no-party-confirm-row', true); hasError = true; }
     if (!selectedCheckin || !selectedCheckout){
-      alert('Please select your check-in and check-out dates.');
-      return false;
+      document.querySelectorAll('.stay-summary-item').forEach(el => el.classList.add('invalid'));
+      if (!firstInvalidEl) firstInvalidEl = document.getElementById('stay-calendar');
+      hasError = true;
     }
-    if (!idFile){
-      alert('Please upload a valid government-issued ID before proceeding to payment.');
-      return false;
-    }
-    if (!termsConfirmed){
-      alert('Please confirm you have read and agree to the Booking Terms before proceeding to payment.');
-      return false;
-    }
-    if (!noPartyConfirmed){
-      alert('Please confirm the no-party / guest-limit agreement before proceeding to payment.');
+
+    if (hasError){
+      alert('Please fill in the fields highlighted in red before proceeding to payment.');
+      if (firstInvalidEl) firstInvalidEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
       return false;
     }
 
@@ -1457,12 +1620,26 @@
     formData.append('Check-Out', selectedCheckout);
     formData.append('Guests', guests);
     formData.append('Guest Names', document.getElementById('guest-names').value.trim());
+    formData.append('Booking For Someone Else', bookingForOther ? 'Yes' : 'No');
+    if (bookingForOther){
+      formData.append('Main Guest Name', mainGuestName);
+      formData.append('Main Guest Phone', mainGuestPhone);
+    }
+    const refundAccountNumber = document.getElementById('refund-account-number').value.trim();
+    const refundBankName = document.getElementById('refund-bank-name').value.trim();
+    const refundAccountName = document.getElementById('refund-account-name').value.trim();
+    if (refundAccountNumber || refundBankName || refundAccountName){
+      formData.append('Refund Account Number', refundAccountNumber);
+      formData.append('Refund Bank Name', refundBankName);
+      formData.append('Refund Account Name', refundAccountName);
+    } else {
+      formData.append('Refund Method', 'Not provided — auto-refund via Paystack');
+    }
     formData.append('Purpose', document.getElementById('purpose').value);
     formData.append('How Heard', document.getElementById('howheard').value);
     formData.append('Notes', document.getElementById('notes').value);
     formData.append('Terms Confirmed', 'Yes — guest agreed at booking');
     formData.append('No-Party Confirmed', 'Yes — guest agreed at booking');
-    formData.append('ID Document', idFile, idFile.name);
     const result = calcTotal(selectedCheckin, selectedCheckout);
     if (result){
       formData.append('Subtotal', fmt(result.total));
@@ -1516,7 +1693,7 @@
         document.getElementById('success-nights').textContent = result.nights + ' night' + (result.nights > 1 ? 's' : '') + ' · ' + guests;
         const roomTotal = LAUNCH_DISCOUNT > 0 ? result.total - Math.round(result.total * LAUNCH_DISCOUNT) : result.total;
         document.getElementById('success-total').textContent = 'Total: ' + fmt(roomTotal + CAUTION_FEE);
-        document.getElementById('success-deposit').textContent = 'Includes ₦100,000 refundable caution fee';
+        document.getElementById('success-deposit').textContent = 'Includes ₦150,000 refundable caution fee';
       }
       window.location.href = 'https://paystack.shop/pay/twresidence';
     });
@@ -1525,7 +1702,11 @@
   }
 
   function resetForm(){
-    ['name','phone','email','notes','guest-names'].forEach(id => document.getElementById(id).value = '');
+    ['name','phone','email','notes','guest-names','main-guest-name','main-guest-phone','refund-account-number','refund-bank-name','refund-account-name'].forEach(id => document.getElementById(id).value = '');
+    document.getElementById('booking-for-other').value = '';
+    document.getElementById('want-direct-refund').value = '';
+    toggleMainGuestFields();
+    toggleRefundFields();
     ['guests','purpose','howheard','apartment'].forEach(id => document.getElementById(id).selectedIndex = 0);
     document.getElementById('estimate').classList.remove('visible');
     document.getElementById('form-card').classList.remove('hidden');
@@ -1535,10 +1716,13 @@
     document.getElementById('pill-checkin-value').classList.add('placeholder');
     document.getElementById('pill-checkout-value').textContent = 'Not selected';
     document.getElementById('pill-checkout-value').classList.add('placeholder');
-    document.getElementById('id-upload').value = '';
     document.getElementById('terms-confirm').checked = false;
     document.getElementById('no-party-confirm').checked = false;
     document.getElementById('promo-row').classList.add('hidden');
+    ['name','phone','apartment','guests','booking-for-other','want-direct-refund','main-guest-name','main-guest-phone','guest-names','purpose','howheard','refund-account-number','refund-bank-name','refund-account-name'].forEach(id => setFieldInvalid(id, false));
+    setRowInvalid('terms-confirm-row', false);
+    setRowInvalid('no-party-confirm-row', false);
+    document.querySelectorAll('.stay-summary-item').forEach(el => el.classList.remove('invalid'));
     renderCalendar();
     goToStep(1, true);
   }
@@ -1556,6 +1740,9 @@
     html += rowHtml('Apartment', apartment);
     html += rowHtml('Guests', guests);
     html += rowHtml('Guest names', guestNames);
+    if (document.getElementById('booking-for-other').value === 'yes'){
+      html += rowHtml('Main guest checking in', (document.getElementById('main-guest-name').value.trim() || '—') + ' · ' + (document.getElementById('main-guest-phone').value.trim() || '—'));
+    }
     html += rowHtml('Check-in', selectedCheckin ? formatDate(selectedCheckin) : '—');
     html += rowHtml('Check-out', selectedCheckout ? formatDate(selectedCheckout) : '—');
     if (result){
@@ -1577,24 +1764,57 @@
   }
 
   function validateStep1(){
-    if (!document.getElementById('apartment').value || !document.getElementById('guests').value){
-      alert('Please select an apartment and number of guests.');
-      return false;
+    setFieldInvalid('apartment', false);
+    setFieldInvalid('guests', false);
+    document.querySelectorAll('.stay-summary-item').forEach(el => el.classList.remove('invalid'));
+
+    let firstInvalidEl = null;
+    let hasError = false;
+    if (!document.getElementById('apartment').value){
+      setFieldInvalid('apartment', true); firstInvalidEl = firstInvalidEl || document.getElementById('apartment'); hasError = true;
+    }
+    if (!document.getElementById('guests').value){
+      setFieldInvalid('guests', true); firstInvalidEl = firstInvalidEl || document.getElementById('guests'); hasError = true;
     }
     if (!selectedCheckin || !selectedCheckout){
-      alert('Please select your check-in and check-out dates.');
+      document.querySelectorAll('.stay-summary-item').forEach(el => el.classList.add('invalid'));
+      firstInvalidEl = firstInvalidEl || document.getElementById('stay-calendar');
+      hasError = true;
+    }
+    if (hasError){
+      alert('Please fill in the fields highlighted in red.');
+      if (firstInvalidEl) firstInvalidEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
       return false;
     }
     return true;
   }
 
   function validateStep2(){
-    if (!document.getElementById('name').value || !document.getElementById('phone').value){
-      alert('Please enter your name and phone number.');
-      return false;
-    }
-    if (!document.getElementById('guest-names').value.trim()){
-      alert('Please list the full names of everyone staying.');
+    const ids = ['name','phone','booking-for-other','want-direct-refund','main-guest-name','main-guest-phone','guest-names','purpose','howheard','refund-account-number','refund-bank-name','refund-account-name'];
+    ids.forEach(id => setFieldInvalid(id, false));
+
+    const bookingForOther = document.getElementById('booking-for-other').value === 'yes';
+    const wantsDirectRefund = document.getElementById('want-direct-refund').value === 'yes';
+    let firstInvalidEl = null;
+    let hasError = false;
+    const flag = (id) => { setFieldInvalid(id, true); firstInvalidEl = firstInvalidEl || document.getElementById(id); hasError = true; };
+
+    if (!document.getElementById('name').value) flag('name');
+    if (!document.getElementById('phone').value) flag('phone');
+    if (!document.getElementById('booking-for-other').value) flag('booking-for-other');
+    if (!document.getElementById('want-direct-refund').value) flag('want-direct-refund');
+    if (bookingForOther && !document.getElementById('main-guest-name').value) flag('main-guest-name');
+    if (bookingForOther && !document.getElementById('main-guest-phone').value) flag('main-guest-phone');
+    if (wantsDirectRefund && !document.getElementById('refund-account-number').value.trim()) flag('refund-account-number');
+    if (wantsDirectRefund && !document.getElementById('refund-bank-name').value.trim()) flag('refund-bank-name');
+    if (wantsDirectRefund && !document.getElementById('refund-account-name').value.trim()) flag('refund-account-name');
+    if (!document.getElementById('guest-names').value.trim()) flag('guest-names');
+    if (!document.getElementById('purpose').value) flag('purpose');
+    if (!document.getElementById('howheard').value) flag('howheard');
+
+    if (hasError){
+      alert('Please fill in the fields highlighted in red.');
+      if (firstInvalidEl) firstInvalidEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
       return false;
     }
     return true;
