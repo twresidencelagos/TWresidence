@@ -120,7 +120,15 @@
       "name": "Can I book T.W Residence for the same day or next day?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "Bookings must be made at least 24 hours before check-in, so the apartment can be properly prepared for your arrival."
+        "text": "Bookings must be made by check-in time (3:00 PM) the day before your check-in date, so the apartment can be properly prepared. A booking made the same evening for next-day arrival cannot be accepted."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What is the maximum length of stay at T.W Residence?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "The maximum stay is 30 nights per booking. For anything longer, please contact us directly to discuss."
       }
     },
     {
@@ -644,6 +652,7 @@
   .cal-cell.booked{color:#C4A090;cursor:not-allowed;}
   .cal-cell.booked .cal-cell-day{text-decoration:line-through;}
   .cal-cell.sunday-closed{color:#C4A090;cursor:not-allowed;font-style:italic;}
+  .cal-cell.max-exceeded{color:#CBB99B;cursor:not-allowed;}
   .cal-cell.selected{background:var(--wine);color:#fff;font-weight:600;}
   .cal-cell.in-range{background:var(--blush);border-radius:0;}
   .cal-cell.empty{cursor:default;}
@@ -716,7 +725,7 @@
 </head>
 <body>
 
-<div class="announce">YOUR HOME AWAY FROM HOME &nbsp;·&nbsp; Fixed, transparent pricing — book at least 24 hours before check-in</div>
+<div class="announce">YOUR HOME AWAY FROM HOME &nbsp;·&nbsp; Bookings close by check-in time the day before your stay</div>
 
 <header>
   <div class="wrap nav-row">
@@ -866,7 +875,8 @@
         <div class="terms-group-list">
           <div>Check-in: 3:00 PM · Check-out: 10:00 AM</div>
           <div>No checkouts available on Sundays</div>
-          <div>Bookings must be made at least 24 hours before check-in</div>
+          <div>Bookings close by check-in time (3:00 PM) the day before — not accepted the same evening for next-day arrival</div>
+          <div>Maximum stay: 30 nights</div>
         </div>
       </div>
       <div class="terms-group">
@@ -931,7 +941,11 @@
       </details>
       <details class="faq-item">
         <summary>Can I book for the same day or next day?</summary>
-        <p>Bookings must be made at least 24 hours before check-in, so the apartment can be properly prepared for your arrival.</p>
+        <p>Bookings must be made by check-in time (3:00 PM) the day before your check-in date, so the apartment can be properly prepared. A booking made the same evening for next-day arrival cannot be accepted.</p>
+      </details>
+      <details class="faq-item">
+        <summary>What is the maximum length of stay?</summary>
+        <p>The maximum stay is 30 nights per booking. For anything longer, please contact us directly to discuss.</p>
       </details>
       <details class="faq-item">
         <summary>What is your cancellation policy?</summary>
@@ -1302,6 +1316,7 @@
     const start = new Date(checkIn), end = new Date(checkOut);
     const nights = Math.round((end - start) / 86400000);
     if (nights <= 0) return null;
+    if (nights > MAX_NIGHTS) return null;
     let total = 0;
     for (let i = 0; i < nights; i++){
       const d = new Date(start);
@@ -1371,16 +1386,31 @@
   }
 
   // Minimum advance notice required for check-in (hard-blocked on the calendar,
-  // not just stated as policy) — same-day check-in is not selectable.
-  const MIN_ADVANCE_HOURS = 24;
+  // not just stated as policy) — bookings close by check-in time the day before,
+  // so same-day check-in and "book tonight for tomorrow" are both unavailable.
+  const CHECKIN_HOUR = 15; // 3:00 PM
+
+  // Maximum stay length, in nights — kept well under what would risk a guest
+  // being treated as a sitting tenant under Nigerian tenancy law. Hard-blocked
+  // on the calendar, not just stated as policy.
+  const MAX_NIGHTS = 30;
 
   function renderCalendar(){
     const { year, month } = calendarState;
     const mode = getMode();
     const today = new Date(); today.setHours(0,0,0,0);
+    // Check-in bookings close by check-in time (3:00 PM) the day before — not just "not today".
+    // If it's already past 3:00 PM, tomorrow is too close to prepare, so push the cutoff to the day after.
+    const now = new Date();
+    const cutoffToday = new Date(); cutoffToday.setHours(CHECKIN_HOUR, 0, 0, 0);
     const minCheckinDate = new Date(today);
-    minCheckinDate.setDate(minCheckinDate.getDate() + 1); // today itself is not bookable as check-in
+    minCheckinDate.setDate(minCheckinDate.getDate() + (now >= cutoffToday ? 2 : 1));
     const minSelectable = mode === 'checkin' ? minCheckinDate : today;
+    let maxCheckoutDate = null;
+    if (mode === 'checkout' && selectedCheckin){
+      maxCheckoutDate = new Date(selectedCheckin + 'T00:00:00');
+      maxCheckoutDate.setDate(maxCheckoutDate.getDate() + MAX_NIGHTS);
+    }
     const firstDay = new Date(year, month, 1).getDay();
     const daysInMonth = new Date(year, month + 1, 0).getDate();
     const monthNames = ['January','February','March','April','May','June','July','August','September','October','November','December'];
@@ -1408,15 +1438,17 @@
       const isInRange = selectedCheckin && selectedCheckout && dateStr > selectedCheckin && dateStr < selectedCheckout;
       const isSundayException = SUNDAY_CHECKOUT_EXCEPTIONS.includes(dateStr);
       const isSundayCheckout = mode === 'checkout' && new Date(dateStr + 'T00:00:00').getDay() === 0 && !isSundayException;
+      const isMaxExceeded = mode === 'checkout' && maxCheckoutDate && dateObj > maxCheckoutDate;
 
       let cls = 'cal-cell';
       if (isPast) cls += ' past';
       else if (isBooked) cls += ' booked';
       else if (isSundayCheckout) cls += ' sunday-closed';
+      else if (isMaxExceeded) cls += ' max-exceeded';
       else if (isSelected) cls += ' selected';
       else if (isInRange) cls += ' in-range';
 
-      const clickable = !isPast && !isBooked && !isSundayCheckout;
+      const clickable = !isPast && !isBooked && !isSundayCheckout && !isMaxExceeded;
       const priceLabel = isPast ? '' : `<div class="cal-cell-price">${fmtShort(getPriceForDate(dateStr))}</div>`;
       html += `<div class="${cls}" ${clickable ? `onclick="selectDate('${dateStr}')"` : ''}><div class="cal-cell-day">${d}</div>${priceLabel}</div>`;
     }
@@ -1427,8 +1459,8 @@
         <div class="cal-legend-item"><div class="cal-legend-dot" style="background:#E7C9BC"></div>Unavailable</div>
         <div class="cal-legend-item"><div class="cal-legend-dot" style="background:var(--wine)"></div>Selected</div>
       </div>
-      ${mode === 'checkin' ? `<div style="text-align:center;font-size:11.5px;color:var(--ink-soft);margin-top:8px;">Bookings require at least ${MIN_ADVANCE_HOURS} hours’ notice — same-day check-in isn’t available.</div>` : ''}
-      ${mode === 'checkout' ? `<div style="text-align:center;font-size:11.5px;color:var(--ink-soft);margin-top:8px;">No checkouts available on Sundays.</div>` : ''}
+      ${mode === 'checkin' ? `<div style="text-align:center;font-size:11.5px;color:var(--ink-soft);margin-top:8px;">Bookings close by check-in time (3:00 PM) the day before — same-day check-in isn’t available.</div>` : ''}
+      ${mode === 'checkout' ? `<div style="text-align:center;font-size:11.5px;color:var(--ink-soft);margin-top:8px;">No checkouts available on Sundays. Maximum stay: ${MAX_NIGHTS} nights.</div>` : ''}
     </div>`;
 
     document.getElementById('stay-calendar').innerHTML = html;
@@ -1467,6 +1499,13 @@
         markCheckin(dateStr);
         renderCalendar();
         return;
+      }
+      {
+        const nightsPicked = Math.round((new Date(dateStr) - new Date(selectedCheckin)) / 86400000);
+        if (nightsPicked > MAX_NIGHTS){
+          alert('The maximum stay is ' + MAX_NIGHTS + ' nights. Please choose a closer check-out date.');
+          return;
+        }
       }
       selectedCheckout = dateStr;
       document.getElementById('pill-checkout-value').textContent = formatDate(dateStr);
