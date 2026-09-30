@@ -120,7 +120,7 @@
       "name": "Can I book T.W Residence for the same day or next day?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "Bookings must be made by check-in time (3:00 PM) the day before your check-in date, so the apartment can be properly prepared. A booking made the same evening for next-day arrival cannot be accepted."
+        "text": "Bookings must be made at least 24 hours before check-in, so the apartment can be properly prepared."
       }
     },
     {
@@ -725,7 +725,7 @@
 </head>
 <body>
 
-<div class="announce">YOUR HOME AWAY FROM HOME &nbsp;·&nbsp; Bookings close by check-in time the day before your stay</div>
+<div class="announce">YOUR HOME AWAY FROM HOME</div>
 
 <header>
   <div class="wrap nav-row">
@@ -875,7 +875,7 @@
         <div class="terms-group-list">
           <div>Check-in: 3:00 PM · Check-out: 10:00 AM</div>
           <div>No checkouts available on Sundays</div>
-          <div>Bookings close by check-in time (3:00 PM) the day before — not accepted the same evening for next-day arrival</div>
+          <div>Bookings must be made at least 24 hours before check-in</div>
           <div>Maximum stay: 30 nights</div>
         </div>
       </div>
@@ -941,7 +941,7 @@
       </details>
       <details class="faq-item">
         <summary>Can I book for the same day or next day?</summary>
-        <p>Bookings must be made by check-in time (3:00 PM) the day before your check-in date, so the apartment can be properly prepared. A booking made the same evening for next-day arrival cannot be accepted.</p>
+        <p>Bookings must be made at least 24 hours before check-in, so the apartment can be properly prepared.</p>
       </details>
       <details class="faq-item">
         <summary>What is the maximum length of stay?</summary>
@@ -1459,7 +1459,7 @@
         <div class="cal-legend-item"><div class="cal-legend-dot" style="background:#E7C9BC"></div>Unavailable</div>
         <div class="cal-legend-item"><div class="cal-legend-dot" style="background:var(--wine)"></div>Selected</div>
       </div>
-      ${mode === 'checkin' ? `<div style="text-align:center;font-size:11.5px;color:var(--ink-soft);margin-top:8px;">Bookings close by check-in time (3:00 PM) the day before — same-day check-in isn’t available.</div>` : ''}
+      ${mode === 'checkin' ? `<div style="text-align:center;font-size:11.5px;color:var(--ink-soft);margin-top:8px;">Same-day check-in isn’t available.</div>` : ''}
       ${mode === 'checkout' ? `<div style="text-align:center;font-size:11.5px;color:var(--ink-soft);margin-top:8px;">No checkouts available on Sundays. Maximum stay: ${MAX_NIGHTS} nights.</div>` : ''}
     </div>`;
 
