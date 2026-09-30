@@ -652,7 +652,6 @@
   .cal-cell.booked{color:#C4A090;cursor:not-allowed;}
   .cal-cell.booked .cal-cell-day{text-decoration:line-through;}
   .cal-cell.sunday-closed{color:#C4A090;cursor:not-allowed;font-style:italic;}
-  .cal-cell.max-exceeded{color:#CBB99B;cursor:not-allowed;}
   .cal-cell.selected{background:var(--wine);color:#fff;font-weight:600;}
   .cal-cell.in-range{background:var(--blush);border-radius:0;}
   .cal-cell.empty{cursor:default;}
@@ -1406,11 +1405,6 @@
     const minCheckinDate = new Date(today);
     minCheckinDate.setDate(minCheckinDate.getDate() + (now >= cutoffToday ? 2 : 1));
     const minSelectable = mode === 'checkin' ? minCheckinDate : today;
-    let maxCheckoutDate = null;
-    if (mode === 'checkout' && selectedCheckin){
-      maxCheckoutDate = new Date(selectedCheckin + 'T00:00:00');
-      maxCheckoutDate.setDate(maxCheckoutDate.getDate() + MAX_NIGHTS);
-    }
     const firstDay = new Date(year, month, 1).getDay();
     const daysInMonth = new Date(year, month + 1, 0).getDate();
     const monthNames = ['January','February','March','April','May','June','July','August','September','October','November','December'];
@@ -1438,17 +1432,18 @@
       const isInRange = selectedCheckin && selectedCheckout && dateStr > selectedCheckin && dateStr < selectedCheckout;
       const isSundayException = SUNDAY_CHECKOUT_EXCEPTIONS.includes(dateStr);
       const isSundayCheckout = mode === 'checkout' && new Date(dateStr + 'T00:00:00').getDay() === 0 && !isSundayException;
-      const isMaxExceeded = mode === 'checkout' && maxCheckoutDate && dateObj > maxCheckoutDate;
 
       let cls = 'cal-cell';
       if (isPast) cls += ' past';
       else if (isBooked) cls += ' booked';
       else if (isSundayCheckout) cls += ' sunday-closed';
-      else if (isMaxExceeded) cls += ' max-exceeded';
       else if (isSelected) cls += ' selected';
       else if (isInRange) cls += ' in-range';
 
-      const clickable = !isPast && !isBooked && !isSundayCheckout && !isMaxExceeded;
+      // Dates beyond the 30-night max stay stay visible and clickable while browsing —
+      // selectDate() below rejects the pick with a message rather than the calendar
+      // pre-emptively greying out entire future months.
+      const clickable = !isPast && !isBooked && !isSundayCheckout;
       const priceLabel = isPast ? '' : `<div class="cal-cell-price">${fmtShort(getPriceForDate(dateStr))}</div>`;
       html += `<div class="${cls}" ${clickable ? `onclick="selectDate('${dateStr}')"` : ''}><div class="cal-cell-day">${d}</div>${priceLabel}</div>`;
     }
