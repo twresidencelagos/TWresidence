@@ -1704,24 +1704,63 @@
     // making a single service's hiccup block a real guest from paying.
     formData.append('access_key', 'c9eda67e-d0b9-43f3-ad92-1cf35e7a5d4e');
 
-    const sheetsRequest = fetch('https://script.google.com/macros/s/AKfycbwtYaZDdtn0CNotSk8l20k_Z43Ih-8wfIOmnP7SR4R_-BLN1xzk9vi3WwYZxhQCNi8o/exec', {
+    // Each request gets a time limit so a slow connection can never leave the
+    // guest stuck, and the two confirmable ones (Web3Forms, Formspree) retry once.
+    const sendWithTimeout = (url, options, ms) => {
+      const controller = new AbortController();
+      const timer = setTimeout(() => controller.abort(), ms);
+      return fetch(url, Object.assign({}, options, { signal: controller.signal }))
+        .finally(() => clearTimeout(timer));
+    };
+    const sendConfirmed = async (url, options) => {
+      for (let attempt = 0; attempt < 2; attempt++){
+        try {
+          const r = await sendWithTimeout(url, options, 8000);
+          if (r.ok) return true;
+        } catch(e){ /* retry once below */ }
+        if (attempt === 0) await new Promise(res => setTimeout(res, 1000));
+      }
+      return false;
+    };
+
+    const sheetsRequest = sendWithTimeout('https://script.google.com/macros/s/AKfycbwtYaZDdtn0CNotSk8l20k_Z43Ih-8wfIOmnP7SR4R_-BLN1xzk9vi3WwYZxhQCNi8o/exec', {
       method: 'POST',
       mode: 'no-cors',
       body: formData
-    }).catch(() => {});
+    }, 8000).catch(() => {});
 
-    const web3formsRequest = fetch('https://api.web3forms.com/submit', {
+    const web3formsRequest = sendConfirmed('https://api.web3forms.com/submit', {
       method: 'POST',
       body: formData
-    }).catch(() => null);
+    });
 
-    const formspreeRequest = fetch('https://formspree.io/f/mjgqzkay', {
+    const formspreeRequest = sendConfirmed('https://formspree.io/f/mjgqzkay', {
       method: 'POST',
       body: formData,
       headers: { 'Accept': 'application/json' }
-    }).catch(() => null);
+    });
 
-    Promise.allSettled([sheetsRequest, web3formsRequest, formspreeRequest]).then(() => {
+    Promise.allSettled([sheetsRequest, web3formsRequest, formspreeRequest]).then(results => {
+      // The Google Sheets copy can't be verified from the browser (no-cors), so
+      // only Web3Forms and Formspree count as confirmed delivery. If neither
+      // confirmed, don't send the guest to pay without a record of their dates.
+      const delivered = results[1].value === true || results[2].value === true;
+      if (!delivered){
+        if (submitBtn){
+          submitBtn.textContent = 'Proceed to Payment →';
+          submitBtn.style.pointerEvents = '';
+          submitBtn.style.opacity = '';
+        }
+        if (confirm('We couldn’t confirm that your booking details reached us, so we haven’t sent you to payment yet.\n\nPress OK to message us on WhatsApp with your dates and we’ll sort it out, or Cancel to try again.')){
+          const waText = 'Hello T.W Residence, I tried to book on your website but it did not confirm.\n' +
+            'Name: ' + name + '\n' +
+            'Check-in: ' + selectedCheckin + '\n' +
+            'Check-out: ' + selectedCheckout + '\n' +
+            'Guests: ' + guests;
+          window.open('https://wa.me/2348123331112?text=' + encodeURIComponent(waText), '_blank', 'noopener');
+        }
+        return;
+      }
       document.getElementById('success-name').textContent = name;
       if (result){
         document.getElementById('success-nights').textContent = result.nights + ' night' + (result.nights > 1 ? 's' : '') + ' · ' + guests;
