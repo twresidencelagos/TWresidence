@@ -1067,7 +1067,7 @@
           <div class="field"><label>Phone *</label><input type="tel" id="phone" placeholder="+234 800 000 0000" required></div>
         </div>
         <div class="field-row">
-          <div class="field full"><label>Email <span style="font-weight:400;text-transform:none;letter-spacing:normal;">(optional)</span></label><input type="email" id="email" placeholder="you@example.com"></div>
+          <div class="field full"><label>Email * <span style="font-weight:400;text-transform:none;letter-spacing:normal;">(your payment receipt is sent here)</span></label><input type="email" id="email" placeholder="you@example.com" required></div>
         </div>
 
         <div class="field-row">
@@ -1172,7 +1172,7 @@
           <a href="https://paystack.shop/pay/twresidence" id="pay-btn" class="btn-primary" onclick="return validateBeforePayment()">Proceed to Payment →</a>
         </div>
         <div class="form-note" style="display:flex;align-items:center;justify-content:center;gap:8px;flex-wrap:wrap;">
-          <span>You'll be redirected to our secure Paystack payment page. Need help?</span>
+          <span>A secure Paystack window will open for your payment. Need help?</span>
           <a href="https://wa.me/message/66FIEM2EUEUKI1" target="_blank" rel="noopener" aria-label="Message T.W Residence on WhatsApp" class="social-icon" style="width:24px;height:24px;margin-top:0;vertical-align:middle;border-color:var(--brass);color:var(--wine);">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
               <path d="M12 2C6.48 2 2 6.48 2 12c0 1.84.5 3.56 1.36 5.04L2 22l5.12-1.34A9.94 9.94 0 0012 22c5.52 0 10-4.48 10-10S17.52 2 12 2zm0 18c-1.62 0-3.13-.44-4.43-1.2l-.32-.19-3.04.8.81-2.96-.21-.31A7.94 7.94 0 014 12c0-4.41 3.59-8 8-8s8 3.59 8 8-3.59 8-8 8zm4.4-5.6c-.24-.12-1.43-.7-1.65-.79-.22-.08-.38-.12-.55.12-.16.24-.63.79-.77.95-.14.16-.28.18-.52.06-.24-.12-1.02-.38-1.94-1.2-.72-.64-1.2-1.43-1.34-1.67-.14-.24-.02-.37.11-.49.11-.11.24-.28.36-.42.12-.14.16-.24.24-.4.08-.16.04-.3-.02-.42-.06-.12-.55-1.32-.75-1.81-.2-.48-.4-.41-.55-.42-.14-.01-.3-.01-.46-.01-.16 0-.42.06-.64.3-.22.24-.84.82-.84 2s.86 2.32.98 2.48c.12.16 1.7 2.6 4.12 3.64.58.25 1.03.4 1.38.51.58.18 1.11.16 1.53.1.47-.07 1.43-.58 1.63-1.15.2-.56.2-1.04.14-1.15-.06-.1-.22-.16-.46-.28z"/>
@@ -1611,7 +1611,7 @@
     let hasError = false;
     if (!name){ flagInvalid('name'); hasError = true; }
     if (!phone){ flagInvalid('phone'); hasError = true; }
-    if (email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim())){ flagInvalid('email'); hasError = true; }
+    if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim())){ flagInvalid('email'); hasError = true; }
     if (!apartment){ flagInvalid('apartment'); hasError = true; }
     if (!guests){ flagInvalid('guests'); hasError = true; }
     if (!bookingForOtherValue){ flagInvalid('booking-for-other'); hasError = true; }
@@ -1759,10 +1759,59 @@
         document.getElementById('success-total').textContent = 'Total: ' + fmt(roomTotal + CAUTION_FEE);
         document.getElementById('success-deposit').textContent = 'Includes ₦150,000 refundable caution fee';
       }
-      window.location.href = 'https://paystack.shop/pay/twresidence';
+      const payTotal = result ? ((LAUNCH_DISCOUNT > 0 ? result.total - Math.round(result.total * LAUNCH_DISCOUNT) : result.total) + CAUTION_FEE) : 0;
+      openPaystackPopup(payTotal, email.trim(), name, phone, submitBtn);
     });
 
     return false;
+  }
+
+  // ---- Paystack pop-up checkout (public key only; safe to be on the site) ----
+  const PAYSTACK_PUBLIC_KEY = 'pk_live_90798d68d7ecb04ae870b8b11de197272e076d2d';
+  const PAYSTACK_FALLBACK_LINK = 'https://paystack.shop/pay/twresidence';
+  const THANK_YOU_PAGE = 'tw-received-4k7m2x.html';
+
+  function resetPayButton(btn){
+    if (!btn) return;
+    btn.textContent = 'Proceed to Payment →';
+    btn.style.pointerEvents = '';
+    btn.style.opacity = '';
+  }
+
+  function openPaystackPopup(totalNaira, email, name, phone, btn){
+    // If the pop-up script didn't load, or the total can't be worked out,
+    // fall back to the original Paystack payment page so nobody is stuck.
+    if (typeof PaystackPop === 'undefined' || !totalNaira || totalNaira <= 0){
+      window.location.href = PAYSTACK_FALLBACK_LINK;
+      return;
+    }
+    try {
+      const handler = PaystackPop.setup({
+        key: PAYSTACK_PUBLIC_KEY,
+        email: email,
+        amount: Math.round(totalNaira * 100), // Paystack uses kobo
+        currency: 'NGN',
+        ref: 'TW-' + Date.now() + '-' + Math.floor(Math.random() * 1000),
+        metadata: {
+          custom_fields: [
+            { display_name: 'Guest name', variable_name: 'guest_name', value: name },
+            { display_name: 'Phone', variable_name: 'phone', value: phone },
+            { display_name: 'Check-in', variable_name: 'check_in', value: selectedCheckin || '' },
+            { display_name: 'Check-out', variable_name: 'check_out', value: selectedCheckout || '' }
+          ]
+        },
+        callback: function(response){
+          window.location.href = THANK_YOU_PAGE;
+        },
+        onClose: function(){
+          resetPayButton(btn);
+        }
+      });
+      if (btn){ btn.textContent = 'Opening payment…'; }
+      handler.openIframe();
+    } catch (e) {
+      window.location.href = PAYSTACK_FALLBACK_LINK;
+    }
   }
 
   function resetForm(){
@@ -1863,7 +1912,7 @@
 
     if (!document.getElementById('name').value) flag('name');
     if (!document.getElementById('phone').value) flag('phone');
-    if (document.getElementById('email').value.trim() && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(document.getElementById('email').value.trim())) flag('email');
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(document.getElementById('email').value.trim())) flag('email');
     if (!document.getElementById('booking-for-other').value) flag('booking-for-other');
     if (!document.getElementById('want-direct-refund').value) flag('want-direct-refund');
     if (bookingForOther && !document.getElementById('main-guest-name').value) flag('main-guest-name');
@@ -1988,5 +2037,6 @@
   </svg>
 </a>
 
+<script src="https://js.paystack.co/v1/inline.js"></script>
 </body>
 </html>
