@@ -1257,7 +1257,11 @@
 </script>
 
 <script>
-  const CAUTION_FEE = 150000;
+  // TEST PRICING: nights listed here cost N1,000 and carry no caution fee (only if the whole stay is test nights).
+  // To go back to normal, empty the list: const TEST_DATES = [];
+  const TEST_DATES = ['2026-10-07'];
+  const NORMAL_CAUTION_FEE = 150000;
+  let CAUTION_FEE = NORMAL_CAUTION_FEE;
 
   // Seasonal pricing calendar — ordered narrowest/most-specific range first,
   // since overlapping ranges are checked top-to-bottom and the first match wins.
@@ -1287,6 +1291,7 @@
   }
 
   function getPriceForDate(dateStr){
+    if (TEST_DATES.indexOf(dateStr) !== -1) return 1000;
     // Used for calendar display (default view, before a full stay is chosen)
     // and for any date outside the September window.
     if (isInShortLongWindow(dateStr)) return SHORT_STAY_RATE;
@@ -1309,13 +1314,15 @@
     const nights = Math.round((end - start) / 86400000);
     if (nights <= 0) return null;
     if (nights > MAX_NIGHTS) return null;
-    let total = 0;
+    let total = 0, testNights = 0;
     for (let i = 0; i < nights; i++){
       const d = new Date(start);
       d.setDate(d.getDate() + i);
       const dateStr = d.toISOString().split('T')[0];
+      if (TEST_DATES.indexOf(dateStr) !== -1) testNights++;
       total += getPriceForDate(dateStr);
     }
+    CAUTION_FEE = (testNights === nights) ? 0 : NORMAL_CAUTION_FEE;
     return { nights, total };
   }
 
@@ -1663,6 +1670,9 @@
     formData.append('Purpose', document.getElementById('purpose').value);
     formData.append('How Heard', document.getElementById('howheard').value);
     formData.append('Notes', document.getElementById('notes').value);
+    // A short reference shared by the booking record and the Paystack payment, so each payment can be matched to its booking.
+    const bookingRef = 'TW-' + Date.now().toString(36).toUpperCase() + Math.random().toString(36).slice(2, 5).toUpperCase();
+    formData.append('Booking Ref', bookingRef);
     formData.append('Terms Confirmed', 'Yes — guest agreed at booking');
     formData.append('No-Party Confirmed', 'Yes — guest agreed at booking');
     const result = calcTotal(selectedCheckin, selectedCheckout);
@@ -1760,7 +1770,7 @@
         document.getElementById('success-deposit').textContent = 'Includes ₦150,000 refundable caution fee';
       }
       const payTotal = result ? ((LAUNCH_DISCOUNT > 0 ? result.total - Math.round(result.total * LAUNCH_DISCOUNT) : result.total) + CAUTION_FEE) : 0;
-      openPaystackPopup(payTotal, email.trim(), name, phone, submitBtn);
+      openPaystackPopup(payTotal, email.trim(), name, phone, submitBtn, bookingRef);
     });
 
     return false;
@@ -1778,7 +1788,7 @@
     btn.style.opacity = '';
   }
 
-  function openPaystackPopup(totalNaira, email, name, phone, btn){
+  function openPaystackPopup(totalNaira, email, name, phone, btn, bookingRef){
     // If the pop-up script didn't load, or the total can't be worked out,
     // fall back to the original Paystack payment page so nobody is stuck.
     if (typeof PaystackPop === 'undefined' || !totalNaira || totalNaira <= 0){
@@ -1791,7 +1801,7 @@
         email: email,
         amount: Math.round(totalNaira * 100), // Paystack uses kobo
         currency: 'NGN',
-        ref: 'TW-' + Date.now() + '-' + Math.floor(Math.random() * 1000),
+        ref: bookingRef || ('TW-' + Date.now() + '-' + Math.floor(Math.random() * 1000)),
         metadata: {
           custom_fields: [
             { display_name: 'Guest name', variable_name: 'guest_name', value: name },
