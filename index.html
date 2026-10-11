@@ -1268,6 +1268,7 @@
   // length-of-stay pricing (see SHORT_LONG_WINDOW below). From October 1
   // onward, pricing is flat with no long-stay discount.
   const SEASONAL_RATES = [
+    { start: '2026-10-11', end: '2026-10-16', price: 170000 }, // Dad's guests
     { start: '2026-11-01', end: '2026-11-07', price: 230000 },
     { start: '2026-11-08', end: '2026-11-14', price: 250000 },
     { start: '2026-11-15', end: '2027-01-05', price: 300000 },
@@ -1387,6 +1388,7 @@
   // not just stated as policy) — bookings close by check-in time the day before,
   // so same-day check-in and "book tonight for tomorrow" are both unavailable.
   const CHECKIN_HOUR = 15; // 3:00 PM
+  const SAME_DAY_CHECKIN_EXCEPTIONS = ['2026-10-11']; // Dad's guests
 
   // Maximum stay length, in nights — kept well under what would risk a guest
   // being treated as a sitting tenant under Nigerian tenancy law. Hard-blocked
@@ -1403,6 +1405,9 @@
     const cutoffToday = new Date(); cutoffToday.setHours(CHECKIN_HOUR, 0, 0, 0);
     const minCheckinDate = new Date(today);
     minCheckinDate.setDate(minCheckinDate.getDate() + (now >= cutoffToday ? 2 : 1));
+    // One-off: same-day check-in allowed on these dates only.
+    const todayStr = `${today.getFullYear()}-${String(today.getMonth()+1).padStart(2,'0')}-${String(today.getDate()).padStart(2,'0')}`;
+    if (SAME_DAY_CHECKIN_EXCEPTIONS.includes(todayStr)) minCheckinDate.setTime(today.getTime());
     const minSelectable = mode === 'checkin' ? minCheckinDate : today;
     const firstDay = new Date(year, month, 1).getDay();
     const daysInMonth = new Date(year, month + 1, 0).getDate();
