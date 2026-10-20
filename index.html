@@ -104,7 +104,7 @@
       "name": "Does T.W Residence offer a discount for longer stays?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "T.W Residence uses fixed, published seasonal pricing shown on the booking calendar. Pricing is not negotiable and is not lowered for longer stays."
+        "text": "T.W Residence uses fixed, published seasonal pricing shown on the booking calendar. Pricing is not negotiable. Current festive offer: stay 4 nights and get the 5th night free, for stays between 1 November and 14 December 2026 (check-out up to 15 December). The offer is applied automatically on the booking form."
       }
     },
     {
@@ -228,6 +228,19 @@
     line-height:1.5;
   }
   .announce{line-height:1.5;}
+
+  /* Festive offer pop-up */
+  .offer-overlay{position:fixed;inset:0;background:rgba(30,20,12,.78);z-index:1000;display:none;align-items:center;justify-content:center;padding:14px;}
+  .offer-overlay.show{display:flex;}
+  .offer-modal{position:relative;background:#2E2015;width:100%;max-width:420px;max-height:calc(100vh - 28px);overflow:auto;box-shadow:0 20px 60px rgba(0,0,0,.5);animation:offerIn .35s ease;}
+  @keyframes offerIn{from{opacity:0;transform:translateY(14px) scale(.98);}to{opacity:1;transform:none;}}
+  .offer-img{display:block;width:100%;height:auto;}
+  .offer-actions{padding:6px 24px 22px;text-align:center;}
+  .offer-cta{display:block;background:linear-gradient(180deg,#E7C265,#C9A24D);color:#3B2A1C;font-weight:700;letter-spacing:.14em;font-size:15px;padding:16px 20px;text-decoration:none;text-transform:uppercase;}
+  .offer-cta:hover{filter:brightness(1.06);}
+  .offer-fine{font-size:12px;line-height:1.5;color:#C4A57F;margin-top:12px;}
+  .offer-skip{background:none;border:0;color:#E6D9C2;font:inherit;font-size:13px;margin-top:10px;cursor:pointer;text-decoration:underline;text-underline-offset:3px;}
+  .offer-close{position:absolute;top:10px;right:10px;z-index:3;width:34px;height:34px;border-radius:50%;border:0;background:rgba(46,32,21,.75);color:#F3F0E6;font-size:22px;line-height:1;cursor:pointer;}
   .contact-bar{
     background:var(--blush);
     color:var(--ink-soft);
@@ -947,7 +960,7 @@
       </details>
       <details class="faq-item">
         <summary>Does T.W Residence offer a discount for longer stays?</summary>
-        <p>T.W Residence uses fixed, published seasonal pricing shown on the booking calendar. Pricing is not negotiable and is not lowered for longer stays.</p>
+        <p>T.W Residence uses fixed, published seasonal pricing shown on the booking calendar. Pricing is not negotiable. Current festive offer: stay 4 nights and get the 5th night free, for stays between 1 November and 14 December 2026 (check-out up to 15 December). The offer is applied automatically on the booking form.</p>
       </details>
       <details class="faq-item">
         <summary>Are parties or events allowed?</summary>
@@ -1287,16 +1300,21 @@
   // length-of-stay pricing (see SHORT_LONG_WINDOW below). From October 1
   // onward, pricing is flat with no long-stay discount.
   const SEASONAL_RATES = [
+    // Nov 1 to Dec 14, 2026: shoulder season
     { start: '2026-11-01', end: '2026-12-14', price: 230000 },
-    { start: '2026-12-15', end: '2027-01-02', price: 250000 }, // peak
+    // Dec 15, 2026 to Jan 21, 2027: Detty December, Christmas, New Year and January
+    { start: '2026-12-15', end: '2027-01-02', price: 250000 },
     { start: '2027-01-03', end: '2027-01-05', price: 250000 },
     { start: '2027-01-06', end: '2027-01-21', price: 250000 },
-    { start: '2027-02-10', end: '2027-02-16', price: 250000 },
-    { start: '2027-03-07', end: '2027-03-13', price: 250000 },
-    { start: '2027-03-24', end: '2027-03-29', price: 250000 },
-    { start: '2027-04-29', end: '2027-05-02', price: 250000 },
-    { start: '2027-05-14', end: '2027-05-19', price: 250000 },
-    { start: '2027-06-12', end: '2027-06-14', price: 250000 },
+    // 2027 holiday and long-weekend periods
+    { start: '2027-02-10', end: '2027-02-16', price: 250000 }, // Valentine's, presidential election Feb 20
+    { start: '2027-03-07', end: '2027-03-13', price: 250000 }, // Eid el-Fitr (Mar 9)
+    { start: '2027-03-24', end: '2027-03-29', price: 250000 }, // Good Friday and Easter Monday
+    { start: '2027-04-29', end: '2027-05-02', price: 250000 }, // Workers' Day long weekend
+    { start: '2027-05-14', end: '2027-05-19', price: 250000 }, // Eid el-Kabir (May 16)
+    { start: '2027-06-11', end: '2027-06-13', price: 250000 }, // Democracy Day long weekend
+    { start: '2027-08-13', end: '2027-08-15', price: 250000 }, // Eid el-Maulud long weekend
+    { start: '2027-09-30', end: '2027-10-02', price: 250000 }, // Independence Day long weekend
   ];
   const STANDARD_RATE = 200000; // applies to October and any other unlisted (non-holiday) date
 
@@ -1318,6 +1336,10 @@
     return STANDARD_RATE;
   }
 
+  // Festive offer: stay 4 nights, get the 5th free. Applies when the first five nights of the stay
+  // fall between 1 Nov and 14 Dec 2026 (check-out up to 15 Dec).
+  const FREE_NIGHT_OFFER = { start: '2026-11-01', end: '2026-12-14', stayNights: 5 };
+
   function fmt(n){ return '₦' + n.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ','); }
 
   function fmtShort(n){
@@ -1332,13 +1354,29 @@
     if (nights <= 0) return null;
     if (nights > MAX_NIGHTS) return null;
     let total = 0;
+    const nightPrices = [];
+    const nightDates = [];
     for (let i = 0; i < nights; i++){
       const d = new Date(start);
       d.setDate(d.getDate() + i);
       const dateStr = d.toISOString().split('T')[0];
-      total += getPriceForDate(dateStr);
+      const price = getPriceForDate(dateStr);
+      nightPrices.push(price);
+      nightDates.push(dateStr);
+      total += price;
     }
-    return { nights, total };
+    // Festive offer: on a stay of 5+ nights where the first five nights all fall inside the
+    // offer window, the 5th night is free.
+    let freeNight = 0;
+    if (nights >= FREE_NIGHT_OFFER.stayNights){
+      const first = nightDates.slice(0, FREE_NIGHT_OFFER.stayNights);
+      const inWindow = first.every(function(ds){ return ds >= FREE_NIGHT_OFFER.start && ds <= FREE_NIGHT_OFFER.end; });
+      if (inWindow){
+        freeNight = nightPrices[FREE_NIGHT_OFFER.stayNights - 1];
+        total -= freeNight;
+      }
+    }
+    return { nights, total, freeNight };
   }
 
   let bookedDates = [];
@@ -1538,8 +1576,8 @@
     const box = document.getElementById('estimate');
     box.classList.add('visible');
     document.getElementById('nights-label').textContent = result.nights + ' night' + (result.nights > 1 ? 's' : '');
-    document.getElementById('subtotal-amount').textContent = fmt(result.total);
-    applyPromoToDisplay(result.total);
+    document.getElementById('subtotal-amount').textContent = fmt(result.total + (result.freeNight || 0));
+    applyPromoToDisplay(result.total + (result.freeNight || 0), result.freeNight || 0);
 
     const longStayNote = document.getElementById('long-stay-note');
     if (longStayNote){
@@ -1547,10 +1585,15 @@
     }
   }
 
-  function applyPromoToDisplay(subtotal){
+  function applyPromoToDisplay(subtotal, freeNight){
     const promoRow = document.getElementById('promo-row');
     const totalEl = document.getElementById('total-amount');
-    if (LAUNCH_DISCOUNT > 0){
+    if (freeNight > 0){
+      document.getElementById('promo-code-label').textContent = '5th night free';
+      document.getElementById('promo-discount-amount').textContent = '\u2212' + fmt(freeNight);
+      promoRow.classList.remove('hidden');
+      totalEl.textContent = fmt(subtotal - freeNight + CAUTION_FEE);
+    } else if (LAUNCH_DISCOUNT > 0){
       const discount = Math.round(subtotal * LAUNCH_DISCOUNT);
       document.getElementById('promo-code-label').textContent = Math.round(LAUNCH_DISCOUNT*100) + '% launch offer';
       document.getElementById('promo-discount-amount').textContent = '\u2212' + fmt(discount);
@@ -1691,8 +1734,12 @@
     formData.append('No-Party Confirmed', 'Yes — guest agreed at booking');
     const result = calcTotal(selectedCheckin, selectedCheckout);
     if (result){
-      formData.append('Subtotal', fmt(result.total));
+      formData.append('Subtotal', fmt(result.total + (result.freeNight || 0)));
       formData.append('Nights', result.nights + ' night(s)');
+      if (result.freeNight > 0){
+        formData.append('Promo', '5th night free');
+        formData.append('Discount', fmt(result.freeNight));
+      }
       let roomTotal = result.total;
       if (LAUNCH_DISCOUNT > 0){
         const discount = Math.round(result.total * LAUNCH_DISCOUNT);
@@ -1802,6 +1849,10 @@
         roomTotal = result.total - discount;
         html += rowHtml('Subtotal', fmt(result.total));
         html += rowHtml('Launch offer (' + Math.round(LAUNCH_DISCOUNT*100) + '%)', '\u2212' + fmt(discount));
+        html += rowHtml('Room total (full payment)', fmt(roomTotal));
+      } else if (result.freeNight > 0){
+        html += rowHtml('Subtotal', fmt(result.total + result.freeNight));
+        html += rowHtml('5th night free', '\u2212' + fmt(result.freeNight));
         html += rowHtml('Room total (full payment)', fmt(roomTotal));
       } else {
         html += rowHtml('Room total (full payment)', fmt(roomTotal));
@@ -1975,5 +2026,38 @@
   </svg>
 </a>
 
+
+<div class="offer-overlay" id="offer-overlay" role="dialog" aria-modal="true" aria-label="Festive offer: stay 4 nights, get the 5th free" aria-hidden="true">
+  <div class="offer-modal">
+    <button class="offer-close" id="offer-close" aria-label="Close">&times;</button>
+    <img class="offer-img" src="offer-popup.jpg" alt="Festive offer: stay 4 nights, get the 5th night free, for stays 1 November to 14 December. T.W Residence, Surulere, Lagos.">
+    <div class="offer-actions">
+      <a href="#book" class="offer-cta" id="offer-cta">Book now</a>
+      <div class="offer-fine">The first five nights of your stay must fall between 1 Nov and 14 Dec (check-out up to 15 Dec). The free night is applied automatically when you pick your dates.</div>
+      <button class="offer-skip" id="offer-skip" type="button">Maybe later</button>
+    </div>
+  </div>
+</div>
+<script>
+(function(){
+  var overlay = document.getElementById('offer-overlay');
+  if (!overlay) return;
+  var KEY = 'tw_offer_seen';
+  var today = new Date().toISOString().split('T')[0];
+  if (today > '2026-12-14') return; // offer has ended
+  try { if (localStorage.getItem(KEY) === today) return; } catch(e){}
+  function openOffer(){
+    overlay.classList.add('show'); overlay.setAttribute('aria-hidden','false');
+    try { localStorage.setItem(KEY, today); } catch(e){}
+  }
+  function closeOffer(){ overlay.classList.remove('show'); overlay.setAttribute('aria-hidden','true'); }
+  setTimeout(openOffer, 3000);
+  document.getElementById('offer-close').addEventListener('click', closeOffer);
+  document.getElementById('offer-skip').addEventListener('click', closeOffer);
+  document.getElementById('offer-cta').addEventListener('click', closeOffer);
+  overlay.addEventListener('click', function(e){ if (e.target === overlay) closeOffer(); });
+  document.addEventListener('keydown', function(e){ if (e.key === 'Escape') closeOffer(); });
+})();
+</script>
 </body>
 </html>
