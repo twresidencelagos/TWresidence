@@ -874,11 +874,11 @@
       <h2>Choose your stay</h2>
     </div>
     <div class="gallery-grid" style="height:auto;grid-template-columns:1fr 1fr;">
-      <div style="position:relative;border-radius:var(--radius);overflow:hidden;">
+      <div class="unit-card" onclick="openLightbox(unit1Images, 0)" style="position:relative;border-radius:var(--radius);overflow:hidden;cursor:pointer;">
         <img src="images/unit1-living-room.jpg.jpg" alt="T.W Unit 1" style="width:100%;height:340px;object-fit:cover;">
         <div style="position:absolute;bottom:0;left:0;right:0;background:linear-gradient(transparent,rgba(59,42,28,.8));padding:18px 20px;">
           <p style="color:#fff;font-family:'Fraunces',serif;font-size:18px;font-weight:600;letter-spacing:.02em;">T.W Unit 1</p>
-          <p style="color:var(--brass);font-size:12px;letter-spacing:.06em;text-transform:uppercase;margin-top:2px;">Coming Soon</p>
+          <p style="color:var(--brass);font-size:12px;letter-spacing:.06em;text-transform:uppercase;margin-top:2px;">Available from 1 Nov · Tap to view photos</p>
         </div>
       </div>
       <div class="unit-card" onclick="openLightbox(unit2Images, 0)" style="position:relative;border-radius:var(--radius);overflow:hidden;cursor:pointer;">
@@ -1064,7 +1064,7 @@
             <label>Select Apartment *</label>
             <select id="apartment" required>
               <option value="">Select...</option>
-              <option disabled>Unit 1 - 3 Bedroom Ensuite (Coming Soon)</option>
+              <option>Unit 1 - 3 Bedroom Ensuite (from 1 Nov)</option>
               <option>Unit 2 - 3 Bedroom Ensuite</option>
               <option>No preference</option>
             </select>
@@ -1398,6 +1398,13 @@
   }
 
   let bookedDates = [];
+  let bookedDatesU1 = [];
+
+  // Unit 1 opens for bookings on this date. Earlier dates stay blocked for Unit 1.
+  const UNIT1_OPEN_DATE = '2026-11-01';
+  // Add Unit 1's own Google Calendar ID(s) here once it exists, e.g. 'abc123@group.calendar.google.com'.
+  // While this list is empty, Unit 1 uses the same booked dates as Unit 2 (safe: no double-booking).
+  const UNIT1_CAL_IDS = [];
 
   // Manually confirmed bookings — always blocked regardless of calendar sync status.
   const MANUALLY_BLOCKED_RANGES = [
@@ -1429,25 +1436,83 @@
     const future = new Date(Date.now() + 365*24*60*60*1000).toISOString();
 
     for (const calId of CAL_IDS){
-      try{
-        const url = `https://www.googleapis.com/calendar/v3/calendars/${encodeURIComponent(calId)}/events?key=${CAL_API_KEY}&timeMin=${encodeURIComponent(now)}&timeMax=${encodeURIComponent(future)}&singleEvents=true&orderBy=startTime`;
-        const res = await fetch(url);
-        const data = await res.json();
-        if (data.items){
-          data.items.forEach(event => {
-            const startStr = event.start.date || event.start.dateTime?.split('T')[0];
-            const endStr = event.end.date || event.end.dateTime?.split('T')[0];
-            if (startStr && endStr){
-              const start = new Date(startStr);
-              const end = new Date(endStr);
-              for (let d = new Date(start); d < end; d.setDate(d.getDate() + 1)){
-                bookedDates.push(d.toISOString().split('T')[0]);
-              }
-            }
-          });
-        }
-      } catch(e){ console.log('Calendar fetch error for', calId, e); }
+      await fetchCalendarDates(calId, bookedDates);
     }
+    bookedDatesU1 = [];
+    for (const calId of UNIT1_CAL_IDS){
+      await fetchCalendarDates(calId, bookedDatesU1);
+    }
+  }
+
+  async function fetchCalendarDates(calId, out){
+    const now = new Date().toISOString();
+    const future = new Date(Date.now() + 365*24*60*60*1000).toISOString();
+    try{
+      const url = `https://www.googleapis.com/calendar/v3/calendars/${encodeURIComponent(calId)}/events?key=${CAL_API_KEY}&timeMin=${encodeURIComponent(now)}&timeMax=${encodeURIComponent(future)}&singleEvents=true&orderBy=startTime`;
+      const res = await fetch(url);
+      const data = await res.json();
+      if (data.items){
+        data.items.forEach(event => {
+          const startStr = event.start.date || event.start.dateTime?.split('T')[0];
+          const endStr = event.end.date || event.end.dateTime?.split('T')[0];
+          if (startStr && endStr){
+            const start = new Date(startStr);
+            const end = new Date(endStr);
+            for (let d = new Date(start); d < end; d.setDate(d.getDate() + 1)){
+              out.push(d.toISOString().split('T')[0]);
+            }
+          }
+        });
+      }
+    } catch(e){ console.log('Calendar fetch error for', calId, e); }
+  }
+
+  // Which unit is selected in the booking form: 1, 2, or 0 (none / no preference).
+  function selectedUnit(){
+    const el = document.getElementById('apartment');
+    const v = el ? el.value : '';
+    if (v.indexOf('Unit 1') === 0) return 1;
+    if (v.indexOf('Unit 2') === 0) return 2;
+    return 0;
+  }
+
+  function isBlockedForUnit(dateStr, unit){
+    const u2Blocked = bookedDates.includes(dateStr) || isDateManuallyBlocked(dateStr);
+    if (unit === 1){
+      if (dateStr < UNIT1_OPEN_DATE) return true;
+      return UNIT1_CAL_IDS.length ? bookedDatesU1.includes(dateStr) : u2Blocked;
+    }
+    return u2Blocked;
+  }
+
+  // A date is unavailable if the chosen unit is booked. With no unit chosen (or "No preference"),
+  // a date is only unavailable when every unit is booked.
+  function isDateBooked(dateStr){
+    const u = selectedUnit();
+    if (u) return isBlockedForUnit(dateStr, u);
+    return isBlockedForUnit(dateStr, 1) && isBlockedForUnit(dateStr, 2);
+  }
+
+  function rangeHasBookedNight(checkIn, checkOut){
+    const start = new Date(checkIn + 'T00:00:00'), end = new Date(checkOut + 'T00:00:00');
+    for (let d = new Date(start); d < end; d.setDate(d.getDate() + 1)){
+      const ds = d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0');
+      if (isDateBooked(ds)) return true;
+    }
+    return false;
+  }
+
+  function onApartmentChange(){
+    if (selectedCheckin && (isDateBooked(selectedCheckin) || (selectedCheckout && rangeHasBookedNight(selectedCheckin, selectedCheckout)))){
+      selectedCheckin = null; selectedCheckout = null;
+      document.getElementById('pill-checkin-value').textContent = 'Not selected';
+      document.getElementById('pill-checkin-value').classList.add('placeholder');
+      document.getElementById('pill-checkout-value').textContent = 'Not selected';
+      document.getElementById('pill-checkout-value').classList.add('placeholder');
+      document.getElementById('estimate').classList.remove('visible');
+      alert('Those dates are not available for the apartment you selected. Please choose new dates.');
+    }
+    renderCalendar();
   }
 
   function getMode(){
@@ -1498,7 +1563,7 @@
       const dateStr = `${year}-${String(month+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
       const dateObj = new Date(year, month, d);
       const isPast = dateObj < minSelectable;
-      const isBooked = bookedDates.includes(dateStr) || isDateManuallyBlocked(dateStr);
+      const isBooked = isDateBooked(dateStr);
       const isSelected = dateStr === selectedCheckin || dateStr === selectedCheckout;
       const isInRange = selectedCheckin && selectedCheckout && dateStr > selectedCheckin && dateStr < selectedCheckout;
       const isSundayException = SUNDAY_CHECKOUT_EXCEPTIONS.includes(dateStr);
@@ -1572,6 +1637,10 @@
           alert('The maximum stay is ' + MAX_NIGHTS + ' nights. Please choose a closer check-out date.');
           return;
         }
+      }
+      if (rangeHasBookedNight(selectedCheckin, dateStr)){
+        alert('Some of those nights are already booked. Please choose different dates.');
+        return;
       }
       selectedCheckout = dateStr;
       document.getElementById('pill-checkout-value').textContent = formatDate(dateStr);
@@ -1961,6 +2030,7 @@
   fetchBookedDates().then(() => {
     renderCalendar();
   });
+  document.getElementById('apartment').addEventListener('change', onApartmentChange);
 </script>
 
 <script>
