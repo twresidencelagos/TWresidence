@@ -2071,13 +2071,10 @@
 (function(){
   var overlay = document.getElementById('offer-overlay');
   if (!overlay) return;
-  var KEY = 'tw_offer_seen';
   var today = new Date().toISOString().split('T')[0];
   if (today > '2026-12-14') return; // offer has ended
-  try { if (localStorage.getItem(KEY) === today) return; } catch(e){}
   function openOffer(){
     overlay.classList.add('show'); overlay.setAttribute('aria-hidden','false');
-    try { localStorage.setItem(KEY, today); } catch(e){}
   }
   function closeOffer(){ overlay.classList.remove('show'); overlay.setAttribute('aria-hidden','true'); }
   setTimeout(openOffer, 3000);
