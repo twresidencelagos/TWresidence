@@ -1403,8 +1403,8 @@
   // Unit 1 opens for bookings on this date. Earlier dates stay blocked for Unit 1.
   const UNIT1_OPEN_DATE = '2026-11-01';
   // Add Unit 1's own Google Calendar ID(s) here once it exists, e.g. 'abc123@group.calendar.google.com'.
-  // While this list is empty, Unit 1 uses the same booked dates as Unit 2 (safe: no double-booking).
-  const UNIT1_CAL_IDS = [];
+  // If this list is empty, Unit 1 falls back to Unit 2's booked dates (safe: no double-booking).
+  const UNIT1_CAL_IDS = ['0d8859311df2e87ddfc3010c34daf044f377f24d8c544e60a915248326041331@group.calendar.google.com'];
 
   // Manually confirmed bookings — always blocked regardless of calendar sync status.
   const MANUALLY_BLOCKED_RANGES = [
