@@ -230,17 +230,35 @@
   .announce{line-height:1.5;}
 
   /* Festive offer pop-up */
-  .offer-overlay{position:fixed;inset:0;background:rgba(30,20,12,.78);z-index:1000;display:none;align-items:center;justify-content:center;padding:14px;}
+  .offer-overlay{position:fixed;inset:0;background:rgba(59,42,28,.5);z-index:1000;display:none;align-items:center;justify-content:center;padding:14px;}
   .offer-overlay.show{display:flex;}
-  .offer-modal{position:relative;background:#2E2015;width:100%;max-width:420px;max-height:calc(100vh - 28px);overflow:auto;box-shadow:0 20px 60px rgba(0,0,0,.5);animation:offerIn .35s ease;}
-  @keyframes offerIn{from{opacity:0;transform:translateY(14px) scale(.98);}to{opacity:1;transform:none;}}
-  .offer-img{display:block;width:100%;height:auto;}
-  .offer-actions{padding:6px 24px 22px;text-align:center;}
-  .offer-cta{display:block;background:linear-gradient(180deg,#E7C265,#C9A24D);color:#3B2A1C;font-weight:700;letter-spacing:.14em;font-size:15px;padding:16px 20px;text-decoration:none;text-transform:uppercase;}
-  .offer-cta:hover{filter:brightness(1.06);}
-  .offer-fine{font-size:12px;line-height:1.5;color:#C4A57F;margin-top:12px;}
-  .offer-skip{background:none;border:0;color:#E6D9C2;font:inherit;font-size:13px;margin-top:10px;cursor:pointer;text-decoration:underline;text-underline-offset:3px;}
-  .offer-close{position:absolute;top:10px;right:10px;z-index:3;width:34px;height:34px;border-radius:50%;border:0;background:rgba(46,32,21,.75);color:#F3F0E6;font-size:22px;line-height:1;cursor:pointer;}
+  .offer-modal{position:relative;background:var(--cream);width:100%;max-width:400px;max-height:calc(100vh - 28px);overflow:auto;border-radius:8px;box-shadow:0 22px 60px rgba(59,42,28,.32);animation:offerIn .4s ease;}
+  @keyframes offerIn{from{opacity:0;transform:translateY(16px) scale(.97);}to{opacity:1;transform:none;}}
+  .offer-art{position:relative;height:236px;background:radial-gradient(ellipse at 50% 58%,#FFF9EC 0%,#F6E8CB 55%,#EBD4A6 100%);border-radius:8px 8px 0 0;overflow:hidden;text-align:center;}
+  .offer-art:before{content:"";position:absolute;inset:-60px;background:repeating-conic-gradient(from 0deg at 50% 62%,rgba(201,162,77,.20) 0deg 6deg,rgba(201,162,77,0) 6deg 12deg);-webkit-mask-image:radial-gradient(circle at 50% 62%,#000 0,rgba(0,0,0,.55) 45%,transparent 75%);mask-image:radial-gradient(circle at 50% 62%,#000 0,rgba(0,0,0,.55) 45%,transparent 75%);}
+  .offer-art:after{content:"";position:absolute;left:0;right:0;bottom:0;height:2px;background:linear-gradient(90deg,transparent,var(--brass),transparent);}
+  .offer-brand{position:relative;padding-top:20px;font-size:11px;letter-spacing:.36em;font-weight:700;color:var(--wine);}
+  .offer-seal{position:absolute;left:50%;top:58px;width:150px;height:150px;transform:translateX(-50%) rotate(-8deg);filter:drop-shadow(0 8px 14px rgba(120,90,30,.35));}
+  .offer-seal svg{display:block;}
+  .offer-seal-t{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;color:#3B2A1C;line-height:1;}
+  .offer-seal-t .a{font-size:11px;letter-spacing:.2em;font-weight:700;margin-bottom:4px;}
+  .offer-seal-t .b{font-family:'Fraunces',serif;font-weight:600;font-size:40px;letter-spacing:-.01em;}
+  .offer-seal-t .c{font-size:9.5px;letter-spacing:.2em;font-weight:700;margin-top:5px;}
+  .offer-spark{position:absolute;color:var(--brass);line-height:1;text-shadow:0 0 8px rgba(255,220,140,.9);}
+  .offer-spark.s1{left:44px;top:84px;font-size:18px;}.offer-spark.s2{right:46px;top:70px;font-size:13px;}.offer-spark.s3{left:70px;bottom:26px;font-size:10px;}.offer-spark.s4{right:62px;bottom:38px;font-size:15px;}
+  .offer-body{padding:22px 24px 20px;text-align:center;}
+  .offer-eye{color:var(--wine);font-size:11px;letter-spacing:.26em;font-weight:700;margin-bottom:10px;}
+  .offer-title{font-family:'Fraunces',serif;font-weight:500;font-size:31px;line-height:1.08;color:var(--ink);margin:0 0 14px;}
+  .offer-title em{font-style:normal;color:var(--wine);display:block;}
+  .offer-dots{display:flex;justify-content:center;gap:9px;margin-bottom:12px;}
+  .offer-dots i{width:11px;height:11px;border-radius:50%;border:1.5px solid var(--ink-soft);}
+  .offer-dots i.f{background:var(--brass);border-color:var(--brass);box-shadow:0 0 0 4px rgba(201,162,77,.25);}
+  .offer-dates{font-size:14px;color:var(--ink-soft);margin:0 0 18px;}
+  .offer-cta{display:block;background:linear-gradient(180deg,#D6B15C,var(--brass));color:var(--wine-deep);font-weight:700;letter-spacing:.1em;font-size:14px;padding:16px 20px;text-decoration:none;text-transform:uppercase;border-radius:4px;box-shadow:0 6px 16px rgba(201,162,77,.4);}
+  .offer-cta:hover{filter:brightness(1.05);}
+  .offer-fine{font-size:12px;line-height:1.5;color:var(--ink-soft);margin-top:14px;}
+  .offer-skip{background:none;border:0;color:var(--ink-soft);font:inherit;font-size:13px;margin-top:8px;cursor:pointer;text-decoration:underline;text-underline-offset:3px;}
+  .offer-close{position:absolute;top:10px;right:10px;z-index:3;width:32px;height:32px;border-radius:50%;border:0;background:rgba(251,243,231,.95);color:var(--ink);font-size:20px;line-height:1;cursor:pointer;box-shadow:0 1px 6px rgba(0,0,0,.2);}
   .contact-bar{
     background:var(--blush);
     color:var(--ink-soft);
@@ -2027,11 +2045,22 @@
 </a>
 
 
-<div class="offer-overlay" id="offer-overlay" role="dialog" aria-modal="true" aria-label="Festive offer: stay 4 nights, get the 5th free" aria-hidden="true">
+<div class="offer-overlay" id="offer-overlay" role="dialog" aria-modal="true" aria-labelledby="offer-title" aria-hidden="true">
   <div class="offer-modal">
     <button class="offer-close" id="offer-close" aria-label="Close">&times;</button>
-    <img class="offer-img" src="offer-popup.jpg" alt="Festive offer: stay 4 nights, get the 5th night free, for stays 1 November to 14 December. T.W Residence, Surulere, Lagos.">
-    <div class="offer-actions">
+    <div class="offer-art" aria-hidden="true">
+      <div class="offer-brand">T.W RESIDENCE</div>
+      <div class="offer-seal">
+        <svg viewBox="-125 -125 250 250" width="150" height="150"><defs><radialGradient id="sealg" cx="40%" cy="35%" r="75%"><stop offset="0" stop-color="#F7DB8F"/><stop offset=".6" stop-color="#E0B64F"/><stop offset="1" stop-color="#B98A2C"/></radialGradient></defs><polygon points="122.0,0.0 107.3,12.1 118.9,27.1 101.9,35.7 109.9,52.9 91.4,57.5 95.4,76.1 76.4,76.4 76.1,95.4 57.5,91.4 52.9,109.9 35.7,101.9 27.1,118.9 12.1,107.3 0.0,122.0 -12.1,107.3 -27.1,118.9 -35.7,101.9 -52.9,109.9 -57.5,91.4 -76.1,95.4 -76.4,76.4 -95.4,76.1 -91.4,57.5 -109.9,52.9 -101.9,35.7 -118.9,27.1 -107.3,12.1 -122.0,0.0 -107.3,-12.1 -118.9,-27.1 -101.9,-35.7 -109.9,-52.9 -91.4,-57.5 -95.4,-76.1 -76.4,-76.4 -76.1,-95.4 -57.5,-91.4 -52.9,-109.9 -35.7,-101.9 -27.1,-118.9 -12.1,-107.3 -0.0,-122.0 12.1,-107.3 27.1,-118.9 35.7,-101.9 52.9,-109.9 57.5,-91.4 76.1,-95.4 76.4,-76.4 95.4,-76.1 91.4,-57.5 109.9,-52.9 101.9,-35.7 118.9,-27.1 107.3,-12.1" fill="url(#sealg)"/><circle r="96" fill="none" stroke="#3B2A1C" stroke-opacity=".5" stroke-width="2"/><circle r="90" fill="none" stroke="#fff" stroke-opacity=".5" stroke-width="1"/></svg>
+        <div class="offer-seal-t"><span class="a">5TH NIGHT</span><span class="b">FREE</span><span class="c">ON US</span></div>
+      </div>
+      <div class="offer-spark s1">&#10022;</div><div class="offer-spark s2">&#10022;</div><div class="offer-spark s3">&#10022;</div><div class="offer-spark s4">&#10022;</div>
+    </div>
+    <div class="offer-body">
+      <div class="offer-eye">FESTIVE OFFER</div>
+      <h2 class="offer-title" id="offer-title">Stay 4 nights.<em>Get the 5th free.</em></h2>
+      <div class="offer-dots" aria-hidden="true"><i></i><i></i><i></i><i></i><i class="f"></i></div>
+      <p class="offer-dates">For stays from <strong>1 Nov</strong> to <strong>14 Dec</strong></p>
       <a href="#book" class="offer-cta" id="offer-cta">Book now</a>
       <div class="offer-fine">The first five nights of your stay must fall between 1 Nov and 14 Dec (check-out up to 15 Dec). The free night is applied automatically when you pick your dates.</div>
       <button class="offer-skip" id="offer-skip" type="button">Maybe later</button>
