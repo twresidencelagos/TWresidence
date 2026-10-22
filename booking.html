@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Your booking | T.W Residence</title>
+<meta name="robots" content="noindex, nofollow">
+<link rel="canonical" href="https://twresidence.org/">
+<script src="config.js"></script>
+<style>
+  body{margin:0;background:#FBF3E7;color:#3B2A1C;font-family:Arial,Helvetica,sans-serif;line-height:1.6;}
+  main{max-width:560px;margin:0 auto;padding:36px 20px 60px;}
+  h1{font-family:Georgia,'Times New Roman',serif;font-weight:500;font-size:clamp(26px,5vw,32px);margin:0 0 12px;}
+  .card{background:#F1E6D3;border:1px solid #E6D9C2;border-radius:4px;padding:18px 20px;margin:18px 0;}
+  .row{display:flex;justify-content:space-between;gap:12px;padding:8px 0;border-bottom:1px solid #E6D9C2;font-size:15px;}
+  .row:last-child{border-bottom:none;}
+  .row span:first-child{color:#786349;}
+  .row span:last-child{text-align:right;font-weight:600;}
+  .badge{display:inline-block;padding:4px 12px;border-radius:99px;font-size:13px;font-weight:700;letter-spacing:.03em;}
+  .ok{background:#2f6b3a;color:#fff;}.wait{background:#8B6B2E;color:#fff;}.bad{background:#8a2f2f;color:#fff;}
+  a{color:#8B6B2E;}
+  input{font-size:16px;padding:12px;border:1px solid #C9B999;border-radius:4px;width:100%;box-sizing:border-box;margin:8px 0;text-transform:uppercase;}
+  button{font-size:15px;padding:12px 22px;background:#3B2A1C;color:#FBF3E7;border:none;border-radius:4px;cursor:pointer;}
+</style>
+</head>
+<body>
+<main>
+  <p><a href="https://twresidence.org/">← T.W Residence</a></p>
+  <h1 id="title">Check your booking</h1>
+  <p id="msg">Enter your booking reference (it starts with TW-).</p>
+  <form id="lookup" style="display:none">
+    <input id="ref" placeholder="TW-XXXXXXXXXX" maxlength="13" autocomplete="off">
+    <button type="submit">Check status</button>
+  </form>
+  <div class="card" id="card" style="display:none"></div>
+  <p style="font-size:14px;color:#786349">Your booking is confirmed only when this page says <strong>Payment verified</strong>. Coming back to this page does not confirm anything by itself. Need help? <a href="https://wa.me/2348123331112">Message us on WhatsApp</a> (messages only, not on Sundays).</p>
+</main>
+<script>
+(function(){
+  var API = ((window.TW_CONFIG && window.TW_CONFIG.apiUrl) || '').replace(/\/+$/, '');
+  var $ = function(id){ return document.getElementById(id); };
+  var timer = null, started = 0;
+  function fmt(n){ return '₦' + String(n).replace(/\B(?=(\d{3})+(?!\d))/g, ','); }
+  function row(l, v){ var r = document.createElement('div'); r.className = 'row'; var a = document.createElement('span'); a.textContent = l; var b = document.createElement('span'); b.textContent = v; r.appendChild(a); r.appendChild(b); return r; }
+  function show(d){
+    $('title').textContent = d.confirmed ? 'Booking confirmed' : d.status === 'needs_review' ? 'Payment received, under review' : 'Booking status';
+    $('msg').textContent = d.message;
+    var c = $('card'); c.style.display = ''; c.textContent = '';
+    var badge = document.createElement('span');
+    badge.className = 'badge ' + (d.confirmed ? 'ok' : (d.status === 'failed' || d.status === 'expired' || d.status === 'cancelled') ? 'bad' : 'wait');
+    badge.textContent = d.confirmed ? 'Payment verified' : d.payment_status;
+    c.appendChild(badge);
+    c.appendChild(row('Reference', d.reference));
+    c.appendChild(row('Apartment', d.apartment));
+    c.appendChild(row('Check-in', d.check_in + ' from ' + d.check_in_time));
+    c.appendChild(row('Check-out', d.check_out + ' by ' + d.check_out_time));
+    c.appendChild(row('Nights', String(d.nights)));
+    c.appendChild(row('Guests', String(d.guests)));
+    c.appendChild(row('Total', fmt(d.total_naira) + ' (incl. ' + fmt(d.caution_naira) + ' refundable caution fee)'));
+    return d.confirmed || ['failed','expired','cancelled','needs_review'].indexOf(d.status) > -1;
+  }
+  function check(ref){
+    if (!API){ $('msg').textContent = 'Online booking status is not switched on yet. Please message us on WhatsApp with your reference.'; return; }
+    fetch(API + '/api/bookings/' + encodeURIComponent(ref)).then(function(r){
+      if (r.status === 404){ $('msg').textContent = 'We could not find that reference. Please check it and try again.'; $('card').style.display = 'none'; return null; }
+      return r.json();
+    }).then(function(d){
+      if (!d) return;
+      var done = show(d);
+      if (!done && !timer){ started = Date.now(); timer = setInterval(function(){ if (Date.now() - started > 10*60000){ clearInterval(timer); timer = null; return; } check(ref); }, 5000); }
+      if (done && timer){ clearInterval(timer); timer = null; }
+    }).catch(function(){ $('msg').textContent = 'We could not reach the booking service. Please try again shortly.'; });
+  }
+  var m = /[?&]ref=([A-Za-z0-9-]+)/.exec(location.search);
+  if (m && /^TW-[A-Za-z0-9]{10}$/.test(m[1])){ $('title').textContent = 'Checking your booking'; $('msg').textContent = 'Checking with our payment records…'; check(m[1].toUpperCase()); }
+  else { $('lookup').style.display = ''; }
+  $('lookup').addEventListener('submit', function(e){ e.preventDefault(); var v = $('ref').value.trim().toUpperCase(); if (/^TW-[A-Z0-9]{10}$/.test(v)) check(v); else $('msg').textContent = 'That does not look like a booking reference. It looks like TW-ABCDE12345.'; });
+})();
+</script>
+</body>
+</html>
