@@ -340,30 +340,22 @@
   .menu-btn span{display:block;width:22px;height:2px;background:var(--ink);margin:5px 0;}
 
   /* hero */
-  .hero{
-    position:relative;
-    min-height:640px;
-    display:flex;align-items:flex-end;
-    background:linear-gradient(180deg, rgba(59,42,28,.15), rgba(42,30,18,.74)),
-               url('images/hero.jpg') center/cover no-repeat;
-  }
-  .hero-inner{padding-top:80px;padding-bottom:64px;color:var(--cream);max-width:640px;}
-  .hero .eyebrow{color:#FFF8EC;font-size:13px;font-weight:600;letter-spacing:0.18em;text-shadow:0 1px 3px rgba(30,20,10,.85),0 0 14px rgba(30,20,10,.55);}
+  .hero{background:var(--cream);padding:34px 0 46px;}
+  .hero-grid{display:grid;grid-template-columns:1fr 1.08fr;gap:52px;align-items:center;}
+  .hero-photo{margin:0;position:relative;}
+  .hero-photo img{display:block;width:100%;height:auto;aspect-ratio:4/3;object-fit:cover;border-radius:6px;box-shadow:0 18px 44px rgba(59,42,28,.22);}
+  .hero-photo:before{content:'';position:absolute;inset:-10px 10px 10px -10px;border:1px solid var(--brass);border-radius:6px;z-index:-1;}
+  .hero .eyebrow{color:var(--wine);font-size:12.5px;font-weight:700;letter-spacing:0.18em;}
   .hero h1{
     font-family:'Fraunces',serif;
     font-weight:500;
-    font-size:clamp(30px,4.6vw,46px);
-    line-height:1.1;
-    margin:14px 0 14px;
-    color:#fff;
+    font-size:clamp(28px,3.6vw,44px);
+    line-height:1.12;
+    margin:14px 0 12px;
+    color:var(--ink);
   }
-  .hero p.hero-tag{font-family:'Fraunces',serif;font-style:italic;font-weight:500;font-size:clamp(20px,3vw,26px);color:#E8CF8E;max-width:none;margin:-4px 0 14px;}
-.hero p{
-    font-size:17px;
-    color:#EFE1E0;
-    max-width:480px;
-    margin-bottom:28px;
-  }
+  .hero p.hero-tag{font-family:'Fraunces',serif;font-style:italic;font-weight:500;font-size:clamp(19px,2.4vw,24px);color:var(--wine);max-width:none;margin:0 0 14px;}
+  .hero p{font-size:16.5px;color:var(--ink-soft);max-width:480px;margin-bottom:26px;}
   .btn-row{display:flex;gap:14px;flex-wrap:wrap;}
   .btn-primary{
     background:var(--brass);
@@ -378,8 +370,8 @@
   }
   .btn-primary:hover{background:#c99a5c;transform:translateY(-1px);}
   .btn-ghost{
-    border:1px solid rgba(255,255,255,.55);
-    color:#fff;
+    border:1px solid var(--ink);
+    color:var(--ink);
     padding:13px 24px;
     font-weight:600;
     font-size:14px;
@@ -399,8 +391,52 @@
     transition:transform .2s, background .2s;
   }
   .btn-photos:hover{background:#fff;transform:translateY(-1px);}
-  .hero-note{
-    margin-top:22px;font-size:13px;color:#DEC7C6;letter-spacing:.02em;
+  .hero-note{margin-top:20px;font-size:13px;color:var(--ink-soft);letter-spacing:.02em;}
+  .hero-note a{color:var(--wine);font-weight:600;text-decoration:underline;text-underline-offset:2px;}
+
+  /* compact hero + apartment cards right under it */
+  .hero{padding:34px 0 46px;}
+  .hero-photo{aspect-ratio:auto;}
+  .hero-photo img{aspect-ratio:4/3;}
+  
+  .units{padding:34px 0 50px;background:#fff;}
+  .units-head{text-align:center;max-width:620px;margin:0 auto 22px;}
+  .units-head h2{font-size:clamp(26px,3.4vw,34px);margin:8px 0 8px;}
+  .units-head p{color:var(--ink-soft);font-size:15px;}
+  .units-grid{display:grid;grid-template-columns:1fr 1fr;gap:26px;max-width:980px;margin:0 auto;}
+  .unit{background:#fff;border:1px solid #E8DCC8;border-radius:16px;overflow:hidden;box-shadow:0 10px 30px rgba(59,42,28,.08);display:flex;flex-direction:column;}
+  .unit-photo{position:relative;aspect-ratio:3/2;overflow:hidden;cursor:pointer;}
+  .unit-photo img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .5s;}
+  .unit-photo:hover img{transform:scale(1.04);}
+  .unit-badge{position:absolute;top:14px;left:14px;font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:7px 12px;border-radius:999px;background:#fff;color:var(--wine-deep);}
+  .unit-badge.on:before{content:'';display:inline-block;width:8px;height:8px;border-radius:50%;background:#2e9d57;margin-right:7px;}
+  .unit-badge.soon{background:var(--brass);color:#2b1d10;}
+  .unit-photos{position:absolute;right:12px;bottom:12px;font-size:12px;background:rgba(31,21,12,.72);color:#fff;padding:6px 12px;border-radius:999px;}
+  .unit-body{padding:20px 22px 22px;display:flex;flex-direction:column;flex:1;}
+  .unit-body h3{font-family:'Fraunces',serif;font-size:22px;margin:0 0 4px;color:var(--wine-deep);}
+  .unit-meta{font-size:14.5px;font-weight:600;color:var(--ink);margin:0 0 4px;}
+  .unit-perks{font-size:13.5px;color:var(--ink-soft);margin:0 0 18px;}
+  .unit-foot{margin-top:auto;display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap;}
+  .unit-price{font-family:'Fraunces',serif;font-size:22px;color:var(--wine-deep);}
+  .unit-price small{font-family:inherit;font-size:12.5px;color:var(--ink-soft);}
+  .unit-foot .btn-primary{border:none;cursor:pointer;font:inherit;font-weight:600;padding:13px 22px;border-radius:var(--radius);}
+  .units-note{text-align:center;font-size:12.5px;color:var(--ink-soft);margin-top:22px;}
+  .units-note a{color:var(--wine);font-weight:600;text-decoration:underline;}
+  @media (max-width:860px){
+    .units-grid{grid-template-columns:1fr;gap:20px;}
+    .units{padding:26px 0 40px;}
+    .units-head{margin-bottom:18px;}
+    .units-head h2{font-size:26px;margin:6px 0 0;}
+    .unit-foot{flex-direction:row;}
+  }
+  @media (max-width:860px){ .contact-bar{display:none;} }
+  @keyframes twpan{from{object-position:12% 62%;}to{object-position:88% 62%;}}
+  @media (prefers-reduced-motion:reduce){.hero-photo img{animation:none!important;object-position:50% 60%!important;}}
+
+  @media (max-width:420px){
+    .logo{white-space:nowrap;font-size:17px;letter-spacing:.1em;}
+    .nav-cta{white-space:nowrap;padding:11px 14px;font-size:13px;}
+    .hero .eyebrow{font-size:11px;letter-spacing:.14em;}
   }
 
   /* feature strip */
@@ -793,6 +829,104 @@
   @media(max-width:600px){
     .whatsapp-float{width:50px;height:50px;bottom:18px;right:18px;}
   }
+
+  /* ===== RoamStay-style layout ===== */
+  .hero{position:relative;overflow:hidden;background:#cfc8bd;padding:0 0 84px;min-height:clamp(440px,60vh,540px);display:flex;align-items:center;justify-content:center;text-align:center;}
+  .hero-bg{position:absolute;inset:0;z-index:0;}
+  .hero-bg img{width:100%;height:100%;object-fit:cover;object-position:50% 62%;display:block;}
+  .hero-bg:after{content:'';position:absolute;inset:0;background:rgba(62,48,36,.34);}
+  .hero-center{position:relative;z-index:2;max-width:780px;padding-top:30px;}
+  .hero .eyebrow{color:#F0DDA8;font-size:12px;letter-spacing:.2em;text-shadow:0 1px 8px rgba(0,0,0,.5);}
+  .hero h1{color:#fff;font-size:clamp(30px,4.6vw,52px);line-height:1.12;margin:12px 0 10px;text-shadow:0 2px 18px rgba(0,0,0,.4);}
+  .hero p.hero-tag{color:#F0DDA8;font-size:clamp(17px,2vw,21px);margin:0;text-shadow:0 1px 10px rgba(0,0,0,.45);}
+  .searchwrap{position:relative;z-index:5;margin-top:-44px;}
+  .searchbar{background:#fff;border-radius:999px;box-shadow:0 18px 48px rgba(59,42,28,.2);display:grid;grid-template-columns:1.4fr 1fr auto;gap:0;align-items:center;max-width:780px;margin:0 auto;padding:12px 12px 12px 12px;}
+  .sb-field{display:block;padding:6px 26px;border-right:1px solid #eadfcc;}
+  .sb-field:nth-child(2){border-right:none;}
+  .sb-field span{display:block;font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#8B6A2B;margin-bottom:2px;}
+  .sb-field select{width:100%;border:none;background:transparent;font:inherit;font-size:15px;font-weight:600;color:#3B2A1C;padding:2px 0;outline:none;cursor:pointer;appearance:auto;}
+  .sb-btn{background:#C9A24D;color:#2b1d10;border:none;border-radius:999px;padding:17px 30px;font:inherit;font-weight:700;font-size:15px;cursor:pointer;white-space:nowrap;}
+  .sb-btn:hover{background:#b98f3e;}
+  .sb-note{text-align:center;font-size:12.5px;color:var(--ink-soft);margin:16px 0 0;}
+  .sb-note a{color:var(--wine);font-weight:600;text-decoration:underline;}
+  .units{background:#FAF7F2;padding:44px 0 56px;}
+  .units-head{text-align:left;max-width:none;margin:0 auto 26px;}
+  .units-grid{max-width:none;}
+  .unit{border-radius:14px;}
+  .conv{background:#fff;padding:56px 0 60px;}
+  .conv-head{display:grid;grid-template-columns:1fr 1.2fr;gap:40px;align-items:center;margin-bottom:32px;}
+  .conv-head h2{font-size:clamp(26px,3.2vw,36px);margin:0;}
+  .conv-head p{color:var(--ink-soft);font-size:15px;margin:0;}
+  .conv-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:18px;}
+  .conv-card{background:#FBF7EE;border:1px solid #EFE3CC;border-radius:16px;padding:26px 20px;text-align:center;}
+  .conv-card .cv-ic{display:block;font-size:30px;color:#B58A3E;margin-bottom:10px;}
+  .conv-card b{display:block;font-size:15px;color:#3B2A1C;margin-bottom:6px;}
+  .conv-card small{display:block;font-size:13px;color:var(--ink-soft);line-height:1.5;}
+  @media (max-width:860px){
+    .hero{min-height:420px;padding-bottom:96px;}
+    .hero-center{padding-top:22px;}
+    .searchwrap{margin-top:-64px;}
+    .searchbar{grid-template-columns:1fr 1fr;border-radius:22px;padding:14px;gap:8px 0;}
+    .sb-field{padding:8px 14px;}
+    .sb-field:first-child{border-right:1px solid #eadfcc;}
+    .sb-btn{grid-column:1 / -1;border-radius:14px;padding:16px;}
+    .sb-note{font-size:11.5px;}
+    .units{padding:34px 0 40px;}
+    .conv{padding:40px 0 44px;}
+    .conv-head{grid-template-columns:1fr;gap:10px;margin-bottom:22px;}
+    .conv-grid{grid-template-columns:1fr 1fr;gap:12px;}
+    .conv-card{padding:20px 14px;}
+  }
+
+  .how{background:#fff;padding:26px 0;border-bottom:1px solid #EFE3CC;}
+  .how-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;max-width:1000px;margin:0 auto;}
+  .how-step{display:flex;align-items:center;gap:14px;}
+  .how-n{flex:0 0 40px;height:40px;border-radius:50%;background:#C9A24D;color:#2b1d10;font-weight:700;display:flex;align-items:center;justify-content:center;font-family:'Fraunces',serif;font-size:18px;}
+  .how-step b{display:block;font-size:15px;color:#3B2A1C;}
+  .how-step small{display:block;font-size:13px;color:var(--ink-soft);}
+  .conv-grid.six{grid-template-columns:repeat(3,1fr);}
+  .terms-cta{text-align:center;margin-top:32px;}
+  .terms-cta p{color:var(--ink-soft);font-size:14px;margin:0 0 14px;}
+  .terms-cta .btn-primary{display:inline-block;}
+  @media (max-width:860px){
+    .how-grid{grid-template-columns:1fr;gap:14px;}
+    .conv-grid.six{grid-template-columns:1fr 1fr;}
+  }
+
+  .conv-head.center{display:block;text-align:center;margin-bottom:26px;}
+  .conv{padding:44px 0 50px;}
+  .faq-more{margin-top:6px;}
+  .faq-more > summary{list-style:none;cursor:pointer;text-align:center;color:var(--wine);font-weight:600;padding:16px 0 4px;font-size:14px;text-decoration:underline;text-underline-offset:3px;}
+  .faq-more > summary::-webkit-details-marker{display:none;}
+  .key-rules{list-style:none;margin:0 auto;padding:0;max-width:820px;display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+  .key-rules li{background:#fff;border:1px solid #EFE3CC;border-radius:12px;padding:16px 18px;font-size:14.5px;color:#5a4632;}
+  .key-rules b{display:block;color:#3B2A1C;font-size:15.5px;margin-bottom:2px;}
+  .terms-more{max-width:820px;margin:16px auto 0;}
+  .terms-more > summary{list-style:none;cursor:pointer;text-align:center;color:var(--wine);font-weight:600;font-size:14px;text-decoration:underline;text-underline-offset:3px;padding:6px;}
+  .terms-more > summary::-webkit-details-marker{display:none;}
+  .terms-more .terms-groups{margin-top:18px;}
+  .faq-section,.terms-section{padding-top:48px;padding-bottom:48px;}
+  @media (max-width:860px){.key-rules{gap:10px;}.key-rules li{padding:13px 14px;font-size:13px;}.key-rules b{font-size:14px;}}
+
+  .hero{padding-bottom:130px;}
+  .hero-down{display:inline-block;margin-top:18px;color:#fff;font-weight:600;font-size:15px;letter-spacing:.04em;border:1.5px solid rgba(255,255,255,.85);border-radius:999px;padding:11px 24px;text-decoration:none;background:rgba(255,255,255,.1);}
+  .units{margin-top:-96px;position:relative;z-index:5;padding-top:0;background:linear-gradient(180deg,transparent 96px,#FAF7F2 96px);}
+  @media (max-width:860px){
+    .hero{min-height:440px;padding-bottom:110px;}
+    .units{margin-top:-80px;background:linear-gradient(180deg,transparent 80px,#FAF7F2 80px);}
+  }
+
+  .fg-title{font-family:'Fraunces',serif;font-size:16px;color:var(--wine-deep);margin:6px 0 10px;padding-top:6px;}
+  #panel-2 .fg-title:not(:first-child){margin-top:22px;border-top:1px solid #EFE3CC;padding-top:18px;}
+  .seg{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px;}
+  .seg-btn{border:1.5px solid #E2D3B8;background:#fff;border-radius:12px;padding:14px 14px;font:inherit;font-size:14.5px;font-weight:600;color:#3B2A1C;cursor:pointer;text-align:left;line-height:1.3;}
+  .seg-btn small{display:block;font-weight:400;font-size:12px;color:var(--ink-soft);margin-top:3px;}
+  .seg-btn.on{border-color:#C9A24D;background:#FBF3DF;box-shadow:0 0 0 2px rgba(201,162,77,.25);}
+  .seg-sel{display:none;}
+  .seg-invalid .seg-btn{border-color:#c0392b;}
+  .seg.chips{grid-template-columns:repeat(3,1fr);}
+  .seg.chips .seg-btn{text-align:center;padding:12px 8px;font-size:14px;}
+  @media (max-width:560px){.seg{grid-template-columns:1fr;}.seg.chips{grid-template-columns:1fr 1fr;}}
 </style>
 </head>
 <body>
@@ -804,11 +938,10 @@
   <div class="wrap nav-row">
     <a href="#top" class="logo">T.W Residence</a>
     <nav class="nav-links">
-      <a href="#why">About</a>
+      <a href="#units">Apartments</a>
       <a href="#features">Amenities</a>
-      <a href="#gallery">Gallery</a>
-      <a href="#terms">Booking Terms</a>
       <a href="#faq">FAQ</a>
+      <a href="#terms">House Rules</a>
       <a href="#book">Contact</a>
     </nav>
     <a href="#book" class="nav-cta">Book Now</a>
@@ -817,74 +950,63 @@
 </header>
 
 <section class="hero" id="top">
-  <div class="wrap hero-inner">
+  <div class="hero-bg"><img src="images/living-tv.jpg" alt="Bright living room at T.W Residence, a furnished 3-bedroom ensuite shortlet apartment in Surulere, Lagos" width="2000" height="1500" fetchpriority="high" decoding="async"></div>
+  <div class="wrap hero-center">
     <span class="eyebrow">Olaleye Estate · Surulere · Lagos</span>
-    <h1>3-Bedroom Shortlet Apartment in Surulere, Lagos</h1>
+    <h1>3-Bedroom Shortlet Apartments in Surulere, Lagos</h1>
     <p class="hero-tag">A private stay, done properly.</p>
-    <p>Three ensuite bedrooms, solar power that never quits, and a host who actually answers. T.W Residence is Lagos hospitality the way it should be.</p>
-    <div class="btn-row">
-      <a href="#gallery" class="btn-photos">View Photos</a>
-      <a href="#terms" class="btn-ghost">Booking Terms</a>
-      <a href="#book" class="btn-primary">Reserve Your Stay</a>
-    </div>
-    <div class="hero-note">Full payment confirms your booking · Refundable caution fee applies</div>
+    <a href="#units" class="hero-down">Choose your apartment ↓</a>
   </div>
 </section>
 
-<div class="strip">
-  <div class="wrap strip-grid">
-    <div class="strip-item"><span class="icon">✓</span>Verified Host</div>
-    <div class="strip-item"><span class="icon">☀</span>Solar Powered</div>
-    <div class="strip-item"><span class="icon">⌂</span>3 Bed, All En-Suite</div>
-    <div class="strip-item"><span class="icon">♡</span>Booked Direct, No Agents</div>
-  </div>
-</div>
-
-<section class="why" id="why">
+<section class="units" id="units">
   <div class="wrap">
-    <span class="eyebrow">Why guests choose us</span>
-    <h2>Designed with everyone in mind.</h2>
-    <p>T.W Residence was built to feel like your home away from home — premium furniture throughout, quality solar for 24-hour electricity, and a modern, luxurious look in every room. Tucked inside Olaleye Estate, Surulere, it's a stay made for anyone who wants comfort, reliability, and real quality without compromise.</p>
+    <div class="units-grid">
+      <article class="unit">
+        <div class="unit-photo" onclick="openLightbox(unit2Images, 0)" role="button" tabindex="0" aria-label="View photos of Unit 2">
+          <img src="images/hero.jpg" alt="Living room of T.W Residence Unit 2, a furnished 3-bedroom ensuite shortlet apartment in Surulere, Lagos" loading="lazy" decoding="async" width="1200" height="800">
+          <span class="unit-badge on">Available now</span>
+          <span class="unit-photos">View photos</span>
+        </div>
+        <div class="unit-body">
+          <h3>T.W Unit 2</h3>
+          <p class="unit-meta">3 bedrooms · all ensuite · sleeps up to 6</p>
+          <div class="unit-foot">
+            <div class="unit-price"><small>From</small> ₦200,000 <small>/ night</small></div>
+            <button type="button" class="btn-primary" onclick="reserveUnit(2)">Book Unit 2</button>
+          </div>
+        </div>
+      </article>
+      <article class="unit">
+        <div class="unit-photo" onclick="openLightbox(unit1Images, 0)" role="button" tabindex="0" aria-label="View photos of Unit 1">
+          <img src="images/unit1-living-room.jpg.jpg" alt="Living room of T.W Residence Unit 1, a furnished 3-bedroom ensuite shortlet apartment in Surulere, Lagos" loading="lazy" decoding="async" width="1200" height="800">
+          <span class="unit-badge soon">Opens 1 Nov</span>
+          <span class="unit-photos">View photos</span>
+        </div>
+        <div class="unit-body">
+          <h3>T.W Unit 1</h3>
+          <p class="unit-meta">3 bedrooms · all ensuite · sleeps up to 6</p>
+          <div class="unit-foot">
+            <div class="unit-price"><small>From</small> ₦200,000 <small>/ night</small></div>
+            <button type="button" class="btn-primary" onclick="reserveUnit(1)">Book Unit 1</button>
+          </div>
+        </div>
+      </article>
+    </div>
+    <p class="units-note">Full payment confirms your booking · Refundable caution fee applies · <a href="#terms">Booking terms</a></p>
   </div>
 </section>
 
-<section class="features" id="features">
+<section class="conv" id="features">
   <div class="wrap">
-    <div class="features-head">
-      <span class="eyebrow">What makes it different</span>
-      <h2>Everything a good stay actually needs</h2>
+    <div class="conv-head center">
+      <h2>Everything you need, already here</h2>
     </div>
-    <div class="feature-grid">
-      <div class="feature-card">
-        <span class="feature-num">01</span>
-        <h3>Three ensuite bedrooms</h3>
-        <p>Every bedroom has its own bathroom — no queuing, no shared taps, real privacy for every guest in the party.</p>
-      </div>
-      <div class="feature-card">
-        <span class="feature-num">02</span>
-        <h3>Solar power, always on</h3>
-        <p>No blackout interruptions. The apartment stays powered through NEPA outages, so your stay never pauses.</p>
-      </div>
-      <div class="feature-card">
-        <span class="feature-num">03</span>
-        <h3>Fully furnished & equipped</h3>
-        <p>Move in and live — fridge, washing machine, microwave, water heater, and gas cooker, all included and ready from check-in, alongside fast WiFi.</p>
-      </div>
-      <div class="feature-card">
-        <span class="feature-num">04</span>
-        <h3>Prime Surulere location</h3>
-        <p>Tucked inside Olaleye Estate with easy reach to the Mainland and Island — close to everything, away from the noise.</p>
-      </div>
-      <div class="feature-card">
-        <span class="feature-num">05</span>
-        <h3>Secure, gated compound</h3>
-        <p>Estate access control and a private entrance, so you can come and go without worry, any hour of the day.</p>
-      </div>
-      <div class="feature-card">
-        <span class="feature-num">06</span>
-        <h3>A host who responds</h3>
-        <p>Direct communication before, during, and after your stay — questions get answered, not left on read.</p>
-      </div>
+    <div class="conv-grid">
+      <div class="conv-card"><span class="cv-ic">☀</span><b>Solar power, always on</b><small>No interruptions, even when NEPA is off</small></div>
+      <div class="conv-card"><span class="cv-ic">⌂</span><b>3 ensuite bedrooms</b><small>Private bathroom for every room</small></div>
+      <div class="conv-card"><span class="cv-ic">⌁</span><b>Fully equipped</b><small>Fast WiFi, kitchen, washer and more</small></div>
+      <div class="conv-card"><span class="cv-ic">⚿</span><b>Secure and private</b><small>Gated estate, host on WhatsApp</small></div>
     </div>
   </div>
 </section>
@@ -896,31 +1018,6 @@
   </div>
 </section>
 
-<section id="gallery">
-  <div class="wrap">
-    <div class="gallery-head">
-      <span class="eyebrow">Our units</span>
-      <h2>Choose your stay</h2>
-    </div>
-    <div class="gallery-grid" style="height:auto;grid-template-columns:1fr 1fr;">
-      <div class="unit-card" onclick="openLightbox(unit1Images, 0)" style="position:relative;border-radius:var(--radius);overflow:hidden;cursor:pointer;">
-        <img src="images/unit1-living-room.jpg.jpg" alt="Living room of T.W Residence Unit 1, a furnished 3-bedroom ensuite shortlet apartment in Surulere, Lagos" loading="lazy" decoding="async" style="width:100%;height:340px;object-fit:cover;">
-        <div style="position:absolute;bottom:0;left:0;right:0;background:linear-gradient(transparent,rgba(59,42,28,.8));padding:18px 20px;">
-          <h3 style="color:#fff;font-family:'Fraunces',serif;font-size:18px;font-weight:600;letter-spacing:.02em;margin:0;">T.W Unit 1</h3>
-          <p style="color:var(--brass);font-size:12px;letter-spacing:.06em;text-transform:uppercase;margin-top:2px;">Available from 1 Nov · Tap to view photos</p>
-        </div>
-      </div>
-      <div class="unit-card" onclick="openLightbox(unit2Images, 0)" style="position:relative;border-radius:var(--radius);overflow:hidden;cursor:pointer;">
-        <img src="images/hero.jpg" alt="T.W Residence Unit 2, a furnished 3-bedroom ensuite shortlet apartment in Surulere, Lagos" loading="lazy" decoding="async" style="width:100%;height:340px;object-fit:cover;">
-        <div style="position:absolute;bottom:0;left:0;right:0;background:linear-gradient(transparent,rgba(59,42,28,.8));padding:18px 20px;">
-          <h3 style="color:#fff;font-family:'Fraunces',serif;font-size:18px;font-weight:600;letter-spacing:.02em;margin:0;">T.W Unit 2</h3>
-          <p style="color:var(--brass);font-size:12px;letter-spacing:.06em;text-transform:uppercase;margin-top:2px;">Available Now · Tap to view photos</p>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
 <div id="lightbox" class="lightbox" onclick="if(event.target===this)closeLightbox()">
   <button class="lightbox-close" onclick="closeLightbox()" aria-label="Close">&times;</button>
   <button class="lightbox-nav lightbox-prev" onclick="lightboxStep(-1)" aria-label="Previous">&#8249;</button>
@@ -928,51 +1025,6 @@
   <button class="lightbox-nav lightbox-next" onclick="lightboxStep(1)" aria-label="Next">&#8250;</button>
   <div class="lightbox-counter" id="lightbox-counter"></div>
 </div>
-
-<section class="terms-section" id="terms">
-  <div class="wrap">
-    <div class="rates-head">
-      <span class="eyebrow">Before you book</span>
-      <h2>Please Read Before Booking</h2>
-    </div>
-    <div class="terms-groups">
-      <div class="terms-group">
-        <div class="terms-group-title">Payment & Pricing</div>
-        <div class="terms-group-list">
-          <div>Full payment required to confirm booking</div>
-          <div>Published pricing is fixed — not open to negotiation</div>
-          <div>Refundable caution fee: ₦150,000</div>
-        </div>
-      </div>
-      <div class="terms-group">
-        <div class="terms-group-title">Check-In & Check-Out</div>
-        <div class="terms-group-list">
-          <div>Check-in: 3:00 PM · Check-out: 10:00 AM</div>
-          <div>No checkouts available on Sundays</div>
-          <div>Bookings must be made at least 24 hours before check-in</div>
-          <div>Maximum stay: 30 nights</div>
-        </div>
-      </div>
-      <div class="terms-group">
-        <div class="terms-group-title">Cancellations</div>
-        <div class="terms-group-list">
-          <div>Booked more than a day before check-in? Cancel free within 24 hours of booking.</div>
-          <div>Booked the day before check-in? Cancel free within 6 hours of booking.</div>
-          <div>Non-refundable outside these windows.</div>
-        </div>
-      </div>
-      <div class="terms-group">
-        <div class="terms-group-title">Guests & Conduct</div>
-        <div class="terms-group-list">
-          <div>The person booking must be at least 21 years old</div>
-          <div>No pets · Non-smoking indoors</div>
-          <div>Strictly for registered guests — no parties or events</div>
-          <div>Guest count may not exceed what's booked — exceeding it forfeits the full caution fee</div>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
 
 <section class="faq-section" id="faq">
   <div class="wrap">
@@ -1001,7 +1053,7 @@
         <summary>What are the check-in and check-out times?</summary>
         <p>Check-in is at 3:00 PM and check-out is at 10:00 AM. Please note that check-outs are not available on Sundays.</p>
       </details>
-      <details class="faq-item">
+      <details class="faq-more"><summary>Show 10 more questions</summary><details class="faq-item">
         <summary>Is there a security deposit or caution fee?</summary>
         <p>Yes, a refundable caution fee of ₦150,000 applies to every booking.</p>
       </details>
@@ -1040,16 +1092,73 @@
       <details class="faq-item">
         <summary>Are pets or smoking allowed?</summary>
         <p>No. T.W Residence does not allow pets, and smoking is not permitted indoors.</p>
-      </details>
+      </details></details>
     </div>
   </div>
 </section>
 
+<section class="terms-section" id="terms">
+  <div class="wrap">
+    <div class="rates-head">
+      <span class="eyebrow">Last step before you book</span>
+      <h2>Please read these house rules</h2>
+      <p style="color:var(--ink-soft);margin-top:10px;">They keep every stay smooth for you and for the next guest. You will be asked to confirm them when you book.</p>
+    </div>
+    <ul class="key-rules">
+      <li><b>Full payment</b> confirms your booking</li>
+      <li><b>₦150,000</b> refundable caution fee</li>
+      <li><b>Check-in 3 PM</b> · check-out 10 AM</li>
+      <li><b>No parties, pets or smoking</b> indoors</li>
+    </ul>
+    <details class="terms-more"><summary>Read the full house rules</summary>
+    <div class="terms-groups">
+      <div class="terms-group">
+        <div class="terms-group-title">Payment & Pricing</div>
+        <div class="terms-group-list">
+          <div>Full payment required to confirm booking</div>
+          <div>Published pricing is fixed — not open to negotiation</div>
+          <div>Refundable caution fee: ₦150,000</div>
+        </div>
+      </div>
+      <div class="terms-group">
+        <div class="terms-group-title">Check-In & Check-Out</div>
+        <div class="terms-group-list">
+          <div>Check-in: 3:00 PM · Check-out: 10:00 AM</div>
+          <div>No checkouts available on Sundays</div>
+          <div>Bookings must be made at least 24 hours before check-in</div>
+          <div>Maximum stay: 30 nights</div>
+        </div>
+      </div>
+      <div class="terms-group">
+        <div class="terms-group-title">Cancellations</div>
+        <div class="terms-group-list">
+          <div>Booked more than a day before check-in? Cancel free within 24 hours of booking.</div>
+          <div>Booked the day before check-in? Cancel free within 6 hours of booking.</div>
+          <div>Non-refundable outside these windows.</div>
+        </div>
+      </div>
+      <div class="terms-group">
+        <div class="terms-group-title">Guests & Conduct</div>
+        <div class="terms-group-list">
+          <div>The person booking must be at least 21 years old</div>
+          <div>No pets · Non-smoking indoors</div>
+          <div>Strictly for registered guests — no parties or events</div>
+          <div>Guest count may not exceed what's booked — exceeding it forfeits the full caution fee</div>
+        </div>
+      </div>
+    </div>
+    </details>
+    <div class="terms-cta">
+      <p>By booking you agree to these terms.</p>
+      <a href="#book" class="btn-primary">I have read them, continue to booking</a>
+    </div>
+  </div>
+</section>
 <section class="booking" id="book">
   <div class="wrap">
     <div class="booking-head">
-      <span class="eyebrow">Reserve your stay</span>
-      <h2>Booking Request</h2>
+      <span class="eyebrow">Book your stay</span>
+      <h2>Book Your Stay</h2>
       <div class="booking-contact-row">
         <span>Need help? Reach us on Instagram or WhatsApp</span>
         <a href="https://wa.me/message/66FIEM2EUEUKI1" target="_blank" rel="noopener" aria-label="Message T.W Residence on WhatsApp" class="social-icon">
@@ -1105,6 +1214,7 @@
               <option>1 guest</option><option>2 guests</option><option>3 guests</option>
               <option>4 guests</option><option>5 guests</option><option>6 guests</option>
             </select>
+            <div class="form-note" style="text-align:left;margin-top:4px;">Security will only admit this number of guests.</div>
           </div>
         </div>
 
@@ -1137,39 +1247,42 @@
 
       <!-- STEP 2: YOUR DETAILS -->
       <div class="step-panel" id="panel-2">
+        <div class="fg-title">About you</div>
         <div class="field-row">
-          <div class="field"><label>Full Name *</label><input type="text" id="name" placeholder="e.g. Amaka Johnson" required></div>
-          <div class="field"><label>Phone *</label><input type="tel" id="phone" placeholder="+234 800 000 0000" required></div>
+          <div class="field"><label>Full Name *</label><input type="text" id="name" placeholder="e.g. Amaka Johnson" autocomplete="name" required></div>
+          <div class="field"><label>Phone (WhatsApp) *</label><input type="tel" id="phone" placeholder="+234 800 000 0000" autocomplete="tel" inputmode="tel" required></div>
         </div>
         <div class="field-row">
-          <div class="field full"><label>Email (optional — to receive a confirmation)</label><input type="email" id="email" placeholder="you@example.com"></div>
+          <div class="field full"><label>Email (we send your confirmation here)</label><input type="email" id="email" placeholder="you@example.com" autocomplete="email" inputmode="email"></div>
         </div>
 
-        <div class="field-row">
-          <div class="field full">
-            <label>Who's Checking In? *</label>
-            <select id="booking-for-other" required onchange="toggleMainGuestFields()">
-              <option value="">Select...</option>
-              <option value="no">I'll be checking in myself</option>
-              <option value="yes">I'm booking for someone else</option>
-            </select>
-          </div>
+        <div class="fg-title">Who is checking in? *</div>
+        <div class="seg" data-for="booking-for-other">
+          <button type="button" class="seg-btn" data-val="no">I am checking in myself</button>
+          <button type="button" class="seg-btn" data-val="yes">Booking for someone else</button>
         </div>
+        <select id="booking-for-other" class="seg-sel" onchange="toggleMainGuestFields()">
+          <option value="">Select...</option>
+          <option value="no">I'll be checking in myself</option>
+          <option value="yes">I'm booking for someone else</option>
+        </select>
         <div class="field-row hidden" id="main-guest-row">
           <div class="field"><label>Main Guest's Name *</label><input type="text" id="main-guest-name" placeholder="Who's checking in"></div>
-          <div class="field"><label>Main Guest's Phone *</label><input type="tel" id="main-guest-phone" placeholder="+234 800 000 0000"></div>
+          <div class="field"><label>Main Guest's Phone *</label><input type="tel" id="main-guest-phone" placeholder="+234 800 000 0000" inputmode="tel"></div>
         </div>
 
-        <div class="field-row">
-          <div class="field full">
-            <label>Caution Fee Refund Method *</label>
-            <select id="want-direct-refund" required onchange="toggleRefundFields()">
-              <option value="">Select...</option>
-              <option value="no">Automatically via Paystack (3–10 business days)</option>
-              <option value="yes">Directly to my bank account</option>
-            </select>
-          </div>
+        <input type="hidden" id="guest-names" value="">
+
+        <div class="fg-title">How should we refund your caution fee? *</div>
+        <div class="seg" data-for="want-direct-refund">
+          <button type="button" class="seg-btn" data-val="no">Automatically via Paystack<small>3 to 10 business days</small></button>
+          <button type="button" class="seg-btn" data-val="yes">Straight to my bank account<small>Needs account details</small></button>
         </div>
+        <select id="want-direct-refund" class="seg-sel" onchange="toggleRefundFields()">
+          <option value="">Select...</option>
+          <option value="no">Automatically via Paystack (3–10 business days)</option>
+          <option value="yes">Directly to my bank account</option>
+        </select>
         <div class="field-row hidden" id="refund-details-row">
           <div class="field"><label>Account Number *</label><input type="text" id="refund-account-number" placeholder="0123456789" inputmode="numeric"></div>
           <div class="field"><label>Bank Name *</label><input type="text" id="refund-bank-name" placeholder="e.g. GTBank"></div>
@@ -1178,31 +1291,28 @@
           <div class="field full"><label>Account Name *</label><input type="text" id="refund-account-name" placeholder="Name on account"></div>
         </div>
 
-        <div class="field-row">
-          <div class="field full">
-            <label>Full Names of All Guests Staying *</label>
-            <textarea id="guest-names" placeholder="List everyone who will be staying, e.g. Amaka Johnson, Tunde Johnson, Ifeoma Bello" required></textarea>
-            <div class="form-note" style="text-align:left;margin-top:4px;">Shared with estate security so only registered guests are let in.</div>
-          </div>
+        <div class="fg-title">What is the stay for? *</div>
+        <div class="seg chips" data-for="purpose">
+          <button type="button" class="seg-btn" data-val="Leisure / Holiday">Holiday</button>
+          <button type="button" class="seg-btn" data-val="Business Trip">Business</button>
+          <button type="button" class="seg-btn" data-val="Family Visit">Family visit</button>
+          <button type="button" class="seg-btn" data-val="Temporary Relocation">Relocating</button>
+          <button type="button" class="seg-btn" data-val="Other">Other</button>
         </div>
+        <select id="purpose" class="seg-sel">
+          <option value="">Select...</option>
+          <option>Leisure / Holiday</option>
+          <option>Business Trip</option>
+          <option>Family Visit</option>
+          <option>Temporary Relocation</option>
+          <option>Other</option>
+        </select>
 
         <div class="field-row">
           <div class="field">
-            <label>Purpose of Stay *</label>
-            <select id="purpose" required>
-              <option value="">Select...</option>
-              <option>Leisure / Holiday</option>
-              <option>Business Trip</option>
-              <option>Family Visit</option>
-              <option>Small Gathering (max 6 guests)</option>
-              <option>Temporary Relocation</option>
-              <option>Other</option>
-            </select>
-          </div>
-          <div class="field">
-            <label>How Did You Hear About Us? *</label>
-            <select id="howheard" required>
-              <option value="">Select...</option>
+            <label>How did you hear about us? (optional)</label>
+            <select id="howheard">
+              <option value="">Skip</option>
               <option>Friend / Family Referral</option>
               <option>Instagram</option>
               <option>Airbnb</option>
@@ -1304,13 +1414,13 @@
       </div>
       <div class="footer-col">
         <h4>Explore</h4>
-        <a href="#why">About</a>
+        <a href="#faq">FAQ</a>
         <a href="#features">Amenities</a>
-        <a href="#gallery">Gallery</a>
+        <a href="#units">Apartments</a>
       </div>
       <div class="footer-col">
         <h4>Booking</h4>
-        <a href="#book">Reserve a Stay</a>
+        <a href="#book">Book a Stay</a>
         <a href="#terms">Booking Terms</a>
         <a href="mailto:twresidence.lagos@gmail.com">Contact Us</a>
         <a href="privacy.html">Privacy Notice</a>
@@ -1757,6 +1867,8 @@
   function setFieldInvalid(id, isInvalid){
     const el = document.getElementById(id);
     if (el) el.classList.toggle('invalid', isInvalid);
+    const grp = document.querySelector('.seg[data-for="'+id+'"]');
+    if (grp) grp.classList.toggle('seg-invalid', isInvalid);
   }
   function setRowInvalid(rowId, isInvalid){
     const el = document.getElementById(rowId);
@@ -1815,7 +1927,6 @@
     if (wantsDirectRefund && !document.getElementById('refund-account-name').value.trim()){ flagInvalid('refund-account-name'); hasError = true; }
     if (!guestNamesValue){ flagInvalid('guest-names'); hasError = true; }
     if (!document.getElementById('purpose').value){ flagInvalid('purpose'); hasError = true; }
-    if (!document.getElementById('howheard').value){ flagInvalid('howheard'); hasError = true; }
     if (!termsConfirmed){ flagInvalid('terms-confirm-row', true); hasError = true; }
     if (!noPartyConfirmed){ flagInvalid('no-party-confirm-row', true); hasError = true; }
     if (!selectedCheckin || !selectedCheckout){
@@ -2266,7 +2377,6 @@
     if (wantsDirectRefund && !document.getElementById('refund-account-name').value.trim()) flag('refund-account-name');
     if (!document.getElementById('guest-names').value.trim()) flag('guest-names');
     if (!document.getElementById('purpose').value) flag('purpose');
-    if (!document.getElementById('howheard').value) flag('howheard');
 
     if (hasError){
       alert('Please fill in the fields highlighted in red.');
@@ -2306,6 +2416,49 @@
       document.body.appendChild(box);
     }
   });
+
+
+  function heroSearch(e){
+    if(e) e.preventDefault();
+    var sel=document.getElementById('apartment'), g=document.getElementById('guests');
+    var u=document.getElementById('hs-unit').value, gv=document.getElementById('hs-guests').value;
+    if(sel){
+      var want=u==='0'?'No preference':'Unit '+u;
+      for(var i=0;i<sel.options.length;i++){ if(sel.options[i].text.indexOf(want)===0){ sel.selectedIndex=i; break; } }
+      sel.dispatchEvent(new Event('change'));
+    }
+    if(g){ g.value=gv; g.dispatchEvent(new Event('change')); }
+    var b=document.getElementById('book'); if(b) b.scrollIntoView({behavior:'smooth',block:'start'});
+    return false;
+  }
+
+  (function(){
+    document.querySelectorAll('.seg').forEach(function(g){
+      g.addEventListener('click',function(e){
+        var btn=e.target.closest('.seg-btn'); if(!btn) return;
+        g.querySelectorAll('.seg-btn').forEach(function(x){x.classList.toggle('on',x===btn);});
+        var sel=document.getElementById(g.getAttribute('data-for'));
+        if(sel){ sel.value=btn.getAttribute('data-val'); sel.dispatchEvent(new Event('change')); }
+      });
+    });
+    // start the guest list with the booker's name; keep it in sync until they edit it themselves
+    var nm=document.getElementById('name'), gn=document.getElementById('guest-names'), mg=document.getElementById('main-guest-name'), auto='';
+    function fill(){
+      var other=document.getElementById('booking-for-other').value==='yes';
+      var v=(other&&mg&&mg.value?mg.value:nm.value).trim();
+      if(!gn.value.trim()||gn.value===auto){ gn.value=v; auto=v; }
+    }
+    nm.addEventListener('input',fill); if(mg) mg.addEventListener('input',fill);
+  })();
+  function reserveUnit(n){
+    var sel=document.getElementById('apartment');
+    if(sel){
+      for(var i=0;i<sel.options.length;i++){ if(sel.options[i].text.indexOf('Unit '+n)===0){ sel.selectedIndex=i; break; } }
+      sel.dispatchEvent(new Event('change'));
+    }
+    var b=document.getElementById('book'); if(b) b.scrollIntoView({behavior:'smooth',block:'start'});
+  }
+  document.querySelectorAll('.unit-photo').forEach(function(el){el.addEventListener('keydown',function(e){if(e.key==='Enter'||e.key===' '){e.preventDefault();el.click();}});});
   document.getElementById('apartment').addEventListener('change', onApartmentChange);
 </script>
 
