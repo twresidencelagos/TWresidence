@@ -1928,7 +1928,9 @@
       headers: { 'Accept': 'application/json' }
     }).catch(() => null);
 
-    Promise.allSettled([sheetsRequest, web3formsRequest, formspreeRequest]).then(() => {
+    // Do not wait forever for the backup services: open payment after at most 2.5 seconds.
+    Promise.race([Promise.allSettled([sheetsRequest, web3formsRequest, formspreeRequest]), new Promise(r => setTimeout(r, 2500))]).then(() => {
+      try {
       document.getElementById('success-name').textContent = name;
       if (result){
         document.getElementById('success-nights').textContent = result.nights + ' night' + (result.nights > 1 ? 's' : '') + ' · ' + guests;
@@ -1943,6 +1945,10 @@
         payTotal = rt + CAUTION_FEE;
       }
       twStartPayment({ name: name, phone: phone, email: email, apartment: apartment, checkin: selectedCheckin, checkout: selectedCheckout, amount: payTotal, ref: payRef });
+      } catch (err) {
+        twResetPayButton();
+        alert('Something went wrong opening the payment window. Please try again or message us on WhatsApp.');
+      }
     });
 
     return false;
@@ -1950,9 +1956,8 @@
 
   /* ---- Paystack pop-up checkout ----
      Paste your Paystack PUBLIC key (starts pk_live_) below. It is safe on a website.
-     NEVER paste the secret key (sk_...) here. While blank, guests are sent to the old payment link. */
+     NEVER paste the secret key (sk_...) here. While blank, the payment button shows a message instead. */
   const PAYSTACK_PUBLIC_KEY = 'pk_live_90798d68d7ecb04ae870b8b11de197272e076d2d';
-  const PAYSTACK_FALLBACK_URL = 'https://paystack.shop/pay/twresidence';
   if (PAYSTACK_PUBLIC_KEY && !(window.TW_CONFIG && window.TW_CONFIG.apiUrl)){
     const ps = document.createElement('script');
     ps.src = 'https://js.paystack.co/v1/inline.js'; ps.async = true;
@@ -1963,7 +1968,16 @@
     if (b){ b.textContent = 'Proceed to Payment \u2192'; b.style.pointerEvents = ''; b.style.opacity = ''; }
   }
   function twStartPayment(info){
-    if (!PAYSTACK_PUBLIC_KEY){ window.location.href = PAYSTACK_FALLBACK_URL; return; }
+    if (!PAYSTACK_PUBLIC_KEY){ twResetPayButton(); alert('Online payment is not available right now. Please message us on WhatsApp to complete your booking.'); return; }
+    if (typeof PaystackPop === 'undefined' && !info._retried){
+      info._retried = true;
+      const ps3 = document.createElement('script');
+      ps3.src = 'https://js.paystack.co/v1/inline.js';
+      ps3.onload = function(){ twStartPayment(info); };
+      ps3.onerror = function(){ twResetPayButton(); alert('The payment window could not load. Please check your connection and try again, or message us on WhatsApp.'); };
+      document.head.appendChild(ps3);
+      return;
+    }
     if (typeof PaystackPop === 'undefined' || !info.amount){
       twResetPayButton();
       alert('The payment window could not open. Your details were saved. Please message us on WhatsApp and we will help you complete payment.');
