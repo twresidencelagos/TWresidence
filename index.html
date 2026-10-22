@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>T.W Residence — Luxury 3-Bedroom Shortlet in Olaleye Estate, Surulere, Lagos</title>
-<meta name="description" content="T.W Residence is a luxury, fully furnished 3-bedroom shortlet apartment in Olaleye Estate, Surulere, Lagos. All ensuite bedrooms, 24-hour solar power, and a modern, premium finish. Book direct — no agents.">
+<title>T.W Residence | 3-Bedroom Shortlet in Surulere, Lagos</title>
+<meta name="description" content="Book a furnished 3-bedroom shortlet in Surulere, Lagos, with ensuite bedrooms, solar power, Wi-Fi and convenient direct booking at T.W Residence.">
 <link rel="canonical" href="https://twresidence.org/">
 
 <link rel="icon" type="image/x-icon" href="favicon.ico">
@@ -16,15 +16,15 @@
 <link rel="icon" type="image/png" sizes="512x512" href="icon-512.png">
 
 <meta property="og:type" content="website">
-<meta property="og:title" content="T.W Residence — Luxury Shortlet, Olaleye Estate, Lagos">
-<meta property="og:description" content="A fully furnished, solar-powered 3-bedroom luxury shortlet in Olaleye Estate, Surulere. All rooms ensuite. Book direct.">
+<meta property="og:title" content="T.W Residence | 3-Bedroom Shortlet in Surulere, Lagos">
+<meta property="og:description" content="Book a furnished 3-bedroom shortlet in Surulere, Lagos, with ensuite bedrooms, solar power, Wi-Fi and convenient direct booking.">
 <meta property="og:image" content="https://twresidence.org/images/hero.jpg">
 <meta property="og:url" content="https://twresidence.org/">
 <meta property="og:site_name" content="T.W Residence">
 
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="T.W Residence — Luxury Shortlet, Olaleye Estate, Lagos">
-<meta name="twitter:description" content="A fully furnished, solar-powered 3-bedroom luxury shortlet in Olaleye Estate, Surulere. All rooms ensuite. Book direct.">
+<meta name="twitter:title" content="T.W Residence | 3-Bedroom Shortlet in Surulere, Lagos">
+<meta name="twitter:description" content="Book a furnished 3-bedroom shortlet in Surulere, Lagos, with ensuite bedrooms, solar power, Wi-Fi and convenient direct booking.">
 <meta name="twitter:image" content="https://twresidence.org/images/hero.jpg">
 
 <script type="application/ld+json">
@@ -325,12 +325,13 @@
   .hero h1{
     font-family:'Fraunces',serif;
     font-weight:500;
-    font-size:clamp(34px,5vw,54px);
-    line-height:1.08;
-    margin:14px 0 18px;
+    font-size:clamp(30px,4.6vw,46px);
+    line-height:1.1;
+    margin:14px 0 14px;
     color:#fff;
   }
-  .hero p{
+  .hero p.hero-tag{font-family:'Fraunces',serif;font-style:italic;font-weight:500;font-size:clamp(20px,3vw,26px);color:#E8CF8E;max-width:none;margin:-4px 0 14px;}
+.hero p{
     font-size:17px;
     color:#EFE1E0;
     max-width:480px;
@@ -791,7 +792,8 @@
 <section class="hero" id="top">
   <div class="wrap hero-inner">
     <span class="eyebrow">Olaleye Estate · Surulere · Lagos</span>
-    <h1>A private stay, done properly.</h1>
+    <h1>3-Bedroom Shortlet Apartment in Surulere, Lagos</h1>
+    <p class="hero-tag">A private stay, done properly.</p>
     <p>Three ensuite bedrooms, solar power that never quits, and a host who actually answers. T.W Residence is Lagos hospitality the way it should be.</p>
     <div class="btn-row">
       <a href="#gallery" class="btn-photos">View Photos</a>
@@ -1451,6 +1453,8 @@
       const url = `https://www.googleapis.com/calendar/v3/calendars/${encodeURIComponent(calId)}/events?key=${CAL_API_KEY}&timeMin=${encodeURIComponent(now)}&timeMax=${encodeURIComponent(future)}&singleEvents=true&orderBy=startTime`;
       const res = await fetch(url);
       const data = await res.json();
+      window.__calDebug = window.__calDebug || [];
+      window.__calDebug.push({ calendar: calId.slice(0, 18) + '…', http: res.status, events: data.items ? data.items.length : 0, error: data.error ? (data.error.code + ' ' + data.error.message) : '' });
       if (data.items){
         data.items.forEach(event => {
           const startStr = event.start.date || event.start.dateTime?.split('T')[0];
@@ -1464,7 +1468,11 @@
           }
         });
       }
-    } catch(e){ console.log('Calendar fetch error for', calId, e); }
+    } catch(e){
+      console.log('Calendar fetch error for', calId, e);
+      window.__calDebug = window.__calDebug || [];
+      window.__calDebug.push({ calendar: calId.slice(0, 18) + '…', http: 0, events: 0, error: String(e) });
+    }
   }
 
   // Which unit is selected in the booking form: 1, 2, or 0 (none / no preference).
@@ -2029,6 +2037,13 @@
 
   fetchBookedDates().then(() => {
     renderCalendar();
+    // Test mode: open the site with ?debug=1 to see what each calendar returned.
+    if (/[?&]debug=1/.test(location.search)){
+      const box = document.createElement('div');
+      box.style.cssText = 'position:fixed;left:8px;right:8px;bottom:8px;z-index:2000;background:#fff;color:#000;border:2px solid #C9A24D;padding:10px;font:12px/1.4 monospace;max-height:50vh;overflow:auto;white-space:pre-wrap;';
+      box.textContent = 'CALENDAR TEST\n' + (window.__calDebug || []).map(r => r.calendar + ' | http ' + r.http + ' | events ' + r.events + (r.error ? ' | ERROR: ' + r.error : '')).join('\n') + '\nUnit 2 blocked dates: ' + bookedDates.length + '\nUnit 1 blocked dates: ' + bookedDatesU1.length;
+      document.body.appendChild(box);
+    }
   });
   document.getElementById('apartment').addEventListener('change', onApartmentChange);
 </script>
