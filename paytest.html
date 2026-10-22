@@ -1764,7 +1764,7 @@
     if (el) el.classList.toggle('invalid', isInvalid);
   }
   // Clear a field's red state as soon as the guest fixes it.
-  ['name','phone','apartment','guests','booking-for-other','want-direct-refund','main-guest-name','main-guest-phone','guest-names','purpose','howheard','refund-account-number','refund-bank-name','refund-account-name'].forEach(id => {
+  ['name','email','phone','apartment','guests','booking-for-other','want-direct-refund','main-guest-name','main-guest-phone','guest-names','purpose','howheard','refund-account-number','refund-bank-name','refund-account-name'].forEach(id => {
     const el = document.getElementById(id);
     if (el) el.addEventListener('input', () => setFieldInvalid(id, false));
     if (el) el.addEventListener('change', () => setFieldInvalid(id, false));
@@ -1790,7 +1790,7 @@
 
     // Reset all invalid markers, then re-check everything so every problem
     // shows up at once, not just the first one hit.
-    ['name','phone','apartment','guests','booking-for-other','want-direct-refund','main-guest-name','main-guest-phone','guest-names','purpose','howheard','refund-account-number','refund-bank-name','refund-account-name'].forEach(id => setFieldInvalid(id, false));
+    ['name','email','phone','apartment','guests','booking-for-other','want-direct-refund','main-guest-name','main-guest-phone','guest-names','purpose','howheard','refund-account-number','refund-bank-name','refund-account-name'].forEach(id => setFieldInvalid(id, false));
     setRowInvalid('terms-confirm-row', false);
     setRowInvalid('no-party-confirm-row', false);
     document.querySelectorAll('.stay-summary-item').forEach(el => el.classList.remove('invalid'));
@@ -1804,6 +1804,7 @@
     let hasError = false;
     if (!name){ flagInvalid('name'); hasError = true; }
     if (!phone){ flagInvalid('phone'); hasError = true; }
+    if (email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim())){ flagInvalid('email'); hasError = true; } // a wrong email stops Paystack opening
     if (!apartment){ flagInvalid('apartment'); hasError = true; }
     if (!guests){ flagInvalid('guests'); hasError = true; }
     if (!bookingForOtherValue){ flagInvalid('booking-for-other'); hasError = true; }
@@ -1948,7 +1949,8 @@
       twStartPayment({ name: name, phone: phone, email: email, apartment: apartment, checkin: selectedCheckin, checkout: selectedCheckout, amount: payTotal, ref: payRef });
       } catch (err) {
         twResetPayButton();
-        alert('Something went wrong opening the payment window. Please try again or message us on WhatsApp.');
+        console.error(err);
+        alert('Something went wrong opening the payment window. Please check your email address, then try again or message us on WhatsApp. (' + (err && err.message ? err.message : 'unknown') + ')');
       }
     });
 
@@ -1986,7 +1988,7 @@
     }
     const handler = PaystackPop.setup({
       key: PAYSTACK_PUBLIC_KEY,
-      email: info.email || 'twresidence.lagos@gmail.com',
+      email: (info.email && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(info.email.trim())) ? info.email.trim() : 'twresidence.lagos@gmail.com',
       amount: Math.round(info.amount * 100),
       currency: 'NGN',
       ref: info.ref,
@@ -1998,6 +2000,7 @@
         { display_name: 'Check-out', variable_name: 'check_out', value: info.checkout }
       ] },
       callback: function(resp){
+        twResetPayButton();
         if (window.twTrack) window.twTrack('payment_popup_success'); /* browser-side signal only; verify in Paystack */
         document.getElementById('success-name').textContent = info.name;
         document.querySelector('#success-card .success-title').textContent = 'Payment Received';
@@ -2012,6 +2015,7 @@
       onClose: function(){ twResetPayButton(); }
     });
     if (window.twTrack) window.twTrack('payment_window_open');
+    try { document.querySelectorAll('iframe[src*="paystack"]').forEach(function(f){ f.remove(); }); } catch(e){} // clear any leftover window from an earlier payment
     handler.openIframe();
   }
 
@@ -2156,7 +2160,7 @@
     document.getElementById('terms-confirm').checked = false;
     document.getElementById('no-party-confirm').checked = false;
     document.getElementById('promo-row').classList.add('hidden');
-    ['name','phone','apartment','guests','booking-for-other','want-direct-refund','main-guest-name','main-guest-phone','guest-names','purpose','howheard','refund-account-number','refund-bank-name','refund-account-name'].forEach(id => setFieldInvalid(id, false));
+    ['name','email','phone','apartment','guests','booking-for-other','want-direct-refund','main-guest-name','main-guest-phone','guest-names','purpose','howheard','refund-account-number','refund-bank-name','refund-account-name'].forEach(id => setFieldInvalid(id, false));
     setRowInvalid('terms-confirm-row', false);
     setRowInvalid('no-party-confirm-row', false);
     document.querySelectorAll('.stay-summary-item').forEach(el => el.classList.remove('invalid'));
