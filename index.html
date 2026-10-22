@@ -1455,7 +1455,7 @@
   let calendarState = { year: new Date().getFullYear(), month: new Date().getMonth() };
   let selectedCheckin = null, selectedCheckout = null;
 
-  const CAL_API_KEY = 'AIzaSyCUQcUIpsi3LzZ6fb8xI1qfKlyZd9dVcnw';
+  const CAL_API_KEY = 'AIzaSyAswdHmklS0eOB-EyzrKc7UQWIO1gR5ALc';
   const CAL_IDS = [
     'twresidence.lagos@gmail.com',
     'm5d98779r2kllrar25f7fh35gg22nrlg@import.calendar.google.com'
@@ -1763,7 +1763,7 @@
     if (el) el.classList.toggle('invalid', isInvalid);
   }
   // Clear a field's red state as soon as the guest fixes it.
-  ['name','phone','apartment','guests','booking-for-other','want-direct-refund','main-guest-name','main-guest-phone','guest-names','purpose','howheard','refund-account-number','refund-bank-name','refund-account-name'].forEach(id => {
+  ['name','email','phone','apartment','guests','booking-for-other','want-direct-refund','main-guest-name','main-guest-phone','guest-names','purpose','howheard','refund-account-number','refund-bank-name','refund-account-name'].forEach(id => {
     const el = document.getElementById(id);
     if (el) el.addEventListener('input', () => setFieldInvalid(id, false));
     if (el) el.addEventListener('change', () => setFieldInvalid(id, false));
@@ -1789,7 +1789,7 @@
 
     // Reset all invalid markers, then re-check everything so every problem
     // shows up at once, not just the first one hit.
-    ['name','phone','apartment','guests','booking-for-other','want-direct-refund','main-guest-name','main-guest-phone','guest-names','purpose','howheard','refund-account-number','refund-bank-name','refund-account-name'].forEach(id => setFieldInvalid(id, false));
+    ['name','email','phone','apartment','guests','booking-for-other','want-direct-refund','main-guest-name','main-guest-phone','guest-names','purpose','howheard','refund-account-number','refund-bank-name','refund-account-name'].forEach(id => setFieldInvalid(id, false));
     setRowInvalid('terms-confirm-row', false);
     setRowInvalid('no-party-confirm-row', false);
     document.querySelectorAll('.stay-summary-item').forEach(el => el.classList.remove('invalid'));
@@ -1803,6 +1803,7 @@
     let hasError = false;
     if (!name){ flagInvalid('name'); hasError = true; }
     if (!phone){ flagInvalid('phone'); hasError = true; }
+    if (email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim())){ flagInvalid('email'); hasError = true; } // a wrong email stops Paystack opening
     if (!apartment){ flagInvalid('apartment'); hasError = true; }
     if (!guests){ flagInvalid('guests'); hasError = true; }
     if (!bookingForOtherValue){ flagInvalid('booking-for-other'); hasError = true; }
@@ -1947,7 +1948,8 @@
       twStartPayment({ name: name, phone: phone, email: email, apartment: apartment, checkin: selectedCheckin, checkout: selectedCheckout, amount: payTotal, ref: payRef });
       } catch (err) {
         twResetPayButton();
-        alert('Something went wrong opening the payment window. Please try again or message us on WhatsApp.');
+        console.error(err);
+        alert('Something went wrong opening the payment window. Please check your email address, then try again or message us on WhatsApp. (' + (err && err.message ? err.message : 'unknown') + ')');
       }
     });
 
@@ -1985,7 +1987,7 @@
     }
     const handler = PaystackPop.setup({
       key: PAYSTACK_PUBLIC_KEY,
-      email: info.email || 'twresidence.lagos@gmail.com',
+      email: (info.email && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(info.email.trim())) ? info.email.trim() : 'twresidence.lagos@gmail.com',
       amount: Math.round(info.amount * 100),
       currency: 'NGN',
       ref: info.ref,
@@ -1997,10 +1999,23 @@
         { display_name: 'Check-out', variable_name: 'check_out', value: info.checkout }
       ] },
       callback: function(resp){
-        if (window.twTrack) window.twTrack('payment_popup_success'); /* browser-side signal only; verify in Paystack */
-        document.getElementById('success-name').textContent = info.name;
+        twResetPayButton();
+        if (window.twTrack) window.twTrack('payment_popup_success');
+        try { /* tell the owner a payment was reported (confirm the money in the Paystack dashboard) */
+          var pf = new FormData();
+          pf.append('access_key','c9eda67e-d0b9-43f3-ad92-1cf35e7a5d4e');
+          pf.append('subject','PAYMENT REPORTED: '+info.name+' ('+info.apartment+')');
+          pf.append('Payment Ref', String((resp && resp.reference) ? resp.reference : info.ref));
+          pf.append('Guest', info.name); pf.append('Phone', info.phone); pf.append('Guest email', info.email||'');
+          pf.append('Apartment', info.apartment); pf.append('Check-in', info.checkin); pf.append('Check-out', info.checkout);
+          pf.append('Amount paid (NGN)', String(info.amount));
+          pf.append('Note','Reported by the guest browser after Paystack pop-up. Confirm in Paystack dashboard before confirming the stay.');
+          fetch('https://api.web3forms.com/submit',{method:'POST',body:pf}).catch(function(){});
+        } catch(e){} /* browser-side signal only; verify in Paystack */
         document.querySelector('#success-card .success-title').textContent = 'Payment Received';
-        document.querySelector('#success-card .success-msg').textContent = 'Thank you, ' + info.name + '. Paystack has received your payment (reference ' + (resp && resp.reference ? resp.reference : info.ref) + '). We will confirm your booking by WhatsApp or email shortly. Your booking is confirmed once we confirm it with you.';
+        var _m = document.querySelector('#success-card .success-msg');
+        _m.innerHTML = 'Thank you, <strong id="success-name"></strong>. Paystack has received your payment (reference ' + String((resp && resp.reference) ? resp.reference : info.ref).replace(/[^A-Za-z0-9_.-]/g,'') + '). We will confirm your booking by WhatsApp or email shortly. Your booking is confirmed once we confirm it with you.';
+        document.getElementById('success-name').textContent = info.name;
         document.getElementById('success-nights').textContent = info.apartment + ' \u00b7 ' + info.checkin + ' to ' + info.checkout;
         document.getElementById('success-total').textContent = 'Total: ' + fmt(info.amount);
         document.getElementById('success-deposit').textContent = 'Includes \u20a6150,000 refundable caution fee';
@@ -2011,6 +2026,7 @@
       onClose: function(){ twResetPayButton(); }
     });
     if (window.twTrack) window.twTrack('payment_window_open');
+    try { document.querySelectorAll('iframe[src*="paystack"]').forEach(function(f){ f.remove(); }); } catch(e){} // clear any leftover window from an earlier payment
     handler.openIframe();
   }
 
@@ -2155,7 +2171,7 @@
     document.getElementById('terms-confirm').checked = false;
     document.getElementById('no-party-confirm').checked = false;
     document.getElementById('promo-row').classList.add('hidden');
-    ['name','phone','apartment','guests','booking-for-other','want-direct-refund','main-guest-name','main-guest-phone','guest-names','purpose','howheard','refund-account-number','refund-bank-name','refund-account-name'].forEach(id => setFieldInvalid(id, false));
+    ['name','email','phone','apartment','guests','booking-for-other','want-direct-refund','main-guest-name','main-guest-phone','guest-names','purpose','howheard','refund-account-number','refund-bank-name','refund-account-name'].forEach(id => setFieldInvalid(id, false));
     setRowInvalid('terms-confirm-row', false);
     setRowInvalid('no-party-confirm-row', false);
     document.querySelectorAll('.stay-summary-item').forEach(el => el.classList.remove('invalid'));
