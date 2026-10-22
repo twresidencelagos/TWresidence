@@ -927,6 +927,19 @@
   .seg.chips{grid-template-columns:repeat(3,1fr);}
   .seg.chips .seg-btn{text-align:center;padding:12px 8px;font-size:14px;}
   @media (max-width:560px){.seg{grid-template-columns:1fr;}.seg.chips{grid-template-columns:1fr 1fr;}}
+
+  /* cards sit below the hero, no overlap */
+  .hero{padding-bottom:0;min-height:clamp(380px,54vh,500px);}
+  .hero-center{padding-top:0;}
+  .hero-bg:after{background:rgba(62,48,36,.38);}
+  .units{margin-top:0;background:#FAF7F2;padding:44px 0 56px;}
+  .units-head{text-align:center;max-width:620px;margin:0 auto 26px;}
+  .units-head h2{font-size:clamp(26px,3.4vw,34px);margin:0 0 8px;}
+  .units-head p{color:var(--ink-soft);font-size:15px;margin:0;}
+  @media (max-width:860px){
+    .hero{min-height:380px;padding-bottom:0;}
+    .units{margin-top:0;background:#FAF7F2;padding:34px 0 40px;}
+  }
 </style>
 </head>
 <body>
@@ -950,7 +963,7 @@
 </header>
 
 <section class="hero" id="top">
-  <div class="hero-bg"><img src="images/living-tv.jpg" alt="Bright living room at T.W Residence, a furnished 3-bedroom ensuite shortlet apartment in Surulere, Lagos" width="2000" height="1500" fetchpriority="high" decoding="async"></div>
+  <div class="hero-bg"><img src="images/master-bedroom-3.jpg" alt="Master bedroom at T.W Residence, a furnished 3-bedroom ensuite shortlet apartment in Surulere, Lagos" width="2000" height="1500" fetchpriority="high" decoding="async"></div>
   <div class="wrap hero-center">
     <span class="eyebrow">Olaleye Estate · Surulere · Lagos</span>
     <h1>3-Bedroom Shortlet Apartments in Surulere, Lagos</h1>
@@ -961,6 +974,7 @@
 
 <section class="units" id="units">
   <div class="wrap">
+    <div class="units-head"><h2>Choose your apartment</h2><p>Both are 3-bedroom, all ensuite and solar powered.</p></div>
     <div class="units-grid">
       <article class="unit">
         <div class="unit-photo" onclick="openLightbox(unit2Images, 0)" role="button" tabindex="0" aria-label="View photos of Unit 2">
