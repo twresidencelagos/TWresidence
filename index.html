@@ -6,6 +6,8 @@
 <title>T.W Residence | 3-Bedroom Shortlet in Surulere, Lagos</title>
 <meta name="description" content="Book a furnished 3-bedroom shortlet in Surulere, Lagos, with ensuite bedrooms, solar power, Wi-Fi and convenient direct booking at T.W Residence.">
 <link rel="canonical" href="https://twresidence.org/">
+<meta name="robots" content="index, follow, max-image-preview:large">
+<meta name="theme-color" content="#3B2A1C">
 
 <link rel="icon" type="image/x-icon" href="favicon.ico">
 <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
@@ -19,6 +21,8 @@
 <meta property="og:title" content="T.W Residence | 3-Bedroom Shortlet in Surulere, Lagos">
 <meta property="og:description" content="Book a furnished 3-bedroom shortlet in Surulere, Lagos, with ensuite bedrooms, solar power, Wi-Fi and convenient direct booking.">
 <meta property="og:image" content="https://twresidence.org/images/hero.jpg">
+<meta property="og:image:alt" content="T.W Residence, a furnished 3-bedroom shortlet apartment in Surulere, Lagos">
+<meta property="og:locale" content="en_NG">
 <meta property="og:url" content="https://twresidence.org/">
 <meta property="og:site_name" content="T.W Residence">
 
@@ -26,6 +30,7 @@
 <meta name="twitter:title" content="T.W Residence | 3-Bedroom Shortlet in Surulere, Lagos">
 <meta name="twitter:description" content="Book a furnished 3-bedroom shortlet in Surulere, Lagos, with ensuite bedrooms, solar power, Wi-Fi and convenient direct booking.">
 <meta name="twitter:image" content="https://twresidence.org/images/hero.jpg">
+<meta name="twitter:image:alt" content="T.W Residence, a furnished 3-bedroom shortlet apartment in Surulere, Lagos">
 
 <script type="application/ld+json">
 {
@@ -42,7 +47,28 @@
     "addressRegion": "Lagos",
     "addressCountry": "NG"
   },
-  "sameAs": ["https://www.instagram.com/twresidence.lagos"]
+  "sameAs": [
+    "https://www.instagram.com/twresidence.lagos"
+  ],
+  "telephone": "+2348123331112",
+  "amenityFeature": [
+    {
+      "@type": "LocationFeatureSpecification",
+      "name": "24-hour solar power",
+      "value": true
+    },
+    {
+      "@type": "LocationFeatureSpecification",
+      "name": "Wi-Fi",
+      "value": true
+    },
+    {
+      "@type": "LocationFeatureSpecification",
+      "name": "Ensuite bedrooms",
+      "value": true
+    }
+  ],
+  "numberOfRooms": 3
 }
 </script>
 
@@ -877,16 +903,16 @@
     </div>
     <div class="gallery-grid" style="height:auto;grid-template-columns:1fr 1fr;">
       <div class="unit-card" onclick="openLightbox(unit1Images, 0)" style="position:relative;border-radius:var(--radius);overflow:hidden;cursor:pointer;">
-        <img src="images/unit1-living-room.jpg.jpg" alt="T.W Unit 1" style="width:100%;height:340px;object-fit:cover;">
+        <img src="images/unit1-living-room.jpg.jpg" alt="Living room of T.W Residence Unit 1, a furnished 3-bedroom ensuite shortlet apartment in Surulere, Lagos" loading="lazy" decoding="async" style="width:100%;height:340px;object-fit:cover;">
         <div style="position:absolute;bottom:0;left:0;right:0;background:linear-gradient(transparent,rgba(59,42,28,.8));padding:18px 20px;">
-          <p style="color:#fff;font-family:'Fraunces',serif;font-size:18px;font-weight:600;letter-spacing:.02em;">T.W Unit 1</p>
+          <h3 style="color:#fff;font-family:'Fraunces',serif;font-size:18px;font-weight:600;letter-spacing:.02em;margin:0;">T.W Unit 1</h3>
           <p style="color:var(--brass);font-size:12px;letter-spacing:.06em;text-transform:uppercase;margin-top:2px;">Available from 1 Nov · Tap to view photos</p>
         </div>
       </div>
       <div class="unit-card" onclick="openLightbox(unit2Images, 0)" style="position:relative;border-radius:var(--radius);overflow:hidden;cursor:pointer;">
-        <img src="images/hero.jpg" alt="T.W Unit 2" style="width:100%;height:340px;object-fit:cover;">
+        <img src="images/hero.jpg" alt="T.W Residence Unit 2, a furnished 3-bedroom ensuite shortlet apartment in Surulere, Lagos" loading="lazy" decoding="async" style="width:100%;height:340px;object-fit:cover;">
         <div style="position:absolute;bottom:0;left:0;right:0;background:linear-gradient(transparent,rgba(59,42,28,.8));padding:18px 20px;">
-          <p style="color:#fff;font-family:'Fraunces',serif;font-size:18px;font-weight:600;letter-spacing:.02em;">T.W Unit 2</p>
+          <h3 style="color:#fff;font-family:'Fraunces',serif;font-size:18px;font-weight:600;letter-spacing:.02em;margin:0;">T.W Unit 2</h3>
           <p style="color:var(--brass);font-size:12px;letter-spacing:.06em;text-transform:uppercase;margin-top:2px;">Available Now · Tap to view photos</p>
         </div>
       </div>
@@ -1198,7 +1224,7 @@
 
         <div class="field full">
           <label>Additional Notes</label>
-          <textarea id="notes"></textarea>
+          <textarea id="notes" placeholder="Expected arrival time, early check-in request or anything we should know (optional)"></textarea>
         </div>
 
         <div class="terms-box">
@@ -1886,6 +1912,7 @@
         document.getElementById('success-total').textContent = 'Total: ' + fmt(roomTotal + CAUTION_FEE);
         document.getElementById('success-deposit').textContent = 'Includes ₦150,000 refundable caution fee';
       }
+      if (window.twTrack){ window.twTrack('booking_form_submit', { apartment: apartment }); /* a lead, not a confirmed booking */ window.twTrack('paystack_redirect'); /* guest sent to Paystack; NOT proof of payment */ }
       window.location.href = 'https://paystack.shop/pay/twresidence';
     });
 
@@ -2168,6 +2195,33 @@
   document.getElementById('offer-cta').addEventListener('click', closeOffer);
   overlay.addEventListener('click', function(e){ if (e.target === overlay) closeOffer(); });
   document.addEventListener('keydown', function(e){ if (e.key === 'Escape') closeOffer(); });
+})();
+</script>
+<script>
+/* T.W Residence measurement (GA4-ready). Stays OFF until a GA4 Measurement ID is pasted below.
+   Example: const TW_GA_ID = 'G-XXXXXXXXXX';  Leave '' to keep tracking disabled. */
+(function(){
+  const TW_GA_ID = '';
+  function track(name, params){
+    try{ if (typeof window.gtag === 'function') window.gtag('event', name, params || {}); }catch(e){}
+  }
+  window.twTrack = track;
+  if (TW_GA_ID){
+    const g = document.createElement('script');
+    g.async = true; g.src = 'https://www.googletagmanager.com/gtag/js?id=' + encodeURIComponent(TW_GA_ID);
+    document.head.appendChild(g);
+    window.dataLayer = window.dataLayer || [];
+    window.gtag = function(){ window.dataLayer.push(arguments); };
+    window.gtag('js', new Date());
+    window.gtag('config', TW_GA_ID, { anonymize_ip: true });
+  }
+  document.addEventListener('click', function(ev){
+    const a = ev.target.closest && ev.target.closest('a[href]');
+    if (!a) return;
+    const h = a.getAttribute('href') || '';
+    if (h.indexOf('wa.me') > -1) track('whatsapp_click', { link_location: a.className || 'text_link' });
+    else if (h.indexOf('mailto:') === 0) track('email_click');
+  }, true);
 })();
 </script>
 </body>
