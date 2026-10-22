@@ -1425,7 +1425,7 @@
         total -= freeNight;
       }
     }
-    return { nights, total: 500, freeNight: 0 }; // PAYMENT TEST PAGE ONLY: every stay costs 500 naira
+    return { nights, total: 500, freeNight: 0 }; // PAYMENT TEST PAGE ONLY
   }
 
   let bookedDates = [];
@@ -1929,7 +1929,9 @@
       headers: { 'Accept': 'application/json' }
     }).catch(() => null);
 
-    Promise.allSettled([sheetsRequest, web3formsRequest, formspreeRequest]).then(() => {
+    // Do not wait forever for the backup services: open payment after at most 2.5 seconds.
+    Promise.race([Promise.allSettled([sheetsRequest, web3formsRequest, formspreeRequest]), new Promise(r => setTimeout(r, 2500))]).then(() => {
+      try {
       document.getElementById('success-name').textContent = name;
       if (result){
         document.getElementById('success-nights').textContent = result.nights + ' night' + (result.nights > 1 ? 's' : '') + ' · ' + guests;
@@ -1944,6 +1946,10 @@
         payTotal = rt + CAUTION_FEE;
       }
       twStartPayment({ name: name, phone: phone, email: email, apartment: apartment, checkin: selectedCheckin, checkout: selectedCheckout, amount: payTotal, ref: payRef });
+      } catch (err) {
+        twResetPayButton();
+        alert('Something went wrong opening the payment window. Please try again or message us on WhatsApp.');
+      }
     });
 
     return false;
@@ -1964,6 +1970,15 @@
   }
   function twStartPayment(info){
     if (!PAYSTACK_PUBLIC_KEY){ twResetPayButton(); alert('Online payment is not available right now. Please message us on WhatsApp to complete your booking.'); return; }
+    if (typeof PaystackPop === 'undefined' && !info._retried){
+      info._retried = true;
+      const ps3 = document.createElement('script');
+      ps3.src = 'https://js.paystack.co/v1/inline.js';
+      ps3.onload = function(){ twStartPayment(info); };
+      ps3.onerror = function(){ twResetPayButton(); alert('The payment window could not load. Please check your connection and try again, or message us on WhatsApp.'); };
+      document.head.appendChild(ps3);
+      return;
+    }
     if (typeof PaystackPop === 'undefined' || !info.amount){
       twResetPayButton();
       alert('The payment window could not open. Your details were saved. Please message us on WhatsApp and we will help you complete payment.');
