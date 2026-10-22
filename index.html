@@ -201,6 +201,7 @@
 }
 </script>
 
+<script src="config.js"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,500&family=Jost:wght@400;500;600;700&family=Public+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -475,6 +476,19 @@
   }
   .gallery-grid img{border-radius:var(--radius);height:100%;object-fit:cover;}
   .gallery-head{text-align:center;max-width:600px;margin:0 auto 48px;}
+  .sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;}
+  .compare{max-width:760px;margin:56px auto 0;}
+  .compare h3{font-family:'Fraunces',serif;font-weight:500;font-size:clamp(22px,3vw,27px);text-align:center;margin:0 0 20px;color:var(--ink);}
+  .compare-table{width:100%;border-collapse:collapse;font-size:15px;background:var(--cream);}
+  .compare-table th,.compare-table td{padding:13px 12px;border-bottom:1px solid var(--line);text-align:center;vertical-align:top;color:var(--ink);}
+  .compare-table thead th{font-family:'Fraunces',serif;font-weight:600;font-size:16px;border-bottom:2px solid var(--brass);}
+  .compare-table tbody th{text-align:left;font-weight:600;font-size:13px;letter-spacing:.04em;text-transform:uppercase;color:var(--ink-soft);width:34%;}
+  .compare-table td.span{color:var(--ink-soft);}
+  .compare-amenities{list-style:none;margin:22px 0 0;padding:0;display:grid;grid-template-columns:1fr 1fr;gap:8px 18px;font-size:14.5px;color:var(--ink);}
+  .compare-amenities li{padding-left:20px;position:relative;line-height:1.45;}
+  .compare-amenities li:before{content:'\2726';position:absolute;left:0;color:var(--wine);font-size:11px;top:3px;}
+  .compare-cta{text-align:center;margin-top:26px;}
+  @media (max-width:560px){.compare-table{font-size:14px;}.compare-table th,.compare-table td{padding:11px 7px;}.compare-amenities{grid-template-columns:1fr;}}
   .gallery-head h2{font-size:clamp(26px,3.4vw,32px);margin-top:10px;}
 
   /* rate card */
@@ -916,6 +930,30 @@
           <p style="color:var(--brass);font-size:12px;letter-spacing:.06em;text-transform:uppercase;margin-top:2px;">Available Now · Tap to view photos</p>
         </div>
       </div>
+    </div>
+    <div class="compare" id="compare">
+      <h3>Compare the two apartments</h3>
+      <table class="compare-table">
+        <thead><tr><th scope="col"><span class="sr-only">Feature</span></th><th scope="col">Unit 1</th><th scope="col">Unit 2</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">Bedrooms</th><td>3</td><td>3</td></tr>
+          <tr><th scope="row">Maximum guests</th><td>6</td><td>6</td></tr>
+          <tr><th scope="row">Availability</th><td>From 1 Nov 2026</td><td>Available now</td></tr>
+          <tr><th scope="row">Amenities</th><td class="span" colspan="2">The same in both apartments (listed below)</td></tr>
+          <tr><th scope="row">Your rate</th><td class="span" colspan="2">Depends on your dates. Choose your check-in and check-out in the booking form to see your exact total, including the refundable caution fee.</td></tr>
+        </tbody>
+      </table>
+      <ul class="compare-amenities">
+        <li>24-hour solar power</li>
+        <li>Fast WiFi</li>
+        <li>Air conditioning</li>
+        <li>TV with DStv and Netflix</li>
+        <li>Fully equipped kitchen: fridge, microwave, gas cooker</li>
+        <li>Washing machine and water heater</li>
+        <li>On-site parking</li>
+        <li>Secure, gated estate with access control</li>
+      </ul>
+      <div class="compare-cta"><a href="#book" class="btn-primary">Choose your dates</a></div>
     </div>
   </div>
 </section>
@@ -1428,6 +1466,7 @@
 
   let bookedDates = [];
   let bookedDatesU1 = [];
+  let serverBlocked = { 1: [], 2: [] }; // nights held/confirmed through the booking service (when switched on)
 
   // Unit 1 opens for bookings on this date. Earlier dates stay blocked for Unit 1.
   const UNIT1_OPEN_DATE = '2026-11-01';
@@ -1471,6 +1510,7 @@
     for (const calId of UNIT1_CAL_IDS){
       await fetchCalendarDates(calId, bookedDatesU1);
     }
+    await fetchServerAvailability();
   }
 
   async function fetchCalendarDates(calId, out){
@@ -1512,6 +1552,7 @@
   }
 
   function isBlockedForUnit(dateStr, unit){
+    if (serverBlocked[unit] && serverBlocked[unit].indexOf(dateStr) > -1) return true; // held or confirmed on this website
     const u2Blocked = bookedDates.includes(dateStr) || isDateManuallyBlocked(dateStr);
     if (unit === 1){
       if (dateStr < UNIT1_OPEN_DATE) return true;
@@ -1883,6 +1924,23 @@
       submitBtn.style.opacity = '0.7';
     }
 
+    if (BOOKING_API_URL){
+      // Secure booking service: the server re-checks availability, works out the price, creates the Paystack
+      // transaction and confirms the booking only after Paystack verifies the payment.
+      twServerCheckout({
+        unit: /^Unit 1/.test(apartment) ? 1 : /^Unit 2/.test(apartment) ? 2 : 'any',
+        check_in: selectedCheckin, check_out: selectedCheckout, guests: parseInt(guests, 10),
+        name: name, phone: phone, email: email,
+        guest_names: document.getElementById('guest-names').value.trim(),
+        booking_for_other: bookingForOther, main_guest_name: mainGuestName, main_guest_phone: mainGuestPhone,
+        purpose: document.getElementById('purpose').value, how_heard: document.getElementById('howheard').value,
+        notes: document.getElementById('notes').value,
+        refund_account_number: refundAccountNumber, refund_bank_name: refundBankName, refund_account_name: refundAccountName,
+        terms_confirmed: termsConfirmed, no_party_confirmed: noPartyConfirmed
+      });
+      return false;
+    }
+
     // Send to both Formspree and the Google Sheets backup in parallel.
     // The guest proceeds to payment once both attempts have finished,
     // regardless of whether either one succeeded — this avoids the earlier
@@ -1932,7 +1990,7 @@
      NEVER paste the secret key (sk_...) here. While blank, guests are sent to the old payment link. */
   const PAYSTACK_PUBLIC_KEY = 'pk_live_90798d68d7ecb04ae870b8b11de197272e076d2d';
   const PAYSTACK_FALLBACK_URL = 'https://paystack.shop/pay/twresidence';
-  if (PAYSTACK_PUBLIC_KEY){
+  if (PAYSTACK_PUBLIC_KEY && !(window.TW_CONFIG && window.TW_CONFIG.apiUrl)){
     const ps = document.createElement('script');
     ps.src = 'https://js.paystack.co/v1/inline.js'; ps.async = true;
     document.head.appendChild(ps);
@@ -1979,7 +2037,130 @@
     handler.openIframe();
   }
 
+  /* ---- Secure booking service (switched on by putting its address in config.js) ---- */
+  const BOOKING_API_URL = ((window.TW_CONFIG && window.TW_CONFIG.apiUrl) || '').replace(/\/+$/, '');
+  if (BOOKING_API_URL){
+    const ps2 = document.createElement('script');
+    ps2.src = 'https://js.paystack.co/v2/inline.js'; ps2.async = true;
+    document.head.appendChild(ps2);
+  }
+  let twActive = null, twPollTimer = null, twPollStarted = 0, twConfirmedShown = false;
+
+  async function fetchServerAvailability(){
+    if (!BOOKING_API_URL) return;
+    try{
+      const res = await fetch(BOOKING_API_URL + '/api/availability');
+      if (res.ok){ const d = await res.json(); serverBlocked = { 1: d['1'] || [], 2: d['2'] || [] }; }
+    }catch(e){ /* the server re-checks every booking anyway */ }
+  }
+
+  function twStatusBox(){
+    let box = document.getElementById('tw-pay-status');
+    if (!box){
+      box = document.createElement('div');
+      box.id = 'tw-pay-status';
+      box.setAttribute('role', 'status');
+      box.style.cssText = 'margin-top:16px;padding:14px 16px;border:1px solid var(--line);background:var(--blush);border-radius:4px;font-size:14px;line-height:1.55;color:var(--ink);';
+      const nav = document.querySelector('#panel-3 .panel-nav');
+      nav.parentNode.insertBefore(box, nav.nextSibling);
+    }
+    return box;
+  }
+  function twShowStatus(text, withButtons){
+    const box = twStatusBox();
+    box.textContent = '';
+    const p = document.createElement('p'); p.style.margin = '0'; p.textContent = text; box.appendChild(p);
+    if (withButtons){
+      const row = document.createElement('div'); row.style.cssText = 'margin-top:10px;display:flex;gap:10px;flex-wrap:wrap;';
+      [['Open payment window', twOpenPayment], ['Check payment status', twPollOnce]].forEach(function(b){
+        const btn = document.createElement('button'); btn.type = 'button'; btn.className = 'btn-secondary'; btn.textContent = b[0]; btn.onclick = b[1]; row.appendChild(btn);
+      });
+      box.appendChild(row);
+    }
+  }
+  function twStopPolling(){ if (twPollTimer){ clearInterval(twPollTimer); twPollTimer = null; } }
+
+  async function twServerCheckout(payload){
+    try{
+      const res = await fetch(BOOKING_API_URL + '/api/bookings', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
+      const data = await res.json().catch(function(){ return {}; });
+      if (res.status === 200 || res.status === 201){
+        twActive = data;
+        twShowStatus('Your dates are held for 20 minutes while you pay. Complete the payment in the Paystack window. We confirm your booking automatically once Paystack verifies it. Please do not pay twice.', true);
+        twOpenPayment();
+        twStartPolling();
+        return;
+      }
+      twResetPayButton();
+      alert(data.message || 'Something went wrong. Please try again or message us on WhatsApp.');
+      if (res.status === 409){ await fetchServerAvailability(); renderCalendar(); goToStep(1, true); }
+    }catch(e){
+      twResetPayButton();
+      alert('We could not reach the booking service. Please check your connection and try again, or message us on WhatsApp.');
+    }
+  }
+
+  function twOpenPayment(){
+    if (!twActive) return;
+    try{
+      const popup = new PaystackPop();
+      popup.resumeTransaction(twActive.access_code, {
+        onSuccess: function(){ twPollOnce(); },
+        onCancel: function(){ twResetPayButton(); twShowStatus('The payment window was closed. If you did not pay, your dates stay held until ' + new Date(twActive.hold_expires_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) + '. You can reopen it below.', true); },
+        onError: function(){ twShowStatus('The payment window had a problem. You can reopen it below. If you were charged, do not pay again: we will confirm automatically.', true); }
+      });
+      if (window.twTrack) window.twTrack('payment_window_open');
+    }catch(e){
+      twShowStatus('The payment window could not open. Please allow pop-ups, or message us on WhatsApp with reference ' + twActive.reference + '.', true);
+    }
+  }
+
+  function twStartPolling(){
+    twStopPolling(); twPollStarted = Date.now();
+    twPollTimer = setInterval(twPollOnce, 3500);
+  }
+  async function twPollOnce(){
+    if (!twActive) return;
+    if (Date.now() - twPollStarted > 15 * 60000){
+      twStopPolling();
+      twShowStatus('We have not yet received verified payment for reference ' + twActive.reference + '. If you paid, do not pay again: we will confirm as soon as Paystack notifies us. You can check at twresidence.org/booking.html?ref=' + twActive.reference + ' or message us on WhatsApp.', false);
+      twResetPayButton();
+      return;
+    }
+    try{
+      const res = await fetch(BOOKING_API_URL + '/api/bookings/' + encodeURIComponent(twActive.reference));
+      if (!res.ok) return;
+      const d = await res.json();
+      if (d.confirmed){ twStopPolling(); twShowConfirmed(d); }
+      else if (d.status === 'failed' || d.status === 'expired' || d.status === 'cancelled'){ twStopPolling(); twResetPayButton(); twShowStatus(d.message + ' Please start again to choose your dates.', false); fetchServerAvailability(); }
+      else if (d.status === 'needs_review'){ twStopPolling(); twShowStatus(d.message + ' Reference: ' + d.reference, false); }
+    }catch(e){ /* try again on the next tick */ }
+  }
+
+  function twShowConfirmed(d){
+    if (twConfirmedShown) return; twConfirmedShown = true;
+    const set = function(sel, t){ document.querySelector(sel).textContent = t; };
+    set('#success-card .success-title', 'Booking Confirmed');
+    set('#success-name', d.guest_first_name || '');
+    set('#success-card .success-msg', 'Thank you, ' + (d.guest_first_name || '') + '. Your payment has been verified and your booking is confirmed. Your booking reference is ' + d.reference + '. Please keep it.');
+    set('#success-nights', d.apartment + ' · ' + d.check_in + ' to ' + d.check_out + ' · ' + d.nights + ' night' + (d.nights > 1 ? 's' : '') + ' · ' + d.guests + ' guest' + (d.guests > 1 ? 's' : ''));
+    set('#success-total', 'Total paid: ' + fmt(d.total_naira));
+    const dep = document.getElementById('success-deposit');
+    dep.style.whiteSpace = 'pre-line';
+    dep.textContent = 'Payment: ' + d.payment_status + '\nCheck-in from ' + d.check_in_time + ', check-out by ' + d.check_out_time + '\nIncludes ' + fmt(d.caution_naira) + ' refundable caution fee\nMessage us on WhatsApp with your expected arrival time.';
+    document.getElementById('form-card').classList.add('hidden');
+    document.getElementById('success-card').classList.remove('hidden');
+    document.getElementById('success-card').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    if (window.twTrack){
+      try{ if (sessionStorage.getItem('tw_ph_' + d.reference)) return; sessionStorage.setItem('tw_ph_' + d.reference, '1'); }catch(e){}
+      window.twTrack('purchase', { transaction_id: d.reference, value: d.total_naira, currency: 'NGN' }); /* server-verified payment only */
+    }
+  }
+
   function resetForm(){
+    twStopPolling(); twActive = null; twConfirmedShown = false;
+    const tsb = document.getElementById('tw-pay-status'); if (tsb) tsb.remove();
+    twResetPayButton();
     ['name','phone','email','notes','guest-names','main-guest-name','main-guest-phone','refund-account-number','refund-bank-name','refund-account-name'].forEach(id => document.getElementById(id).value = '');
     document.getElementById('booking-for-other').value = '';
     document.getElementById('want-direct-refund').value = '';
