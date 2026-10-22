@@ -943,6 +943,11 @@
 
   .unit-badge{font-size:12.5px;padding:9px 15px;}
   .unit-badge.soon{background:#6B4A14;color:#fff;box-shadow:0 4px 14px rgba(0,0,0,.28);letter-spacing:.12em;}
+
+  .logo-link{display:flex;align-items:center;line-height:0;}
+  .logo-img{height:62px;width:auto;display:block;}
+  .nav-row{padding-top:8px;padding-bottom:8px;}
+  @media (max-width:860px){.logo-img{height:54px;}}
 </style>
 </head>
 <body>
@@ -952,7 +957,7 @@
 
 <header>
   <div class="wrap nav-row">
-    <a href="#top" class="logo">T.W Residence</a>
+    <a href="#top" class="logo logo-link" aria-label="T.W Residence home"><img src="images/logo.png" alt="T.W Residence" class="logo-img" width="900" height="468"></a>
     <nav class="nav-links">
       <a href="#units">Apartments</a>
       <a href="#features">Amenities</a>
