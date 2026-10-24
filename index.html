@@ -130,7 +130,7 @@
       "name": "Does T.W Residence offer a discount for longer stays?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "T.W Residence uses fixed, published seasonal pricing shown on the booking calendar. Pricing is not negotiable. Current festive offer: stay 4 nights and get the 5th night free, for stays between 1 November and 14 December 2026 (check-out up to 15 December). The offer is applied automatically on the booking form."
+        "text": "T.W Residence uses fixed, published seasonal pricing shown on the booking calendar. Pricing is not negotiable."
       }
     },
     {
@@ -1081,7 +1081,7 @@
       </details>
       <details class="faq-item">
         <summary>Does T.W Residence offer a discount for longer stays?</summary>
-        <p>T.W Residence uses fixed, published seasonal pricing shown on the booking calendar. Pricing is not negotiable. Current festive offer: stay 4 nights and get the 5th night free, for stays between 1 November and 14 December 2026 (check-out up to 15 December). The offer is applied automatically on the booking form.</p>
+        <p>T.W Residence uses fixed, published seasonal pricing shown on the booking calendar. Pricing is not negotiable.</p>
       </details>
       <details class="faq-item">
         <summary>Are parties or events allowed?</summary>
@@ -1518,7 +1518,7 @@
 
   // Festive offer: stay 4 nights, get the 5th free. Applies when the first five nights of the stay
   // fall between 1 Nov and 14 Dec 2026 (check-out up to 15 Dec).
-  const FREE_NIGHT_OFFER = { start: '2026-11-01', end: '2026-12-14', stayNights: 5 };
+  const FREE_NIGHT_OFFER = { enabled: false, start: '2026-11-01', end: '2026-12-14', stayNights: 5 }; // offer switched off
 
   function fmt(n){ return '₦' + n.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ','); }
 
@@ -1548,7 +1548,7 @@
     // Festive offer: on a stay of 5+ nights where the first five nights all fall inside the
     // offer window, the 5th night is free.
     let freeNight = 0;
-    if (nights >= FREE_NIGHT_OFFER.stayNights){
+    if (FREE_NIGHT_OFFER.enabled && nights >= FREE_NIGHT_OFFER.stayNights){
       const first = nightDates.slice(0, FREE_NIGHT_OFFER.stayNights);
       const inWindow = first.every(function(ds){ return ds >= FREE_NIGHT_OFFER.start && ds <= FREE_NIGHT_OFFER.end; });
       if (inWindow){
@@ -1572,7 +1572,7 @@
   // Manually confirmed bookings — always blocked regardless of calendar sync status.
   const MANUALLY_BLOCKED_RANGES = [
     { start: '2026-09-26', end: '2026-09-27' }, // Fatima
-    { start: '2026-10-26', end: '2026-11-06' }, // Olajide, checkout Nov 6 (left open for a new check-in)
+    { start: '2026-10-26', end: '2026-11-07' }, // Olajide, checkout Nov 6, Nov 6 also kept blocked (no new check-in that day)
   ];
 
   // One-off exceptions to the "no Sunday checkout" rule.
@@ -2591,7 +2591,8 @@
 <script>
 (function(){
   var overlay = document.getElementById('offer-overlay');
-  if (!overlay) return;
+  var SHOW_OFFER_POPUP = false; // set to true to bring the festive popup back
+  if (!overlay || !SHOW_OFFER_POPUP) return;
   var today = new Date().toISOString().split('T')[0];
   if (today > '2026-12-14') return; // offer has ended
   function openOffer(){
