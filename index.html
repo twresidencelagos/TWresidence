@@ -1516,9 +1516,10 @@
     return STANDARD_RATE;
   }
 
-  // Festive offer: stay 4 nights, get the 5th free. Applies when the first five nights of the stay
-  // fall between 1 Nov and 14 Dec 2026 (check-out up to 15 Dec).
-  const FREE_NIGHT_OFFER = { enabled: false, start: '2026-11-01', end: '2026-12-14', stayNights: 5 }; // offer switched off
+  // November offer: 10% off the room total when the booking is made by 14 Nov 2026 and every night of
+  // the stay falls between 1 and 30 Nov 2026 (check-out up to 1 Dec). Applied automatically.
+  const PERCENT_OFFER = { enabled: true, percent: 10, bookBy: '2026-11-14', stayStart: '2026-11-01', stayEnd: '2026-11-30', label: '10% November offer' };
+  function todayLagos(){ return new Date(Date.now() + 3600000).toISOString().slice(0, 10); } // Lagos is UTC+1 all year
 
   function fmt(n){ return '₦' + n.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ','); }
 
@@ -1545,16 +1546,13 @@
       nightDates.push(dateStr);
       total += price;
     }
-    // Festive offer: on a stay of 5+ nights where the first five nights all fall inside the
-    // offer window, the 5th night is free.
+    // November offer: 10% off when booked by the deadline and every night is inside the stay window.
+    // (The field keeps its old name, freeNight, but now holds the amount taken off.)
     let freeNight = 0;
-    if (FREE_NIGHT_OFFER.enabled && nights >= FREE_NIGHT_OFFER.stayNights){
-      const first = nightDates.slice(0, FREE_NIGHT_OFFER.stayNights);
-      const inWindow = first.every(function(ds){ return ds >= FREE_NIGHT_OFFER.start && ds <= FREE_NIGHT_OFFER.end; });
-      if (inWindow){
-        freeNight = nightPrices[FREE_NIGHT_OFFER.stayNights - 1];
-        total -= freeNight;
-      }
+    if (PERCENT_OFFER.enabled && todayLagos() <= PERCENT_OFFER.bookBy &&
+        nightDates.every(function(ds){ return ds >= PERCENT_OFFER.stayStart && ds <= PERCENT_OFFER.stayEnd; })){
+      freeNight = Math.round(total * PERCENT_OFFER.percent / 100);
+      total -= freeNight;
     }
     return { nights, total, freeNight };
   }
@@ -1847,7 +1845,7 @@
     const promoRow = document.getElementById('promo-row');
     const totalEl = document.getElementById('total-amount');
     if (freeNight > 0){
-      document.getElementById('promo-code-label').textContent = '5th night free';
+      document.getElementById('promo-code-label').textContent = PERCENT_OFFER.label;
       document.getElementById('promo-discount-amount').textContent = '\u2212' + fmt(freeNight);
       promoRow.classList.remove('hidden');
       totalEl.textContent = fmt(subtotal - freeNight + CAUTION_FEE);
@@ -1999,7 +1997,7 @@
       formData.append('Subtotal', fmt(result.total + (result.freeNight || 0)));
       formData.append('Nights', result.nights + ' night(s)');
       if (result.freeNight > 0){
-        formData.append('Promo', '5th night free');
+        formData.append('Promo', PERCENT_OFFER.label);
         formData.append('Discount', fmt(result.freeNight));
       }
       let roomTotal = result.total;
@@ -2341,7 +2339,7 @@
         html += rowHtml('Room total (full payment)', fmt(roomTotal));
       } else if (result.freeNight > 0){
         html += rowHtml('Subtotal', fmt(result.total + result.freeNight));
-        html += rowHtml('5th night free', '\u2212' + fmt(result.freeNight));
+        html += rowHtml(PERCENT_OFFER.label, '\u2212' + fmt(result.freeNight));
         html += rowHtml('Room total (full payment)', fmt(roomTotal));
       } else {
         html += rowHtml('Room total (full payment)', fmt(roomTotal));
@@ -2573,17 +2571,16 @@
       <div class="offer-brand">T.W RESIDENCE</div>
       <div class="offer-seal">
         <svg viewBox="-125 -125 250 250" width="150" height="150"><defs><radialGradient id="sealg" cx="40%" cy="35%" r="75%"><stop offset="0" stop-color="#F7DB8F"/><stop offset=".6" stop-color="#E0B64F"/><stop offset="1" stop-color="#B98A2C"/></radialGradient></defs><polygon points="122.0,0.0 107.3,12.1 118.9,27.1 101.9,35.7 109.9,52.9 91.4,57.5 95.4,76.1 76.4,76.4 76.1,95.4 57.5,91.4 52.9,109.9 35.7,101.9 27.1,118.9 12.1,107.3 0.0,122.0 -12.1,107.3 -27.1,118.9 -35.7,101.9 -52.9,109.9 -57.5,91.4 -76.1,95.4 -76.4,76.4 -95.4,76.1 -91.4,57.5 -109.9,52.9 -101.9,35.7 -118.9,27.1 -107.3,12.1 -122.0,0.0 -107.3,-12.1 -118.9,-27.1 -101.9,-35.7 -109.9,-52.9 -91.4,-57.5 -95.4,-76.1 -76.4,-76.4 -76.1,-95.4 -57.5,-91.4 -52.9,-109.9 -35.7,-101.9 -27.1,-118.9 -12.1,-107.3 -0.0,-122.0 12.1,-107.3 27.1,-118.9 35.7,-101.9 52.9,-109.9 57.5,-91.4 76.1,-95.4 76.4,-76.4 95.4,-76.1 91.4,-57.5 109.9,-52.9 101.9,-35.7 118.9,-27.1 107.3,-12.1" fill="url(#sealg)"/><circle r="96" fill="none" stroke="#3B2A1C" stroke-opacity=".5" stroke-width="2"/><circle r="90" fill="none" stroke="#fff" stroke-opacity=".5" stroke-width="1"/></svg>
-        <div class="offer-seal-t"><span class="a">5TH NIGHT</span><span class="b">FREE</span><span class="c">ON US</span></div>
+        <div class="offer-seal-t"><span class="a">NOVEMBER</span><span class="b">10%</span><span class="c">OFF YOUR STAY</span></div>
       </div>
       <div class="offer-spark s1">&#10022;</div><div class="offer-spark s2">&#10022;</div><div class="offer-spark s3">&#10022;</div><div class="offer-spark s4">&#10022;</div>
     </div>
     <div class="offer-body">
       <div class="offer-eye">FESTIVE OFFER</div>
-      <h2 class="offer-title" id="offer-title">Stay 4 nights.<em>Get the 5th free.</em></h2>
-      <div class="offer-dots" aria-hidden="true"><i></i><i></i><i></i><i></i><i class="f"></i></div>
-      <p class="offer-dates">For stays from <strong>1 Nov</strong> to <strong>14 Dec</strong></p>
+      <h2 class="offer-title" id="offer-title">10% off<em>your November stay.</em></h2>
+            <p class="offer-dates">Book by <strong>14 Nov</strong> &middot; stay <strong>1&ndash;30 Nov 2026</strong></p>
       <a href="#book" class="offer-cta" id="offer-cta">Book now</a>
-      <div class="offer-fine">The first five nights of your stay must fall between 1 Nov and 14 Dec (check-out up to 15 Dec). The free night is applied automatically when you pick your dates.</div>
+      <div class="offer-fine">Book by 14 November 2026 for a stay between 1 and 30 November (check-out up to 1 December). The discount is applied automatically when you pick your dates. Subject to availability and terms.</div>
       <button class="offer-skip" id="offer-skip" type="button">Maybe later</button>
     </div>
   </div>
@@ -2591,10 +2588,10 @@
 <script>
 (function(){
   var overlay = document.getElementById('offer-overlay');
-  var SHOW_OFFER_POPUP = false; // set to true to bring the festive popup back
+  var SHOW_OFFER_POPUP = true; // set to false to hide the offer popup
   if (!overlay || !SHOW_OFFER_POPUP) return;
   var today = new Date().toISOString().split('T')[0];
-  if (today > '2026-12-14') return; // offer has ended
+  if (today > '2026-11-14') return; // offer has ended
   function openOffer(){
     overlay.classList.add('show'); overlay.setAttribute('aria-hidden','false');
   }
