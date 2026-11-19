@@ -122,7 +122,7 @@
       "name": "Is there a security deposit or caution fee?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "Yes, a refundable caution fee of ₦100,000 applies to every booking."
+        "text": "Yes, a refundable caution fee of ₦0 applies to every booking."
       }
     },
     {
@@ -257,28 +257,28 @@
   .announce{line-height:1.5;}
 
   /* Season offer pop-up (owner-approved warm-glow design, 19 Nov 2026) */
-.offer-overlay{position:fixed;inset:0;background:rgba(59,42,28,.55);z-index:1000;display:none;align-items:center;justify-content:center;padding:14px;}
-.offer-overlay.show{display:flex;}
-.offer-modal{position:relative;width:100%;max-width:420px;max-height:calc(100vh - 28px);overflow:auto;border-radius:12px;border:2px solid #B0842C;outline:1.5px solid rgba(176,132,44,.55);outline-offset:-13px;background:radial-gradient(ellipse at 50% 32%,#FFFAEC 0%,#F6E8CB 55%,#E9D09E 100%);box-shadow:0 22px 60px rgba(59,42,28,.35);animation:offerIn .4s ease;text-align:center;padding:36px 30px 24px;}
-@keyframes offerIn{from{opacity:0;transform:translateY(16px) scale(.97);}to{opacity:1;transform:none;}}
-.offer-brand{font-size:12px;letter-spacing:.36em;font-weight:700;color:#A06E0A;}
-.offer-spark{position:absolute;color:#C9A24B;line-height:1;}
-.offer-spark.s1{left:36px;top:78px;font-size:17px;}.offer-spark.s2{right:38px;top:54px;font-size:12px;}.offer-spark.s3{right:54px;top:158px;font-size:14px;}.offer-spark.s4{left:50px;top:204px;font-size:11px;}
-.offer-saveup{margin-top:28px;font-size:13px;letter-spacing:.34em;font-weight:500;color:#78644A;}
-.offer-hero{font-family:'Marcellus',serif;font-weight:400;font-size:96px;line-height:1.02;color:#6E202E;margin:2px 0 0;}
-.offer-hero .pct{font-size:54px;color:#B8860B;vertical-align:34px;margin-left:2px;}
-.offer-off{font-size:15px;letter-spacing:.3em;font-weight:600;color:#3B2A1C;margin-top:8px;}
-.offer-orn{display:flex;align-items:center;justify-content:center;gap:10px;margin:18px auto 4px;max-width:230px;}
-.offer-orn span{flex:1;height:1.5px;background:#B0842C;}
-.offer-orn i{width:8px;height:8px;background:#B8860B;transform:rotate(45deg);display:block;}
-.offer-lines{margin:12px 0 4px;}
-.offer-lines p{margin:10px 0;font-size:16.5px;color:#2B2118;}
-.offer-lines strong{color:#6E202E;font-weight:600;white-space:nowrap;}
-.offer-cta{display:block;background:#6E202E;color:#FAF3E6;font-weight:700;letter-spacing:.1em;font-size:14px;padding:16px 20px;text-decoration:none;text-transform:uppercase;border-radius:6px;box-shadow:0 8px 18px rgba(110,32,46,.35);margin-top:20px;}
-.offer-cta:hover{filter:brightness(1.08);}
-.offer-fine{font-size:12px;line-height:1.55;color:#6E5E46;margin-top:14px;}
-.offer-skip{background:none;border:0;color:#6E5E46;font:inherit;font-size:13px;margin-top:8px;cursor:pointer;text-decoration:underline;text-underline-offset:3px;}
-.offer-close{position:absolute;top:10px;right:10px;z-index:3;width:32px;height:32px;border-radius:50%;border:0;background:rgba(251,243,231,.95);color:var(--ink);font-size:20px;line-height:1;cursor:pointer;box-shadow:0 1px 6px rgba(0,0,0,.2);}
+  .offer-overlay{position:fixed;inset:0;background:rgba(59,42,28,.55);z-index:1000;display:none;align-items:center;justify-content:center;padding:14px;}
+  .offer-overlay.show{display:flex;}
+  .offer-modal{position:relative;width:100%;max-width:420px;max-height:calc(100vh - 28px);overflow:auto;border-radius:12px;border:2px solid #B0842C;outline:1.5px solid rgba(176,132,44,.55);outline-offset:-13px;background:radial-gradient(ellipse at 50% 32%,#FFFAEC 0%,#F6E8CB 55%,#E9D09E 100%);box-shadow:0 22px 60px rgba(59,42,28,.35);animation:offerIn .4s ease;text-align:center;padding:36px 30px 24px;}
+  @keyframes offerIn{from{opacity:0;transform:translateY(16px) scale(.97);}to{opacity:1;transform:none;}}
+  .offer-brand{font-size:12px;letter-spacing:.36em;font-weight:700;color:#A06E0A;}
+  .offer-spark{position:absolute;color:#C9A24B;line-height:1;}
+  .offer-spark.s1{left:36px;top:78px;font-size:17px;}.offer-spark.s2{right:38px;top:54px;font-size:12px;}.offer-spark.s3{right:54px;top:158px;font-size:14px;}.offer-spark.s4{left:50px;top:204px;font-size:11px;}
+  .offer-saveup{margin-top:28px;font-size:13px;letter-spacing:.34em;font-weight:500;color:#78644A;}
+  .offer-hero{font-family:'Marcellus',serif;font-weight:400;font-size:96px;line-height:1.02;color:#6E202E;margin:2px 0 0;}
+  .offer-hero .pct{font-size:54px;color:#B8860B;vertical-align:34px;margin-left:2px;}
+  .offer-off{font-size:15px;letter-spacing:.3em;font-weight:600;color:#3B2A1C;margin-top:8px;}
+  .offer-orn{display:flex;align-items:center;justify-content:center;gap:10px;margin:18px auto 4px;max-width:230px;}
+  .offer-orn span{flex:1;height:1.5px;background:#B0842C;}
+  .offer-orn i{width:8px;height:8px;background:#B8860B;transform:rotate(45deg);display:block;}
+  .offer-lines{margin:12px 0 4px;}
+  .offer-lines p{margin:10px 0;font-size:16.5px;color:#2B2118;}
+  .offer-lines strong{color:#6E202E;font-weight:600;white-space:nowrap;}
+  .offer-cta{display:block;background:#6E202E;color:#FAF3E6;font-weight:700;letter-spacing:.1em;font-size:14px;padding:16px 20px;text-decoration:none;text-transform:uppercase;border-radius:6px;box-shadow:0 8px 18px rgba(110,32,46,.35);margin-top:20px;}
+  .offer-cta:hover{filter:brightness(1.08);}
+  .offer-fine{font-size:12px;line-height:1.55;color:#6E5E46;margin-top:14px;}
+  .offer-skip{background:none;border:0;color:#6E5E46;font:inherit;font-size:13px;margin-top:8px;cursor:pointer;text-decoration:underline;text-underline-offset:3px;}
+  .offer-close{position:absolute;top:10px;right:10px;z-index:3;width:32px;height:32px;border-radius:50%;border:0;background:rgba(251,243,231,.95);color:var(--ink);font-size:20px;line-height:1;cursor:pointer;box-shadow:0 1px 6px rgba(0,0,0,.2);}
   .contact-bar{
     background:var(--blush);
     color:var(--ink-soft);
@@ -1070,7 +1070,7 @@
       </details>
       <details class="faq-more"><summary>Show 10 more questions</summary><details class="faq-item">
         <summary>Is there a security deposit or caution fee?</summary>
-        <p>Yes, a refundable caution fee of ₦100,000 applies to every booking.</p>
+        <p>Yes, a refundable caution fee of ₦0 applies to every booking.</p>
       </details>
       <details class="faq-item">
         <summary>Does T.W Residence offer a discount for longer stays?</summary>
@@ -1121,7 +1121,7 @@
     </div>
     <ul class="key-rules">
       <li><b>Full payment</b> confirms your booking</li>
-      <li><b>₦100,000</b> refundable caution fee</li>
+      <li><b>₦0</b> refundable caution fee</li>
       <li><b>Check-in 3 PM</b> · check-out 10 AM</li>
       <li><b>No parties, pets or smoking</b> indoors</li>
     </ul>
@@ -1132,7 +1132,7 @@
         <div class="terms-group-list">
           <div>Full payment required to confirm booking</div>
           <div>Published pricing is fixed — not open to negotiation</div>
-          <div>Refundable caution fee: ₦100,000</div>
+          <div>Refundable caution fee: ₦0</div>
         </div>
       </div>
       <div class="terms-group">
@@ -1250,7 +1250,7 @@
           <div class="estimate-title">Estimated Cost</div>
           <div class="estimate-row"><span id="nights-label"></span><span class="estimate-total" id="subtotal-amount"></span></div>
           <div class="estimate-row promo-row hidden" id="promo-row"><span>Promo (<span id="promo-code-label"></span>)</span><span id="promo-discount-amount"></span></div>
-          <div class="estimate-row"><span>Refundable caution fee</span><span>₦100,000</span></div>
+          <div class="estimate-row"><span>Refundable caution fee</span><span>₦0</span></div>
           <div class="estimate-row"><strong>Total due</strong><span class="estimate-total" id="total-amount"></span></div>
           <div class="long-stay-note hidden" id="long-stay-note"></div>
         </div>
@@ -1357,7 +1357,7 @@
           <div class="terms-box-title">Booking Terms</div>
           <div class="terms">
             <div>Full payment required to confirm booking</div>
-            <div>Refundable caution fee: ₦100,000</div>
+            <div>Refundable caution fee: ₦0</div>
             <div>Check-in: 3:00 PM · Check-out: 10:00 AM</div>
             <div>No pets · Non-smoking indoors</div>
             <div>No parties or events</div>
@@ -1371,7 +1371,7 @@
 
         <div class="field full checkbox-row" id="no-party-confirm-row" style="flex-direction:row;align-items:flex-start;gap:10px;padding:4px;border-radius:6px;">
           <input type="checkbox" id="no-party-confirm" required style="margin-top:3px;width:16px;height:16px;flex:0 0 auto;">
-          <label for="no-party-confirm" style="font-size:13px;font-weight:500;color:var(--ink-soft);letter-spacing:normal;">I confirm this stay is not for a party, event, or gathering, and I will not exceed the registered guest count. I understand that if more guests than were booked and paid for are found at check-in or during the stay, the full refundable caution fee (₦100,000) will be forfeited, in addition to any deductions for cleaning and damages. *</label>
+          <label for="no-party-confirm" style="font-size:13px;font-weight:500;color:var(--ink-soft);letter-spacing:normal;">I confirm this stay is not for a party, event, or gathering, and I will not exceed the registered guest count. I understand that if more guests than were booked and paid for are found at check-in or during the stay, the full refundable caution fee (₦0) will be forfeited, in addition to any deductions for cleaning and damages. *</label>
         </div>
 
         <div class="panel-nav">
@@ -1465,7 +1465,7 @@
 </script>
 
 <script>
-  const CAUTION_FEE = 100000;
+  const CAUTION_FEE = 0; // TEMPORARY owner test — restore to 100000 after test
 
   // Seasonal pricing calendar — ordered narrowest/most-specific range first,
   // since overlapping ranges are checked top-to-bottom and the first match wins.
@@ -1473,6 +1473,7 @@
   // length-of-stay pricing (see SHORT_LONG_WINDOW below). From October 1
   // onward the seasonal calendar below applies; the length-of-stay discount is applied in calcTotal.
   const SEASONAL_RATES = [
+    { start: '2026-11-19', end: '2026-11-19', price: 100 }, // TEMPORARY owner test price — revert after test
     // Nov 1 to Dec 14, 2026: shoulder season
     { start: '2026-11-01', end: '2026-12-14', price: 230000 },
     // Dec 15, 2026 to Jan 21, 2027: Detty December, Christmas, New Year and January
@@ -2088,7 +2089,7 @@
         document.getElementById('success-nights').textContent = result.nights + ' night' + (result.nights > 1 ? 's' : '') + ' · ' + guests;
         const roomTotal = LAUNCH_DISCOUNT > 0 ? result.total - Math.round(result.total * LAUNCH_DISCOUNT) : result.total;
         document.getElementById('success-total').textContent = 'Total: ' + fmt(roomTotal + CAUTION_FEE);
-        document.getElementById('success-deposit').textContent = 'Includes ₦100,000 refundable caution fee';
+        document.getElementById('success-deposit').textContent = 'Includes ₦0 refundable caution fee';
       }
       if (window.twTrack) window.twTrack('booking_form_submit', { apartment: apartment }); /* a lead, not a confirmed booking */
       let payTotal = 0;
@@ -2169,7 +2170,7 @@
         document.getElementById('success-name').textContent = info.name;
         document.getElementById('success-nights').textContent = info.apartment + ' \u00b7 ' + info.checkin + ' to ' + info.checkout;
         document.getElementById('success-total').textContent = 'Total: ' + fmt(info.amount);
-        document.getElementById('success-deposit').textContent = 'Includes \u20a6100,000 refundable caution fee';
+        document.getElementById('success-deposit').textContent = 'Includes \u20a60 refundable caution fee';
         document.getElementById('form-card').classList.add('hidden');
         document.getElementById('success-card').classList.remove('hidden');
         document.getElementById('success-card').scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -2602,7 +2603,7 @@
 <div class="offer-overlay" id="offer-overlay" role="dialog" aria-modal="true" aria-labelledby="offer-title" aria-hidden="true">
   <div class="offer-modal">
     <button class="offer-close" id="offer-close" aria-label="Close">&times;</button>
-        <div class="offer-spark s1">&#10022;</div><div class="offer-spark s2">&#10022;</div><div class="offer-spark s3">&#10022;</div><div class="offer-spark s4">&#10022;</div>
+    <div class="offer-spark s1">&#10022;</div><div class="offer-spark s2">&#10022;</div><div class="offer-spark s3">&#10022;</div><div class="offer-spark s4">&#10022;</div>
     <div class="offer-brand">T.W RESIDENCE</div>
     <div class="offer-saveup">SAVE UP TO</div>
     <h2 class="offer-hero" id="offer-title">25<span class="pct">%</span></h2>
@@ -2624,10 +2625,11 @@
   var overlay = document.getElementById('offer-overlay');
   var SHOW_OFFER_POPUP = true; // set to false to hide the offer popup
   if (!overlay || !SHOW_OFFER_POPUP) return;
-    try { if (sessionStorage.getItem('twOfferSeen')) return; } catch(e){} // once per visit
-    function openOffer(){
-      try { sessionStorage.setItem('twOfferSeen','1'); } catch(e){}    
-      overlay.classList.add('show'); overlay.setAttribute('aria-hidden','false');   }
+  try { if (sessionStorage.getItem('twOfferSeen')) return; } catch(e){} // once per visit
+  function openOffer(){
+    try { sessionStorage.setItem('twOfferSeen','1'); } catch(e){}
+    overlay.classList.add('show'); overlay.setAttribute('aria-hidden','false');
+  }
   function closeOffer(){ overlay.classList.remove('show'); overlay.setAttribute('aria-hidden','true'); }
   setTimeout(openOffer, 1500);
   document.getElementById('offer-close').addEventListener('click', closeOffer);
