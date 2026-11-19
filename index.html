@@ -1478,7 +1478,7 @@
   // since overlapping ranges are checked top-to-bottom and the first match wins.
   // Note: September 2026 is NOT priced here \u2014 that window still uses
   // length-of-stay pricing (see SHORT_LONG_WINDOW below). From October 1
-  // onward the seasonal calendar below applies; stay and last-minute discounts are applied in calcTotal.
+  // onward the seasonal calendar below applies; the length-of-stay discount is applied in calcTotal.
   const SEASONAL_RATES = [
     // Nov 1 to Dec 14, 2026: shoulder season
     { start: '2026-11-01', end: '2026-12-14', price: 230000 },
@@ -1530,10 +1530,9 @@
     return base;
   }
 
-  // Discounts (from 19 Nov 2026), applied automatically in calcTotal:
+  // Discount (from 19 Nov 2026), applied automatically in calcTotal:
   // length-of-stay 7+ nights 10%, 14+ nights 15%, 28+ nights 25% (capped at 15%
-  // when the stay includes a peak-rate night); last-minute 10% when check-in is
-  // within 7 days. The two never stack - the guest gets whichever is larger.
+  // when the stay includes a peak-rate night). (Last-minute discount removed 19 Nov 2026 at the owner's request.)
   let lastDiscountLabel = '';
   function todayLagos(){ return new Date(Date.now() + 3600000).toISOString().slice(0, 10); } // Lagos is UTC+1 all year
 
@@ -1567,13 +1566,9 @@
     lastDiscountLabel = '';
     let losPct = nights >= 28 ? 25 : nights >= 14 ? 15 : nights >= 7 ? 10 : 0;
     if (nightPrices.some(function(p){ return p >= 250000; })) losPct = Math.min(losPct, 15);
-    const leadDays = Math.round((new Date(checkIn) - new Date(todayLagos())) / 86400000);
-    const lastMinutePct = (leadDays >= 0 && leadDays <= 7) ? 10 : 0;
-    const discountPct = Math.max(losPct, lastMinutePct);
+    const discountPct = losPct;
     if (discountPct > 0){
-      lastDiscountLabel = losPct >= lastMinutePct
-        ? discountPct + '% length-of-stay discount'
-        : discountPct + '% last-minute discount';
+      lastDiscountLabel = discountPct + '% length-of-stay discount';
       freeNight = Math.round(total * discountPct / 100);
       total -= freeNight;
     }
@@ -2620,7 +2615,7 @@
       <h2 class="offer-title" id="offer-title">Stay longer,<em>save more.</em></h2>
             <p class="offer-dates"><strong>7+ nights &minus;10%</strong> &middot; <strong>14+ nights &minus;15%</strong> &middot; <strong>28+ nights &minus;25%</strong></p>
       <a href="#book" class="offer-cta" id="offer-cta">Check your dates</a>
-      <div class="offer-fine">Discounts apply automatically when you book direct and pick your dates. One discount per booking &mdash; always the better one for you. Subject to availability.</div>
+      <div class="offer-fine">The discount is applied automatically when you book direct and pick your dates. Subject to availability.</div>
       <button class="offer-skip" id="offer-skip" type="button">Maybe later</button>
     </div>
   </div>
