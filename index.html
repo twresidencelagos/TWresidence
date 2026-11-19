@@ -1526,7 +1526,9 @@
   // Season discount (19 Nov 2026 - 21 Jan 2027), applied automatically in calcTotal:
   // length-of-stay 7+ nights 10%, 14+ nights 15%, 28+ nights 25% (capped at 15%
   // when the stay includes a peak-rate night), on shoulder/peak nights only
-  // (230,000/250,000). Standard-season nights are never discounted.
+  // (230,000/250,000). Standard-season nights are never discounted, and the offer
+  // is date-bound: nights after 21 Jan 2027 are never discounted, including the
+  // 250,000 holiday windows later in 2027 (owner's ruling, 19 Nov 2026).
   // (Last-minute discount removed 19 Nov 2026 at the owner's request.)
   let lastDiscountLabel = '';
   function todayLagos(){ return new Date(Date.now() + 3600000).toISOString().slice(0, 10); } // Lagos is UTC+1 all year
@@ -1560,15 +1562,15 @@
     let freeNight = 0;
     lastDiscountLabel = '';
     let losPct = nights >= 28 ? 25 : nights >= 14 ? 15 : nights >= 7 ? 10 : 0;
-    if (nightPrices.some(function(p){ return p >= 250000; })) losPct = Math.min(losPct, 15);
+    if (nightPrices.some(function(p, i){ return p >= 250000 && nightDates[i] <= '2027-01-21'; })) losPct = Math.min(losPct, 15);
     const discountPct = losPct;
     if (discountPct > 0){
       lastDiscountLabel = discountPct + '% length-of-stay discount';
-      // The discount applies to shoulder/peak nights only (230,000/250,000):
-      // standard-season nights (200,000/180,000) are never discounted, so the
-      // offer ends by itself when standard rates resume on 22 Jan 2027
-      // (owner's rule, 19 Nov 2026).
-      const discountable = nightPrices.reduce(function(s, p){ return p >= 230000 ? s + p : s; }, 0);
+      // The discount applies to shoulder/peak nights only (230,000/250,000)
+      // and only to nights on or before 21 Jan 2027: standard-season nights
+      // (200,000/180,000) are never discounted, and neither are the 250,000
+      // holiday nights later in 2027 (owner's rules, 19 Nov 2026).
+      const discountable = nightPrices.reduce(function(s, p, i){ return (p >= 230000 && nightDates[i] <= '2027-01-21') ? s + p : s; }, 0);
       freeNight = Math.round(discountable * discountPct / 100);
       total -= freeNight;
     }
