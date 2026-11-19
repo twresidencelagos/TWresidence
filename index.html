@@ -2614,7 +2614,7 @@
       </div>
       <div class="offer-spark s1">&#10022;</div><div class="offer-spark s2">&#10022;</div><div class="offer-spark s3">&#10022;</div><div class="offer-spark s4">&#10022;</div>
     </div>
-    <div class="offer-body"
+    <div class="offer-body">
       
       <div class="offer-eye">BOOK DIRECT &amp; SAVE</div>
       <h2 class="offer-title" id="offer-title">Stay longer,<em>save more.</em></h2>
@@ -2637,8 +2637,7 @@
   function closeOffer(){ overlay.classList.remove('show'); overlay.setAttribute('aria-hidden','true'); }
   setTimeout(openOffer, 1500);
   document.getElementById('offer-close').addEventListener('click', closeOffer);
-  document.getElementBy
-    Id('offer-skip').addEventListener('click', closeOffer);
+  document.getElementById('offer-skip').addEventListener('click', closeOffer);
   document.getElementById('offer-cta').addEventListener('click', closeOffer);
   overlay.addEventListener('click', function(e){ if (e.target === overlay) closeOffer(); });
   document.addEventListener('keydown', function(e){ if (e.key === 'Escape') closeOffer(); });
