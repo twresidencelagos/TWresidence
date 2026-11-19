@@ -122,7 +122,7 @@
       "name": "Is there a security deposit or caution fee?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "Yes, a refundable caution fee of ₦0 applies to every booking."
+        "text": "Yes, a refundable caution fee of ₦100,000 applies to every booking."
       }
     },
     {
@@ -1070,7 +1070,7 @@
       </details>
       <details class="faq-more"><summary>Show 10 more questions</summary><details class="faq-item">
         <summary>Is there a security deposit or caution fee?</summary>
-        <p>Yes, a refundable caution fee of ₦0 applies to every booking.</p>
+        <p>Yes, a refundable caution fee of ₦100,000 applies to every booking.</p>
       </details>
       <details class="faq-item">
         <summary>Does T.W Residence offer a discount for longer stays?</summary>
@@ -1121,7 +1121,7 @@
     </div>
     <ul class="key-rules">
       <li><b>Full payment</b> confirms your booking</li>
-      <li><b>₦0</b> refundable caution fee</li>
+      <li><b>₦100,000</b> refundable caution fee</li>
       <li><b>Check-in 3 PM</b> · check-out 10 AM</li>
       <li><b>No parties, pets or smoking</b> indoors</li>
     </ul>
@@ -1132,7 +1132,7 @@
         <div class="terms-group-list">
           <div>Full payment required to confirm booking</div>
           <div>Published pricing is fixed — not open to negotiation</div>
-          <div>Refundable caution fee: ₦0</div>
+          <div>Refundable caution fee: ₦100,000</div>
         </div>
       </div>
       <div class="terms-group">
@@ -1250,7 +1250,7 @@
           <div class="estimate-title">Estimated Cost</div>
           <div class="estimate-row"><span id="nights-label"></span><span class="estimate-total" id="subtotal-amount"></span></div>
           <div class="estimate-row promo-row hidden" id="promo-row"><span>Promo (<span id="promo-code-label"></span>)</span><span id="promo-discount-amount"></span></div>
-          <div class="estimate-row"><span>Refundable caution fee</span><span>₦0</span></div>
+          <div class="estimate-row"><span>Refundable caution fee</span><span id="estimate-caution-amount">₦100,000</span></div>
           <div class="estimate-row"><strong>Total due</strong><span class="estimate-total" id="total-amount"></span></div>
           <div class="long-stay-note hidden" id="long-stay-note"></div>
         </div>
@@ -1357,7 +1357,7 @@
           <div class="terms-box-title">Booking Terms</div>
           <div class="terms">
             <div>Full payment required to confirm booking</div>
-            <div>Refundable caution fee: ₦0</div>
+            <div>Refundable caution fee: ₦100,000</div>
             <div>Check-in: 3:00 PM · Check-out: 10:00 AM</div>
             <div>No pets · Non-smoking indoors</div>
             <div>No parties or events</div>
@@ -1371,7 +1371,7 @@
 
         <div class="field full checkbox-row" id="no-party-confirm-row" style="flex-direction:row;align-items:flex-start;gap:10px;padding:4px;border-radius:6px;">
           <input type="checkbox" id="no-party-confirm" required style="margin-top:3px;width:16px;height:16px;flex:0 0 auto;">
-          <label for="no-party-confirm" style="font-size:13px;font-weight:500;color:var(--ink-soft);letter-spacing:normal;">I confirm this stay is not for a party, event, or gathering, and I will not exceed the registered guest count. I understand that if more guests than were booked and paid for are found at check-in or during the stay, the full refundable caution fee (₦0) will be forfeited, in addition to any deductions for cleaning and damages. *</label>
+          <label for="no-party-confirm" style="font-size:13px;font-weight:500;color:var(--ink-soft);letter-spacing:normal;">I confirm this stay is not for a party, event, or gathering, and I will not exceed the registered guest count. I understand that if more guests than were booked and paid for are found at check-in or during the stay, the full refundable caution fee (₦100,000) will be forfeited, in addition to any deductions for cleaning and damages. *</label>
         </div>
 
         <div class="panel-nav">
@@ -1465,7 +1465,14 @@
 </script>
 
 <script>
-  const CAUTION_FEE = 0; // TEMPORARY owner test — restore to 100000 after test
+  const CAUTION_FEE = 100000;
+  // TEMPORARY (owner's test, 19 Nov 2026): the caution fee is 0 only for the
+  // one test stay, check-in 20 Nov 2026 / check-out 21 Nov 2026. Every other
+  // booking pays the standard caution fee. Remove with the test price above.
+  function cautionFeeFor(checkIn, checkOut){
+    if (checkIn === '2026-11-20' && checkOut === '2026-11-21') return 0;
+    return CAUTION_FEE;
+  }
 
   // Seasonal pricing calendar — ordered narrowest/most-specific range first,
   // since overlapping ranges are checked top-to-bottom and the first match wins.
@@ -1863,22 +1870,24 @@
   }
 
   function applyPromoToDisplay(subtotal, freeNight){
+    const cautionEl = document.getElementById('estimate-caution-amount');
+    if (cautionEl) cautionEl.textContent = fmt(cautionFeeFor(selectedCheckin, selectedCheckout));
     const promoRow = document.getElementById('promo-row');
     const totalEl = document.getElementById('total-amount');
     if (freeNight > 0){
       document.getElementById('promo-code-label').textContent = lastDiscountLabel;
       document.getElementById('promo-discount-amount').textContent = '\u2212' + fmt(freeNight);
       promoRow.classList.remove('hidden');
-      totalEl.textContent = fmt(subtotal - freeNight + CAUTION_FEE);
+      totalEl.textContent = fmt(subtotal - freeNight + cautionFeeFor(selectedCheckin, selectedCheckout));
     } else if (LAUNCH_DISCOUNT > 0){
       const discount = Math.round(subtotal * LAUNCH_DISCOUNT);
       document.getElementById('promo-code-label').textContent = Math.round(LAUNCH_DISCOUNT*100) + '% launch offer';
       document.getElementById('promo-discount-amount').textContent = '\u2212' + fmt(discount);
       promoRow.classList.remove('hidden');
-      totalEl.textContent = fmt(subtotal - discount + CAUTION_FEE);
+      totalEl.textContent = fmt(subtotal - discount + cautionFeeFor(selectedCheckin, selectedCheckout));
     } else {
       promoRow.classList.add('hidden');
-      totalEl.textContent = fmt(subtotal + CAUTION_FEE);
+      totalEl.textContent = fmt(subtotal + cautionFeeFor(selectedCheckin, selectedCheckout));
     }
   }
 
@@ -2029,8 +2038,8 @@
         formData.append('Discount', fmt(discount));
       }
       formData.append('Room Total', fmt(roomTotal));
-      formData.append('Caution Fee', fmt(CAUTION_FEE));
-      formData.append('Total Amount', fmt(roomTotal + CAUTION_FEE));
+      formData.append('Caution Fee', fmt(cautionFeeFor(selectedCheckin, selectedCheckout)));
+      formData.append('Total Amount', fmt(roomTotal + cautionFeeFor(selectedCheckin, selectedCheckout)));
     }
 
     const submitBtn = document.getElementById('pay-btn');
@@ -2088,14 +2097,14 @@
       if (result){
         document.getElementById('success-nights').textContent = result.nights + ' night' + (result.nights > 1 ? 's' : '') + ' · ' + guests;
         const roomTotal = LAUNCH_DISCOUNT > 0 ? result.total - Math.round(result.total * LAUNCH_DISCOUNT) : result.total;
-        document.getElementById('success-total').textContent = 'Total: ' + fmt(roomTotal + CAUTION_FEE);
-        document.getElementById('success-deposit').textContent = 'Includes ₦0 refundable caution fee';
+        document.getElementById('success-total').textContent = 'Total: ' + fmt(roomTotal + cautionFeeFor(selectedCheckin, selectedCheckout));
+        document.getElementById('success-deposit').textContent = 'Includes ₦100,000 refundable caution fee';
       }
       if (window.twTrack) window.twTrack('booking_form_submit', { apartment: apartment }); /* a lead, not a confirmed booking */
       let payTotal = 0;
       if (result){
         const rt = LAUNCH_DISCOUNT > 0 ? result.total - Math.round(result.total * LAUNCH_DISCOUNT) : result.total;
-        payTotal = rt + CAUTION_FEE;
+        payTotal = rt + cautionFeeFor(selectedCheckin, selectedCheckout);
       }
       twStartPayment({ name: name, phone: phone, email: email, apartment: apartment, checkin: selectedCheckin, checkout: selectedCheckout, amount: payTotal, ref: payRef });
       } catch (err) {
@@ -2170,7 +2179,7 @@
         document.getElementById('success-name').textContent = info.name;
         document.getElementById('success-nights').textContent = info.apartment + ' \u00b7 ' + info.checkin + ' to ' + info.checkout;
         document.getElementById('success-total').textContent = 'Total: ' + fmt(info.amount);
-        document.getElementById('success-deposit').textContent = 'Includes \u20a60 refundable caution fee';
+        document.getElementById('success-deposit').textContent = 'Includes \u20a6100,000 refundable caution fee';
         document.getElementById('form-card').classList.add('hidden');
         document.getElementById('success-card').classList.remove('hidden');
         document.getElementById('success-card').scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -2365,8 +2374,8 @@
       } else {
         html += rowHtml('Room total (full payment)', fmt(roomTotal));
       }
-      html += rowHtml('Caution fee (refundable)', fmt(CAUTION_FEE));
-      html += rowHtml('Total due', fmt(roomTotal + CAUTION_FEE));
+      html += rowHtml('Caution fee (refundable)', fmt(cautionFeeFor(selectedCheckin, selectedCheckout)));
+      html += rowHtml('Total due', fmt(roomTotal + cautionFeeFor(selectedCheckin, selectedCheckout)));
     }
     document.getElementById('review-card').innerHTML = html;
   }
