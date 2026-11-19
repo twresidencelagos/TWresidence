@@ -130,7 +130,7 @@
       "name": "Does T.W Residence offer a discount for longer stays?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "Yes - longer stays are discounted automatically: 10% off at 7+ nights, 15% at 14+ nights and 25% at 28+ nights (capped at 15% in peak season). Stays booked within 7 days of check-in also get 10% off, and Monday to Thursday nights are ₦180,000 in the quiet season. Discounts are applied on the booking calendar and never stack; published pricing is not negotiable."
+        "text": "Yes - this season, longer stays are discounted automatically: 10% off at 7+ nights, 15% at 14+ nights and 25% at 28+ nights (capped at 15% if the stay includes peak nights). The offer runs until 21 January 2027; in the standard season bookings are simply at the standard rate. Discounts are applied on the booking calendar; published pricing is not negotiable."
       }
     },
     {
@@ -204,7 +204,7 @@
 <script src="config.js"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,500&family=Jost:wght@400;500;600;700&family=Public+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,500&family=Jost:wght@400;500;600;700&family=Marcellus&family=Public+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
   :root{
     --wine:#8B6B2E;
@@ -256,36 +256,29 @@
   }
   .announce{line-height:1.5;}
 
-  /* Festive offer pop-up */
-  .offer-overlay{position:fixed;inset:0;background:rgba(59,42,28,.5);z-index:1000;display:none;align-items:center;justify-content:center;padding:14px;}
-  .offer-overlay.show{display:flex;}
-  .offer-modal{position:relative;background:var(--cream);width:100%;max-width:400px;max-height:calc(100vh - 28px);overflow:auto;border-radius:8px;box-shadow:0 22px 60px rgba(59,42,28,.32);animation:offerIn .4s ease;}
-  @keyframes offerIn{from{opacity:0;transform:translateY(16px) scale(.97);}to{opacity:1;transform:none;}}
-  .offer-art{position:relative;height:236px;background:radial-gradient(ellipse at 50% 58%,#FFF9EC 0%,#F6E8CB 55%,#EBD4A6 100%);border-radius:8px 8px 0 0;overflow:hidden;text-align:center;}
-  .offer-art:before{content:"";position:absolute;inset:-60px;background:repeating-conic-gradient(from 0deg at 50% 62%,rgba(201,162,77,.20) 0deg 6deg,rgba(201,162,77,0) 6deg 12deg);-webkit-mask-image:radial-gradient(circle at 50% 62%,#000 0,rgba(0,0,0,.55) 45%,transparent 75%);mask-image:radial-gradient(circle at 50% 62%,#000 0,rgba(0,0,0,.55) 45%,transparent 75%);}
-  .offer-art:after{content:"";position:absolute;left:0;right:0;bottom:0;height:2px;background:linear-gradient(90deg,transparent,var(--brass),transparent);}
-  .offer-brand{position:relative;padding-top:20px;font-size:11px;letter-spacing:.36em;font-weight:700;color:var(--wine);}
-  .offer-seal{position:absolute;left:50%;top:58px;width:150px;height:150px;transform:translateX(-50%) rotate(-8deg);filter:drop-shadow(0 8px 14px rgba(120,90,30,.35));}
-  .offer-seal svg{display:block;}
-  .offer-seal-t{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;color:#3B2A1C;line-height:1;}
-  .offer-seal-t .a{font-size:11px;letter-spacing:.2em;font-weight:700;margin-bottom:4px;}
-  .offer-seal-t .b{font-family:'Fraunces',serif;font-weight:600;font-size:40px;letter-spacing:-.01em;}
-  .offer-seal-t .c{font-size:9.5px;letter-spacing:.2em;font-weight:700;margin-top:5px;}
-  .offer-spark{position:absolute;color:var(--brass);line-height:1;text-shadow:0 0 8px rgba(255,220,140,.9);}
-  .offer-spark.s1{left:44px;top:84px;font-size:18px;}.offer-spark.s2{right:46px;top:70px;font-size:13px;}.offer-spark.s3{left:70px;bottom:26px;font-size:10px;}.offer-spark.s4{right:62px;bottom:38px;font-size:15px;}
-  .offer-body{padding:22px 24px 20px;text-align:center;}
-  .offer-eye{color:var(--wine);font-size:11px;letter-spacing:.26em;font-weight:700;margin-bottom:10px;}
-  .offer-title{font-family:'Fraunces',serif;font-weight:500;font-size:31px;line-height:1.08;color:var(--ink);margin:0 0 14px;}
-  .offer-title em{font-style:normal;color:var(--wine);display:block;}
-  .offer-dots{display:flex;justify-content:center;gap:9px;margin-bottom:12px;}
-  .offer-dots i{width:11px;height:11px;border-radius:50%;border:1.5px solid var(--ink-soft);}
-  .offer-dots i.f{background:var(--brass);border-color:var(--brass);box-shadow:0 0 0 4px rgba(201,162,77,.25);}
-  .offer-dates{font-size:14px;color:var(--ink-soft);margin:0 0 18px;}
-  .offer-cta{display:block;background:linear-gradient(180deg,#D6B15C,var(--brass));color:var(--wine-deep);font-weight:700;letter-spacing:.1em;font-size:14px;padding:16px 20px;text-decoration:none;text-transform:uppercase;border-radius:4px;box-shadow:0 6px 16px rgba(201,162,77,.4);}
-  .offer-cta:hover{filter:brightness(1.05);}
-  .offer-fine{font-size:12px;line-height:1.5;color:var(--ink-soft);margin-top:14px;}
-  .offer-skip{background:none;border:0;color:var(--ink-soft);font:inherit;font-size:13px;margin-top:8px;cursor:pointer;text-decoration:underline;text-underline-offset:3px;}
-  .offer-close{position:absolute;top:10px;right:10px;z-index:3;width:32px;height:32px;border-radius:50%;border:0;background:rgba(251,243,231,.95);color:var(--ink);font-size:20px;line-height:1;cursor:pointer;box-shadow:0 1px 6px rgba(0,0,0,.2);}
+  /* Season offer pop-up (owner-approved warm-glow design, 19 Nov 2026) */
+.offer-overlay{position:fixed;inset:0;background:rgba(59,42,28,.55);z-index:1000;display:none;align-items:center;justify-content:center;padding:14px;}
+.offer-overlay.show{display:flex;}
+.offer-modal{position:relative;width:100%;max-width:420px;max-height:calc(100vh - 28px);overflow:auto;border-radius:12px;border:2px solid #B0842C;outline:1.5px solid rgba(176,132,44,.55);outline-offset:-13px;background:radial-gradient(ellipse at 50% 32%,#FFFAEC 0%,#F6E8CB 55%,#E9D09E 100%);box-shadow:0 22px 60px rgba(59,42,28,.35);animation:offerIn .4s ease;text-align:center;padding:36px 30px 24px;}
+@keyframes offerIn{from{opacity:0;transform:translateY(16px) scale(.97);}to{opacity:1;transform:none;}}
+.offer-brand{font-size:12px;letter-spacing:.36em;font-weight:700;color:#A06E0A;}
+.offer-spark{position:absolute;color:#C9A24B;line-height:1;}
+.offer-spark.s1{left:36px;top:78px;font-size:17px;}.offer-spark.s2{right:38px;top:54px;font-size:12px;}.offer-spark.s3{right:54px;top:158px;font-size:14px;}.offer-spark.s4{left:50px;top:204px;font-size:11px;}
+.offer-saveup{margin-top:28px;font-size:13px;letter-spacing:.34em;font-weight:500;color:#78644A;}
+.offer-hero{font-family:'Marcellus',serif;font-weight:400;font-size:96px;line-height:1.02;color:#6E202E;margin:2px 0 0;}
+.offer-hero .pct{font-size:54px;color:#B8860B;vertical-align:34px;margin-left:2px;}
+.offer-off{font-size:15px;letter-spacing:.3em;font-weight:600;color:#3B2A1C;margin-top:8px;}
+.offer-orn{display:flex;align-items:center;justify-content:center;gap:10px;margin:18px auto 4px;max-width:230px;}
+.offer-orn span{flex:1;height:1.5px;background:#B0842C;}
+.offer-orn i{width:8px;height:8px;background:#B8860B;transform:rotate(45deg);display:block;}
+.offer-lines{margin:12px 0 4px;}
+.offer-lines p{margin:10px 0;font-size:16.5px;color:#2B2118;}
+.offer-lines strong{color:#6E202E;font-weight:600;white-space:nowrap;}
+.offer-cta{display:block;background:#6E202E;color:#FAF3E6;font-weight:700;letter-spacing:.1em;font-size:14px;padding:16px 20px;text-decoration:none;text-transform:uppercase;border-radius:6px;box-shadow:0 8px 18px rgba(110,32,46,.35);margin-top:20px;}
+.offer-cta:hover{filter:brightness(1.08);}
+.offer-fine{font-size:12px;line-height:1.55;color:#6E5E46;margin-top:14px;}
+.offer-skip{background:none;border:0;color:#6E5E46;font:inherit;font-size:13px;margin-top:8px;cursor:pointer;text-decoration:underline;text-underline-offset:3px;}
+.offer-close{position:absolute;top:10px;right:10px;z-index:3;width:32px;height:32px;border-radius:50%;border:0;background:rgba(251,243,231,.95);color:var(--ink);font-size:20px;line-height:1;cursor:pointer;box-shadow:0 1px 6px rgba(0,0,0,.2);}
   .contact-bar{
     background:var(--blush);
     color:var(--ink-soft);
@@ -1081,7 +1074,7 @@
       </details>
       <details class="faq-item">
         <summary>Does T.W Residence offer a discount for longer stays?</summary>
-        <p>Yes - longer stays are discounted automatically: 10% off at 7+ nights, 15% at 14+ nights and 25% at 28+ nights (capped at 15% in peak season). Stays booked within 7 days of check-in also get 10% off, and Monday to Thursday nights are ₦180,000 in the quiet season. Discounts are applied on the booking calendar and never stack; published pricing is not negotiable.</p>
+        <p>Yes - this season, longer stays are discounted automatically: 10% off at 7+ nights, 15% at 14+ nights and 25% at 28+ nights (capped at 15% if the stay includes peak nights). The offer runs until 21 January 2027; in the standard season bookings are simply at the standard rate. Discounts are applied on the booking calendar; published pricing is not negotiable.</p>
       </details>
       <details class="faq-item">
         <summary>Are parties or events allowed?</summary>
@@ -1530,9 +1523,11 @@
     return base;
   }
 
-  // Discount (from 19 Nov 2026), applied automatically in calcTotal:
+  // Season discount (19 Nov 2026 - 21 Jan 2027), applied automatically in calcTotal:
   // length-of-stay 7+ nights 10%, 14+ nights 15%, 28+ nights 25% (capped at 15%
-  // when the stay includes a peak-rate night). (Last-minute discount removed 19 Nov 2026 at the owner's request.)
+  // when the stay includes a peak-rate night), on shoulder/peak nights only
+  // (230,000/250,000). Standard-season nights are never discounted.
+  // (Last-minute discount removed 19 Nov 2026 at the owner's request.)
   let lastDiscountLabel = '';
   function todayLagos(){ return new Date(Date.now() + 3600000).toISOString().slice(0, 10); } // Lagos is UTC+1 all year
 
@@ -1569,7 +1564,12 @@
     const discountPct = losPct;
     if (discountPct > 0){
       lastDiscountLabel = discountPct + '% length-of-stay discount';
-      freeNight = Math.round(total * discountPct / 100);
+      // The discount applies to shoulder/peak nights only (230,000/250,000):
+      // standard-season nights (200,000/180,000) are never discounted, so the
+      // offer ends by itself when standard rates resume on 22 Jan 2027
+      // (owner's rule, 19 Nov 2026).
+      const discountable = nightPrices.reduce(function(s, p){ return p >= 230000 ? s + p : s; }, 0);
+      freeNight = Math.round(discountable * discountPct / 100);
       total -= freeNight;
     }
     return { nights, total, freeNight };
@@ -2600,23 +2600,20 @@
 <div class="offer-overlay" id="offer-overlay" role="dialog" aria-modal="true" aria-labelledby="offer-title" aria-hidden="true">
   <div class="offer-modal">
     <button class="offer-close" id="offer-close" aria-label="Close">&times;</button>
-    <div class="offer-art" aria-hidden="true">
-      <div class="offer-brand">T.W RESIDENCE</div>
-      <div class="offer-seal">
-        <svg viewBox="-125 -125 250 250" width="150" height="150"><defs><radialGradient id="sealg" cx="40%" cy="35%" r="75%"><stop offset="0" stop-color="#F7DB8F"/><stop offset=".6" stop-color="#E0B64F"/><stop offset="1" stop-color="#B98A2C"/></radialGradient></defs><polygon points="122.0,0.0 107.3,12.1 118.9,27.1 101.9,35.7 109.9,52.9 91.4,57.5 95.4,76.1 76.4,76.4 76.1,95.4 57.5,91.4 52.9,109.9 35.7,101.9 27.1,118.9 12.1,107.3 0.0,122.0 -12.1,107.3 -27.1,118.9 -35.7,101.9 -52.9,109.9 -57.5,91.4 -76.1,95.4 -76.4,76.4 -95.4,76.1 -91.4,57.5 -109.9,52.9 -101.9,35.7 -118.9,27.1 -107.3,12.1 -122.0,0.0 -107.3,-12.1 -118.9,-27.1 -101.9,-35.7 -109.9,-52.9 -91.4,-57.5 -95.4,-76.1 -76.4,-76.4 -76.1,-95.4 -57.5,-91.4 -52.9,-109.9 -35.7,-101.9 -27.1,-118.9 -12.1,-107.3 -0.0,-122.0 12.1,-107.3 27.1,-118.9 35.7,-101.9 52.9,-109.9 57.5,-91.4 76.1,-95.4 76.4,-76.4 95.4,-76.1 91.4,-57.5 109.9,-52.9 101.9,-35.7 118.9,-27.1 107.3,-12.1" fill="url(#sealg)"/><circle r="96" fill="none" stroke="#3B2A1C" stroke-opacity=".5" stroke-width="2"/><circle r="90" fill="none" stroke="#fff" stroke-opacity=".5" stroke-width="1"/></sv
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         >
-        <div class="offer-seal-t"><span class="a">SAVE UP TO</span><span class="b">25%</span><span class="c">ON LONGER STAYS</span></div>
-      </div>
-      <div class="offer-spark s1">&#10022;</div><div class="offer-spark s2">&#10022;</div><div class="offer-spark s3">&#10022;</div><div class="offer-spark s4">&#10022;</div>
+        <div class="offer-spark s1">&#10022;</div><div class="offer-spark s2">&#10022;</div><div class="offer-spark s3">&#10022;</div><div class="offer-spark s4">&#10022;</div>
+    <div class="offer-brand">T.W RESIDENCE</div>
+    <div class="offer-saveup">SAVE UP TO</div>
+    <h2 class="offer-hero" id="offer-title">25<span class="pct">%</span></h2>
+    <div class="offer-off">OFF LONGER STAYS</div>
+    <div class="offer-orn" aria-hidden="true"><span></span><i></i><span></span></div>
+    <div class="offer-lines">
+      <p>Stay 7 nights or more &mdash; <strong>save 10%</strong></p>
+      <p>Stay 14 nights or more &mdash; <strong>save 15%</strong></p>
+      <p>Stay 28 nights or more &mdash; <strong>save 25%</strong></p>
     </div>
-    <div class="offer-body">
-      
-      <div class="offer-eye">BOOK DIRECT &amp; SAVE</div>
-      <h2 class="offer-title" id="offer-title">Stay longer,<em>save more.</em></h2>
-            <p class="offer-dates"><strong>7+ nights &minus;10%</strong> &middot; <strong>14+ nights &minus;15%</strong> &middot; <strong>28+ nights &minus;25%</strong></p>
-      <a href="#book" class="offer-cta" id="offer-cta">Check your dates</a>
-      <div class="offer-fine">The discount is applied automatically when you book direct and pick your dates. Subject to availability.</div>
-      <button class="offer-skip" id="offer-skip" type="button">Maybe later</button>
+    <a href="#book" class="offer-cta" id="offer-cta">Check your dates</a>
+    <div class="offer-fine">Book direct &middot; until 21 January 2027 &middot; applied automatically. Stays that include peak nights are capped at 15% off.</div>
+    <button class="offer-skip" id="offer-skip" type="button">Maybe later</button>
     </div>
   </div>
 </div>
