@@ -1535,6 +1535,9 @@
   // (230,000/250,000). Standard-season nights are never discounted, and the offer
   // is date-bound: nights after 21 Jan 2027 are never discounted, including the
   // 250,000 holiday windows later in 2027 (owner's ruling, 19 Nov 2026).
+  // Special window (owner's ruling, 22 Nov 2026): in a stay of 7+ nights, the
+  // nights of 1-10 Jan 2027 (i.e. a 1-11 Jan stay) get 15% instead of the usual
+  // tier rate, so stays over those dates come to 15% off in total.
   // (Last-minute discount removed 19 Nov 2026 at the owner's request.)
   let lastDiscountLabel = '';
   function todayLagos(){ return new Date(Date.now() + 3600000).toISOString().slice(0, 10); } // Lagos is UTC+1 all year
@@ -1569,16 +1572,23 @@
     lastDiscountLabel = '';
     let losPct = nights >= 28 ? 25 : nights >= 14 ? 15 : nights >= 7 ? 10 : 0;
     if (nightPrices.some(function(p, i){ return p >= 250000 && nightDates[i] <= '2027-01-21'; })) losPct = Math.min(losPct, 15);
-    const discountPct = losPct;
-    if (discountPct > 0){
-      lastDiscountLabel = discountPct + '% length-of-stay discount';
+    if (losPct > 0){
       // The discount applies to shoulder/peak nights only (230,000/250,000)
       // and only to nights on or before 21 Jan 2027: standard-season nights
       // (200,000/180,000) are never discounted, and neither are the 250,000
       // holiday nights later in 2027 (owner's rules, 19 Nov 2026).
-      const discountable = nightPrices.reduce(function(s, p, i){ return (p >= 230000 && nightDates[i] <= '2027-01-21') ? s + p : s; }, 0);
-      freeNight = Math.round(discountable * discountPct / 100);
+      // Special window (owner's ruling, 22 Nov 2026): nights of 1-10 Jan 2027
+      // in a stay of 7+ nights get 15% instead of the tier rate.
+      const pcts = nightPrices.map(function(p, i){
+        if (!(p >= 230000 && nightDates[i] <= '2027-01-21')) return 0;
+        if (nights >= 7 && nightDates[i] >= '2027-01-01' && nightDates[i] <= '2027-01-10') return Math.max(losPct, 15);
+        return losPct;
+      });
+      freeNight = Math.round(nightPrices.reduce(function(s, p, i){ return s + p * pcts[i] / 100; }, 0));
       total -= freeNight;
+      let appliedPct = 0, mixed = false;
+      pcts.forEach(function(x){ if (x > 0){ if (!appliedPct) appliedPct = x; else if (x !== appliedPct) mixed = true; } });
+      lastDiscountLabel = mixed ? 'Length-of-stay discount' : (appliedPct || losPct) + '% length-of-stay discount';
     }
     return { nights, total, freeNight };
   }
