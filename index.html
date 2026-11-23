@@ -1416,7 +1416,6 @@
               <button type="button" class="tw-pill" id="tw-pill-intl" onclick="twSelectTransferOrigin('intl')">Outside Nigeria</button>
             </div>
             <p class="tw-pesa-line hidden" id="tw-pesa-line">We recommend <strong>Pesa</strong> — or any remittance app you prefer.</p>
-            <p style="font-size:13.5px;color:var(--ink-soft);margin:0;">Continue below and we will hold your dates for 24 hours and show our bank details and your booking reference — send the total and use the reference as the transfer narration.</p>
           </div>
         </div>
 
@@ -2348,8 +2347,6 @@
     box.textContent = '';
     const bd = data.bank_details || {};
     const para = function(css){ const p = document.createElement('p'); p.style.cssText = css; box.appendChild(p); return p; };
-    const hold = para('margin:0 0 10px;font-weight:600;');
-    hold.textContent = 'Your dates are held for 24 hours — until ' + new Date(data.hold_expires_at).toLocaleString([], { weekday: 'short', day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' }) + '.';
     if (window.twTransferOrigin === 'intl'){
       const pesa = para('margin:0 0 10px;font-size:15px;');
       pesa.appendChild(document.createTextNode('We recommend '));
@@ -2368,9 +2365,14 @@
     });
     box.appendChild(bank);
     const narr = para('margin:0 0 4px;');
-    narr.appendChild(document.createTextNode('Use your booking reference '));
+    narr.appendChild(document.createTextNode('Use '));
     const refEl = document.createElement('strong'); refEl.textContent = data.reference; narr.appendChild(refEl);
-    narr.appendChild(document.createTextNode(' as the transfer narration, so we can match your payment. Once we confirm your transfer has arrived, we confirm your booking by email.'));
+    narr.appendChild(document.createTextNode(' as the transfer narration.'));
+    const proof = para('margin:0 0 4px;');
+    proof.appendChild(document.createTextNode('Then send your proof of payment on '));
+    const wa = document.createElement('a'); wa.href = 'https://wa.me/2348123331112?text=' + encodeURIComponent('Hello TW Residence, I have sent my transfer for booking ' + data.reference + '.'); wa.target = '_blank'; wa.rel = 'noopener'; wa.style.cssText = 'color:var(--wine-deep);font-weight:700;text-decoration:underline;'; wa.textContent = 'WhatsApp';
+    proof.appendChild(wa);
+    proof.appendChild(document.createTextNode(' so we can confirm faster.'));
     const row = document.createElement('div'); row.style.cssText = 'margin-top:12px;display:flex;gap:10px;flex-wrap:wrap;';
     const btn = document.createElement('button'); btn.type = 'button'; btn.className = 'btn-primary'; btn.textContent = 'I’ve Sent the Transfer'; btn.onclick = twTransferSent;
     row.appendChild(btn); box.appendChild(row);
@@ -2383,7 +2385,7 @@
       const res = await fetch(BOOKING_API_URL + '/api/bookings/' + encodeURIComponent(twActive.reference) + '/transfer-sent', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: '{}' });
       const data = await res.json().catch(function(){ return {}; });
       if (res.ok){
-        twShowStatus('We’ve noted your transfer — we’ll confirm by email once it arrives. Your booking reference is ' + twActive.reference + '. You can check its status any time at twresidence.org/booking.html?ref=' + twActive.reference, false);
+        twShowStatus('We’ve noted your transfer — we’ll confirm by email once it arrives.', false);
         twResetPayButton();
         return;
       }
@@ -2503,7 +2505,7 @@
       } else if (d.status === 'payment_processing'){
         twActive = { reference: ref };
         goToStep(3, true);
-        twShowStatus('We’ve noted your transfer — we’ll confirm by email once it arrives. Your booking reference is ' + ref + '.', false);
+        twShowStatus('We’ve noted your transfer — we’ll confirm by email once it arrives.', false);
       } else {
         try{ sessionStorage.removeItem('tw_transfer_ref'); }catch(e){}
       }
