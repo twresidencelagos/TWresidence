@@ -2385,7 +2385,7 @@
       const res = await fetch(BOOKING_API_URL + '/api/bookings/' + encodeURIComponent(twActive.reference) + '/transfer-sent', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: '{}' });
       const data = await res.json().catch(function(){ return {}; });
       if (res.ok){
-        twShowStatus('We’ve noted your transfer — we’ll confirm by email once it arrives.', false);
+        twShowStatus('We’ve noted your transfer — we’ll confirm by WhatsApp or email once it arrives.', false);
         twResetPayButton();
         return;
       }
@@ -2505,7 +2505,7 @@
       } else if (d.status === 'payment_processing'){
         twActive = { reference: ref };
         goToStep(3, true);
-        twShowStatus('We’ve noted your transfer — we’ll confirm by email once it arrives.', false);
+        twShowStatus('We’ve noted your transfer — we’ll confirm by WhatsApp or email once it arrives.', false);
       } else {
         try{ sessionStorage.removeItem('tw_transfer_ref'); }catch(e){}
       }
