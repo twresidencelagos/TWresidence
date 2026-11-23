@@ -656,6 +656,19 @@
   .submit-row{margin-top:8px;}
   .submit-row .btn-primary{width:100%;text-align:center;border:none;cursor:pointer;font-size:15px;padding:15px;}
   .form-note{font-size:12.5px;color:var(--ink-soft);margin-top:14px;text-align:center;}
+  .tw-opt{display:flex;align-items:center;gap:12px;border:1px solid var(--line);padding:14px 16px;margin-bottom:10px;cursor:pointer;background:#fff;}
+  .tw-opt.selected{border:2px solid var(--wine);padding:13px 15px;}
+  .tw-radio{width:18px;height:18px;border-radius:50%;border:2px solid var(--ink-soft);flex:0 0 auto;position:relative;}
+  .tw-opt.selected .tw-radio{border-color:var(--wine);}
+  .tw-opt.selected .tw-radio::after{content:"";position:absolute;inset:3px;border-radius:50%;background:var(--wine);}
+  .tw-opt-name{font-weight:600;font-size:15px;color:var(--wine-deep);}
+  .tw-opt-sub{font-size:12.5px;color:var(--ink-soft);}
+  .tw-from-label{font-size:12px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-soft);margin:10px 0 8px;}
+  .tw-pills{display:flex;gap:8px;margin-bottom:14px;}
+  .tw-pill{flex:1;text-align:center;font-size:13.5px;font-weight:600;padding:9px 4px;border:1px solid var(--line);color:var(--ink-soft);background:#fff;cursor:pointer;font-family:inherit;}
+  .tw-pill.selected{background:var(--wine-deep);border-color:var(--wine-deep);color:var(--cream);}
+  .tw-pesa-line{font-size:15px;margin:0 0 6px;color:var(--ink);}
+  .tw-pesa-line strong{color:var(--wine-deep);}
 
   /* footer */
   footer{background:var(--wine-deep);color:#E9D6D6;padding:64px 0 28px;}
@@ -1380,12 +1393,39 @@
           <label for="no-party-confirm" style="font-size:13px;font-weight:500;color:var(--ink-soft);letter-spacing:normal;">I confirm this stay is not for a party, event, or gathering, and I will not exceed the registered guest count. I understand that if more guests than were booked and paid for are found at check-in or during the stay, the full refundable caution fee (₦100,000) will be forfeited, in addition to any deductions for cleaning and damages. *</label>
         </div>
 
+        <div class="field full hidden" id="pay-method-block">
+          <label>How would you like to pay?</label>
+          <div class="tw-opt selected" id="tw-opt-card" onclick="twSelectPayMethod('card')">
+            <div class="tw-radio"></div>
+            <div>
+              <div class="tw-opt-name">Pay with Card</div>
+              <div class="tw-opt-sub">Secure payment via Paystack</div>
+            </div>
+          </div>
+          <div class="tw-opt" id="tw-opt-transfer" onclick="twSelectPayMethod('transfer')">
+            <div class="tw-radio"></div>
+            <div>
+              <div class="tw-opt-name">Transfer</div>
+              <div class="tw-opt-sub">Bank transfer or remittance app — no card fees</div>
+            </div>
+          </div>
+          <div id="tw-transfer-box" class="hidden">
+            <div class="tw-from-label">Where are you sending from?</div>
+            <div class="tw-pills">
+              <button type="button" class="tw-pill selected" id="tw-pill-ng" onclick="twSelectTransferOrigin('ng')">Nigeria</button>
+              <button type="button" class="tw-pill" id="tw-pill-intl" onclick="twSelectTransferOrigin('intl')">Outside Nigeria</button>
+            </div>
+            <p class="tw-pesa-line hidden" id="tw-pesa-line">We recommend <strong>Pesa</strong> — or any remittance app you prefer.</p>
+            <p style="font-size:13.5px;color:var(--ink-soft);margin:0;">Continue below and we will hold your dates for 24 hours and show our bank details and your booking reference — send the total and use the reference as the transfer narration.</p>
+          </div>
+        </div>
+
         <div class="panel-nav">
           <button type="button" class="btn-secondary" onclick="goToStep(2)">← Back</button>
           <a href="#form-card" id="pay-btn" class="btn-primary" onclick="return validateBeforePayment()">Proceed to Payment →</a>
         </div>
         <div class="form-note" style="display:flex;align-items:center;justify-content:center;gap:8px;flex-wrap:wrap;">
-          <span>A secure Paystack payment window will open. Need help?</span>
+          <span>Pay by card in a secure Paystack window, or by transfer with no card fees. Need help?</span>
           <a href="https://wa.me/message/66FIEM2EUEUKI1" target="_blank" rel="noopener" aria-label="Message T.W Residence on WhatsApp" class="social-icon" style="width:24px;height:24px;margin-top:0;vertical-align:middle;border-color:var(--brass);color:var(--wine);">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
               <path d="M12 2C6.48 2 2 6.48 2 12c0 1.84.5 3.56 1.36 5.04L2 22l5.12-1.34A9.94 9.94 0 0012 22c5.52 0 10-4.48 10-10S17.52 2 12 2zm0 18c-1.62 0-3.13-.44-4.43-1.2l-.32-.19-3.04.8.81-2.96-.21-.31A7.94 7.94 0 014 12c0-4.41 3.59-8 8-8s8 3.59 8 8-3.59 8-8 8zm4.4-5.6c-.24-.12-1.43-.7-1.65-.79-.22-.08-.38-.12-.55.12-.16.24-.63.79-.77.95-.14.16-.28.18-.52.06-.24-.12-1.02-.38-1.94-1.2-.72-.64-1.2-1.43-1.34-1.67-.14-.24-.02-.37.11-.49.11-.11.24-.28.36-.42.12-.14.16-.24.24-.4.08-.16.04-.3-.02-.42-.06-.12-.55-1.32-.75-1.81-.2-.48-.4-.41-.55-.42-.14-.01-.3-.01-.46-.01-.16 0-.42.06-.64.3-.22.24-.84.82-.84 2s.86 2.32.98 2.48c.12.16 1.7 2.6 4.12 3.64.58.25 1.03.4 1.38.51.58.18 1.11.16 1.53.1.47-.07 1.43-.58 1.63-1.15.2-.56.2-1.04.14-1.15-.06-.1-.22-.16-.46-.28z"/>
@@ -1939,6 +1979,23 @@
   document.getElementById('terms-confirm').addEventListener('change', () => setRowInvalid('terms-confirm-row', false));
   document.getElementById('no-party-confirm').addEventListener('change', () => setRowInvalid('no-party-confirm-row', false));
 
+  /* Which payment method the guest chose on step 3. Anything but 'transfer'
+     means the original card flow, byte for byte. */
+  window.twPayWith = 'paystack';
+  window.twTransferOrigin = 'ng';
+  function twSelectPayMethod(m){
+    window.twPayWith = m === 'transfer' ? 'transfer' : 'paystack';
+    document.getElementById('tw-opt-card').classList.toggle('selected', window.twPayWith !== 'transfer');
+    document.getElementById('tw-opt-transfer').classList.toggle('selected', window.twPayWith === 'transfer');
+    document.getElementById('tw-transfer-box').classList.toggle('hidden', window.twPayWith !== 'transfer');
+  }
+  function twSelectTransferOrigin(o){
+    window.twTransferOrigin = o === 'intl' ? 'intl' : 'ng';
+    document.getElementById('tw-pill-ng').classList.toggle('selected', window.twTransferOrigin === 'ng');
+    document.getElementById('tw-pill-intl').classList.toggle('selected', window.twTransferOrigin === 'intl');
+    document.getElementById('tw-pesa-line').classList.toggle('hidden', window.twTransferOrigin !== 'intl');
+  }
+
   function validateBeforePayment(){
     const name = document.getElementById('name').value;
     const phone = document.getElementById('phone').value;
@@ -2056,9 +2113,10 @@
     }
 
     if (BOOKING_API_URL){
-      // Secure booking service: the server re-checks availability, works out the price, creates the Paystack
-      // transaction and confirms the booking only after Paystack verifies the payment.
-      twServerCheckout({
+      // Secure booking service: the server re-checks availability and works out the price. Card bookings
+      // are confirmed only after Paystack verifies the payment; transfer bookings are held for 24 hours
+      // and confirmed once the transfer is received.
+      const payload = {
         unit: /^Unit 1/.test(apartment) ? 1 : /^Unit 2/.test(apartment) ? 2 : 'any',
         check_in: selectedCheckin, check_out: selectedCheckout, guests: parseInt(guests, 10),
         name: name, phone: phone, email: email,
@@ -2068,7 +2126,9 @@
         notes: document.getElementById('notes').value,
         refund_account_number: refundAccountNumber, refund_bank_name: refundBankName, refund_account_name: refundAccountName,
         terms_confirmed: termsConfirmed, no_party_confirmed: noPartyConfirmed
-      });
+      };
+      if (window.twPayWith === 'transfer') twServerCheckoutTransfer(payload);
+      else twServerCheckout(payload);
       return false;
     }
 
@@ -2205,6 +2265,7 @@
     document.head.appendChild(ps2);
   }
   let twActive = null, twPollTimer = null, twPollStarted = 0, twConfirmedShown = false;
+  if (BOOKING_API_URL){ const pmb = document.getElementById('pay-method-block'); if (pmb) pmb.classList.remove('hidden'); }
 
   async function fetchServerAvailability(){
     if (!BOOKING_API_URL) return;
@@ -2257,6 +2318,78 @@
     }catch(e){
       twResetPayButton();
       alert('We could not reach the booking service. Please check your connection and try again, or message us on WhatsApp.');
+    }
+  }
+
+  async function twServerCheckoutTransfer(payload){
+    try{
+      const res = await fetch(BOOKING_API_URL + '/api/bookings/transfer', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
+      const data = await res.json().catch(function(){ return {}; });
+      if (res.status === 200 || res.status === 201){
+        twActive = data;
+        try{ sessionStorage.setItem('tw_transfer_ref', data.reference); }catch(e){}
+        twShowTransferDetails(data);
+        return;
+      }
+      twResetPayButton();
+      alert(data.message || 'Something went wrong. Please try again or message us on WhatsApp.');
+      if (res.status === 409){ await fetchServerAvailability(); renderCalendar(); goToStep(1, true); }
+    }catch(e){
+      twResetPayButton();
+      alert('We could not reach the booking service. Please check your connection and try again, or message us on WhatsApp.');
+    }
+  }
+
+  /* Renders the transfer instructions into the same status box the card flow
+     uses. Everything the guest must copy — bank details, reference, total —
+     comes from the server's response; bank values are inserted as text only. */
+  function twShowTransferDetails(data){
+    const box = twStatusBox();
+    box.textContent = '';
+    const bd = data.bank_details || {};
+    const para = function(css){ const p = document.createElement('p'); p.style.cssText = css; box.appendChild(p); return p; };
+    const hold = para('margin:0 0 10px;font-weight:600;');
+    hold.textContent = 'Your dates are held for 24 hours — until ' + new Date(data.hold_expires_at).toLocaleString([], { weekday: 'short', day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' }) + '.';
+    if (window.twTransferOrigin === 'intl'){
+      const pesa = para('margin:0 0 10px;font-size:15px;');
+      pesa.appendChild(document.createTextNode('We recommend '));
+      const st = document.createElement('strong'); st.textContent = 'Pesa'; pesa.appendChild(st);
+      pesa.appendChild(document.createTextNode(' — or any remittance app you prefer.'));
+    }
+    const send = para('margin:0 0 6px;');
+    send.textContent = 'Send ' + fmt(data.amount_naira) + ' to:';
+    const bank = document.createElement('div');
+    bank.style.cssText = 'background:var(--cream);border:1px solid var(--line);padding:12px 14px;margin:0 0 10px;';
+    [['Bank', bd.bank_name], ['Account name', bd.account_name], ['Account number', bd.account_number]].forEach(function(r){
+      const row = document.createElement('div'); row.style.cssText = 'display:flex;justify-content:space-between;padding:2px 0;';
+      const a = document.createElement('span'); a.style.color = 'var(--ink-soft)'; a.style.fontSize = '12.5px'; a.textContent = r[0];
+      const b = document.createElement('span'); b.style.fontWeight = '700'; b.textContent = r[1] || '';
+      row.appendChild(a); row.appendChild(b); bank.appendChild(row);
+    });
+    box.appendChild(bank);
+    const narr = para('margin:0 0 4px;');
+    narr.appendChild(document.createTextNode('Use your booking reference '));
+    const refEl = document.createElement('strong'); refEl.textContent = data.reference; narr.appendChild(refEl);
+    narr.appendChild(document.createTextNode(' as the transfer narration, so we can match your payment. Once we confirm your transfer has arrived, we confirm your booking by email.'));
+    const row = document.createElement('div'); row.style.cssText = 'margin-top:12px;display:flex;gap:10px;flex-wrap:wrap;';
+    const btn = document.createElement('button'); btn.type = 'button'; btn.className = 'btn-primary'; btn.textContent = 'I’ve Sent the Transfer'; btn.onclick = twTransferSent;
+    row.appendChild(btn); box.appendChild(row);
+    box.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }
+
+  async function twTransferSent(){
+    if (!twActive) return;
+    try{
+      const res = await fetch(BOOKING_API_URL + '/api/bookings/' + encodeURIComponent(twActive.reference) + '/transfer-sent', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: '{}' });
+      const data = await res.json().catch(function(){ return {}; });
+      if (res.ok){
+        twShowStatus('We’ve noted your transfer — we’ll confirm by email once it arrives. Your booking reference is ' + twActive.reference + '. You can check its status any time at twresidence.org/booking.html?ref=' + twActive.reference, false);
+        twResetPayButton();
+        return;
+      }
+      alert(data.message || 'Something went wrong. Please message us on WhatsApp with reference ' + twActive.reference + '.');
+    }catch(e){
+      alert('We could not reach the booking service. Your dates are still held — please message us on WhatsApp with reference ' + twActive.reference + '.');
     }
   }
 
@@ -2319,6 +2452,9 @@
 
   function resetForm(){
     twStopPolling(); twActive = null; twConfirmedShown = false;
+    window.twPayWith = 'paystack'; window.twTransferOrigin = 'ng';
+    try{ sessionStorage.removeItem('tw_transfer_ref'); }catch(e){}
+    twSelectPayMethod('card'); twSelectTransferOrigin('ng');
     const tsb = document.getElementById('tw-pay-status'); if (tsb) tsb.remove();
     twResetPayButton();
     ['name','phone','email','notes','guest-names','main-guest-name','main-guest-phone','refund-account-number','refund-bank-name','refund-account-name'].forEach(id => document.getElementById(id).value = '');
@@ -2345,6 +2481,34 @@
     renderCalendar();
     goToStep(1, true);
   }
+
+  /* If this browser already started a transfer booking, show its instructions
+     again. The status endpoint returns the bank details while the booking is
+     awaiting its transfer, so nothing is stored on the site. (Transfer
+     bookings carry provider 'transfer'; their unpaid states are the shared
+     'pending_payment' = awaiting and 'payment_processing' = reported — the
+     live status CHECK list has no transfer-specific statuses. See
+     BUILD-NOTES.md, "Status mapping".) */
+  (function(){
+    if (!BOOKING_API_URL) return;
+    let ref = null;
+    try{ ref = sessionStorage.getItem('tw_transfer_ref'); }catch(e){}
+    if (!ref) return;
+    fetch(BOOKING_API_URL + '/api/bookings/' + encodeURIComponent(ref)).then(function(r){ return r.ok ? r.json() : null; }).then(function(d){
+      if (!d || d.provider !== 'transfer') return;
+      if (d.status === 'pending_payment'){
+        twActive = { reference: ref, hold_expires_at: d.hold_expires_at, amount_naira: d.total_naira, bank_details: d.bank_details };
+        goToStep(3, true);
+        twShowTransferDetails(twActive);
+      } else if (d.status === 'payment_processing'){
+        twActive = { reference: ref };
+        goToStep(3, true);
+        twShowStatus('We’ve noted your transfer — we’ll confirm by email once it arrives. Your booking reference is ' + ref + '.', false);
+      } else {
+        try{ sessionStorage.removeItem('tw_transfer_ref'); }catch(e){}
+      }
+    }).catch(function(){});
+  })();
 
   function rowHtml(label, value){
     return `<div class="review-row"><span class="rlabel">${label}</span><span class="rvalue">${value}</span></div>`;
