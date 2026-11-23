@@ -1151,7 +1151,7 @@
         <div class="terms-group-list">
           <div>Full payment required to confirm booking</div>
           <div>Published pricing is fixed — not open to negotiation</div>
-          <div>Refundable caution fee: ₦100,000</div>
+          <div>Refundable caution fee: <span class="caution-amount-text">₦100,000</span></div>
         </div>
       </div>
       <div class="terms-group">
@@ -1269,7 +1269,7 @@
           <div class="estimate-title">Estimated Cost</div>
           <div class="estimate-row"><span id="nights-label"></span><span class="estimate-total" id="subtotal-amount"></span></div>
           <div class="estimate-row promo-row hidden" id="promo-row"><span>Promo (<span id="promo-code-label"></span>)</span><span id="promo-discount-amount"></span></div>
-          <div class="estimate-row"><span>Refundable caution fee</span><span>₦100,000</span></div>
+          <div class="estimate-row"><span>Refundable caution fee</span><span class="caution-amount-text">₦100,000</span></div>
           <div class="estimate-row"><strong>Total due</strong><span class="estimate-total" id="total-amount"></span></div>
           <div class="long-stay-note hidden" id="long-stay-note"></div>
         </div>
@@ -1358,7 +1358,7 @@
           <div class="terms-box-title">Booking Terms</div>
           <div class="terms">
             <div>Full payment required to confirm booking</div>
-            <div>Refundable caution fee: ₦100,000</div>
+            <div>Refundable caution fee: <span class="caution-amount-text">₦100,000</span></div>
             <div>Check-in: 3:00 PM · Check-out: 10:00 AM</div>
             <div>No pets · Non-smoking indoors</div>
             <div>No parties or events</div>
@@ -1505,6 +1505,24 @@
 
 <script>
   const CAUTION_FEE = 100000;
+
+  // Caution-fee window (owner ruling, 2026-11-23): a stay that includes any
+  // night of 26–30 Nov 2026 carries a ₦200,000 caution fee; all other stays
+  // stay at ₦100,000. The booking engine applies the identical rule.
+  const CAUTION_WINDOW = ['2026-11-26', '2026-11-27', '2026-11-28', '2026-11-29', '2026-11-30'];
+  function twCautionFor(ci, co){
+    if (!ci || !co) return CAUTION_FEE;
+    const d = new Date(ci + 'T00:00:00Z');
+    const end = new Date(co + 'T00:00:00Z');
+    while (d < end){
+      if (CAUTION_WINDOW.includes(d.toISOString().slice(0, 10))) return 200000;
+      d.setUTCDate(d.getUTCDate() + 1);
+    }
+    return CAUTION_FEE;
+  }
+  function twRefreshCautionTexts(caution){
+    document.querySelectorAll('.caution-amount-text').forEach(function(el){ el.textContent = fmt(caution); });
+  }
 
   // Seasonal pricing calendar — ordered narrowest/most-specific range first,
   // since overlapping ranges are checked top-to-bottom and the first match wins.
@@ -1902,7 +1920,9 @@
     box.classList.add('visible');
     document.getElementById('nights-label').textContent = result.nights + ' night' + (result.nights > 1 ? 's' : '');
     document.getElementById('subtotal-amount').textContent = fmt(result.total + (result.freeNight || 0));
-    applyPromoToDisplay(result.total + (result.freeNight || 0), result.freeNight || 0);
+    const caution = twCautionFor(ci, co);
+    twRefreshCautionTexts(caution);
+    applyPromoToDisplay(result.total + (result.freeNight || 0), result.freeNight || 0, caution);
 
     const longStayNote = document.getElementById('long-stay-note');
     if (longStayNote){
@@ -1910,23 +1930,24 @@
     }
   }
 
-  function applyPromoToDisplay(subtotal, freeNight){
+  function applyPromoToDisplay(subtotal, freeNight, caution){
+    const cautionFee = (typeof caution === 'number') ? caution : CAUTION_FEE;
     const promoRow = document.getElementById('promo-row');
     const totalEl = document.getElementById('total-amount');
     if (freeNight > 0){
       document.getElementById('promo-code-label').textContent = lastDiscountLabel;
       document.getElementById('promo-discount-amount').textContent = '\u2212' + fmt(freeNight);
       promoRow.classList.remove('hidden');
-      totalEl.textContent = fmt(subtotal - freeNight + CAUTION_FEE);
+      totalEl.textContent = fmt(subtotal - freeNight + cautionFee);
     } else if (LAUNCH_DISCOUNT > 0){
       const discount = Math.round(subtotal * LAUNCH_DISCOUNT);
       document.getElementById('promo-code-label').textContent = Math.round(LAUNCH_DISCOUNT*100) + '% launch offer';
       document.getElementById('promo-discount-amount').textContent = '\u2212' + fmt(discount);
       promoRow.classList.remove('hidden');
-      totalEl.textContent = fmt(subtotal - discount + CAUTION_FEE);
+      totalEl.textContent = fmt(subtotal - discount + cautionFee);
     } else {
       promoRow.classList.add('hidden');
-      totalEl.textContent = fmt(subtotal + CAUTION_FEE);
+      totalEl.textContent = fmt(subtotal + cautionFee);
     }
   }
 
@@ -2078,8 +2099,8 @@
         formData.append('Discount', fmt(discount));
       }
       formData.append('Room Total', fmt(roomTotal));
-      formData.append('Caution Fee', fmt(CAUTION_FEE));
-      formData.append('Total Amount', fmt(roomTotal + CAUTION_FEE));
+      formData.append('Caution Fee', fmt(twCautionFor(selectedCheckin, selectedCheckout)));
+      formData.append('Total Amount', fmt(roomTotal + twCautionFor(selectedCheckin, selectedCheckout)));
     }
 
     const submitBtn = document.getElementById('pay-btn');
@@ -2140,14 +2161,15 @@
       if (result){
         document.getElementById('success-nights').textContent = result.nights + ' night' + (result.nights > 1 ? 's' : '') + ' · ' + guests;
         const roomTotal = LAUNCH_DISCOUNT > 0 ? result.total - Math.round(result.total * LAUNCH_DISCOUNT) : result.total;
-        document.getElementById('success-total').textContent = 'Total: ' + fmt(roomTotal + CAUTION_FEE);
-        document.getElementById('success-deposit').textContent = 'Includes ₦100,000 refundable caution fee';
+        const cautionFee = twCautionFor(selectedCheckin, selectedCheckout);
+        document.getElementById('success-total').textContent = 'Total: ' + fmt(roomTotal + cautionFee);
+        document.getElementById('success-deposit').textContent = 'Includes ' + fmt(cautionFee) + ' refundable caution fee';
       }
       if (window.twTrack) window.twTrack('booking_form_submit', { apartment: apartment }); /* a lead, not a confirmed booking */
       let payTotal = 0;
       if (result){
         const rt = LAUNCH_DISCOUNT > 0 ? result.total - Math.round(result.total * LAUNCH_DISCOUNT) : result.total;
-        payTotal = rt + CAUTION_FEE;
+        payTotal = rt + twCautionFor(selectedCheckin, selectedCheckout);
       }
       twStartPayment({ name: name, phone: phone, email: email, apartment: apartment, checkin: selectedCheckin, checkout: selectedCheckout, amount: payTotal, ref: payRef });
       } catch (err) {
@@ -2222,7 +2244,7 @@
         document.getElementById('success-name').textContent = info.name;
         document.getElementById('success-nights').textContent = info.apartment + ' \u00b7 ' + info.checkin + ' to ' + info.checkout;
         document.getElementById('success-total').textContent = 'Total: ' + fmt(info.amount);
-        document.getElementById('success-deposit').textContent = 'Includes \u20a6100,000 refundable caution fee';
+        document.getElementById('success-deposit').textContent = 'Includes ' + fmt(twCautionFor(info.checkin, info.checkout)) + ' refundable caution fee';
         document.getElementById('form-card').classList.add('hidden');
         document.getElementById('success-card').classList.remove('hidden');
         document.getElementById('success-card').scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -2522,8 +2544,8 @@
       } else {
         html += rowHtml('Room total (full payment)', fmt(roomTotal));
       }
-      html += rowHtml('Caution fee (refundable)', fmt(CAUTION_FEE));
-      html += rowHtml('Total due', fmt(roomTotal + CAUTION_FEE));
+      html += rowHtml('Caution fee (refundable)', fmt(twCautionFor(selectedCheckin, selectedCheckout)));
+      html += rowHtml('Total due', fmt(roomTotal + twCautionFor(selectedCheckin, selectedCheckout)));
     }
     document.getElementById('review-card').innerHTML = html;
   }
