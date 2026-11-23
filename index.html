@@ -1307,24 +1307,6 @@
 
         <input type="hidden" id="guest-names" value="">
 
-        <div class="fg-title">How should we refund your caution fee? *</div>
-        <div class="seg" data-for="want-direct-refund">
-          <button type="button" class="seg-btn" data-val="no">Automatically via Paystack<small>Within 1 business day</small></button>
-          <button type="button" class="seg-btn" data-val="yes">Straight to my bank account<small>Needs account details</small></button>
-        </div>
-        <select id="want-direct-refund" class="seg-sel" onchange="toggleRefundFields()">
-          <option value="">Select...</option>
-          <option value="no">Automatically via Paystack (within 1 business day)</option>
-          <option value="yes">Directly to my bank account</option>
-        </select>
-        <div class="field-row hidden" id="refund-details-row">
-          <div class="field"><label>Account Number *</label><input type="text" id="refund-account-number" placeholder="0123456789" inputmode="numeric"></div>
-          <div class="field"><label>Bank Name *</label><input type="text" id="refund-bank-name" placeholder="e.g. GTBank"></div>
-        </div>
-        <div class="field-row hidden" id="refund-details-row-2">
-          <div class="field full"><label>Account Name *</label><input type="text" id="refund-account-name" placeholder="Name on account"></div>
-        </div>
-
         <div class="fg-title">What is the stay for? *</div>
         <div class="seg chips" data-for="purpose">
           <button type="button" class="seg-btn" data-val="Leisure / Holiday">Holiday</button>
@@ -1402,6 +1384,7 @@
               <div class="tw-opt-sub">Secure payment via Paystack</div>
             </div>
           </div>
+          <p id="tw-card-refund-note" style="font-size:13px;color:var(--ink-soft);margin:0 0 10px;">Your caution fee will be refunded via Paystack.</p>
           <div class="tw-opt" id="tw-opt-transfer" onclick="twSelectPayMethod('transfer')">
             <div class="tw-radio"></div>
             <div>
@@ -1417,6 +1400,16 @@
             </div>
             <p class="tw-pesa-line hidden" id="tw-pesa-line">We recommend <strong>Pesa</strong> — or any remittance app you prefer.</p>
             <p style="font-size:13.5px;color:var(--ink-soft);margin:6px 0 0;">Click <strong>Proceed to Payment</strong> below for our bank transfer details.</p>
+            <div style="margin-top:16px;">
+              <div class="tw-from-label">For your caution fee refund</div>
+              <div class="field-row">
+                <div class="field"><label>Account Number *</label><input type="text" id="refund-account-number" placeholder="0123456789" inputmode="numeric"></div>
+                <div class="field"><label>Bank Name *</label><input type="text" id="refund-bank-name" placeholder="e.g. GTBank"></div>
+              </div>
+              <div class="field-row">
+                <div class="field full"><label>Account Name *</label><input type="text" id="refund-account-name" placeholder="Name on account"></div>
+              </div>
+            </div>
           </div>
         </div>
 
@@ -1946,20 +1939,6 @@
     }
   }
 
-  function toggleRefundFields(){
-    const wantsDirect = document.getElementById('want-direct-refund').value === 'yes';
-    document.getElementById('refund-details-row').classList.toggle('hidden', !wantsDirect);
-    document.getElementById('refund-details-row-2').classList.toggle('hidden', !wantsDirect);
-    if (!wantsDirect){
-      document.getElementById('refund-account-number').value = '';
-      document.getElementById('refund-bank-name').value = '';
-      document.getElementById('refund-account-name').value = '';
-      setFieldInvalid('refund-account-number', false);
-      setFieldInvalid('refund-bank-name', false);
-      setFieldInvalid('refund-account-name', false);
-    }
-  }
-
   function setFieldInvalid(id, isInvalid){
     const el = document.getElementById(id);
     if (el) el.classList.toggle('invalid', isInvalid);
@@ -1971,7 +1950,7 @@
     if (el) el.classList.toggle('invalid', isInvalid);
   }
   // Clear a field's red state as soon as the guest fixes it.
-  ['name','email','phone','apartment','guests','booking-for-other','want-direct-refund','main-guest-name','main-guest-phone','guest-names','purpose','howheard','refund-account-number','refund-bank-name','refund-account-name'].forEach(id => {
+  ['name','email','phone','apartment','guests','booking-for-other','main-guest-name','main-guest-phone','guest-names','purpose','howheard','refund-account-number','refund-bank-name','refund-account-name'].forEach(id => {
     const el = document.getElementById(id);
     if (el) el.addEventListener('input', () => setFieldInvalid(id, false));
     if (el) el.addEventListener('change', () => setFieldInvalid(id, false));
@@ -1988,6 +1967,7 @@
     document.getElementById('tw-opt-card').classList.toggle('selected', window.twPayWith !== 'transfer');
     document.getElementById('tw-opt-transfer').classList.toggle('selected', window.twPayWith === 'transfer');
     document.getElementById('tw-transfer-box').classList.toggle('hidden', window.twPayWith !== 'transfer');
+    document.getElementById('tw-card-refund-note').classList.toggle('hidden', window.twPayWith === 'transfer');
   }
   function twSelectTransferOrigin(o){
     window.twTransferOrigin = o === 'intl' ? 'intl' : 'ng';
@@ -2008,13 +1988,11 @@
     const bookingForOther = bookingForOtherValue === 'yes';
     const mainGuestName = document.getElementById('main-guest-name').value;
     const mainGuestPhone = document.getElementById('main-guest-phone').value;
-    const refundMethodValue = document.getElementById('want-direct-refund').value;
-    const wantsDirectRefund = refundMethodValue === 'yes';
     const guestNamesValue = document.getElementById('guest-names').value.trim();
 
     // Reset all invalid markers, then re-check everything so every problem
     // shows up at once, not just the first one hit.
-    ['name','email','phone','apartment','guests','booking-for-other','want-direct-refund','main-guest-name','main-guest-phone','guest-names','purpose','howheard','refund-account-number','refund-bank-name','refund-account-name'].forEach(id => setFieldInvalid(id, false));
+    ['name','email','phone','apartment','guests','booking-for-other','main-guest-name','main-guest-phone','guest-names','purpose','howheard','refund-account-number','refund-bank-name','refund-account-name'].forEach(id => setFieldInvalid(id, false));
     setRowInvalid('terms-confirm-row', false);
     setRowInvalid('no-party-confirm-row', false);
     document.querySelectorAll('.stay-summary-item').forEach(el => el.classList.remove('invalid'));
@@ -2032,12 +2010,11 @@
     if (!apartment){ flagInvalid('apartment'); hasError = true; }
     if (!guests){ flagInvalid('guests'); hasError = true; }
     if (!bookingForOtherValue){ flagInvalid('booking-for-other'); hasError = true; }
-    if (!refundMethodValue){ flagInvalid('want-direct-refund'); hasError = true; }
     if (bookingForOther && !mainGuestName){ flagInvalid('main-guest-name'); hasError = true; }
     if (bookingForOther && !mainGuestPhone){ flagInvalid('main-guest-phone'); hasError = true; }
-    if (wantsDirectRefund && !document.getElementById('refund-account-number').value.trim()){ flagInvalid('refund-account-number'); hasError = true; }
-    if (wantsDirectRefund && !document.getElementById('refund-bank-name').value.trim()){ flagInvalid('refund-bank-name'); hasError = true; }
-    if (wantsDirectRefund && !document.getElementById('refund-account-name').value.trim()){ flagInvalid('refund-account-name'); hasError = true; }
+    if (window.twPayWith === 'transfer' && !document.getElementById('refund-account-number').value.trim()){ flagInvalid('refund-account-number'); hasError = true; }
+    if (window.twPayWith === 'transfer' && !document.getElementById('refund-bank-name').value.trim()){ flagInvalid('refund-bank-name'); hasError = true; }
+    if (window.twPayWith === 'transfer' && !document.getElementById('refund-account-name').value.trim()){ flagInvalid('refund-account-name'); hasError = true; }
     if (!guestNamesValue){ flagInvalid('guest-names'); hasError = true; }
     if (!document.getElementById('purpose').value){ flagInvalid('purpose'); hasError = true; }
     if (!termsConfirmed){ flagInvalid('terms-confirm-row', true); hasError = true; }
@@ -2462,9 +2439,7 @@
     twResetPayButton();
     ['name','phone','email','notes','guest-names','main-guest-name','main-guest-phone','refund-account-number','refund-bank-name','refund-account-name'].forEach(id => document.getElementById(id).value = '');
     document.getElementById('booking-for-other').value = '';
-    document.getElementById('want-direct-refund').value = '';
     toggleMainGuestFields();
-    toggleRefundFields();
     ['guests','purpose','howheard','apartment'].forEach(id => document.getElementById(id).selectedIndex = 0);
     document.getElementById('estimate').classList.remove('visible');
     document.getElementById('form-card').classList.remove('hidden');
@@ -2477,7 +2452,7 @@
     document.getElementById('terms-confirm').checked = false;
     document.getElementById('no-party-confirm').checked = false;
     document.getElementById('promo-row').classList.add('hidden');
-    ['name','email','phone','apartment','guests','booking-for-other','want-direct-refund','main-guest-name','main-guest-phone','guest-names','purpose','howheard','refund-account-number','refund-bank-name','refund-account-name'].forEach(id => setFieldInvalid(id, false));
+    ['name','email','phone','apartment','guests','booking-for-other','main-guest-name','main-guest-phone','guest-names','purpose','howheard','refund-account-number','refund-bank-name','refund-account-name'].forEach(id => setFieldInvalid(id, false));
     setRowInvalid('terms-confirm-row', false);
     setRowInvalid('no-party-confirm-row', false);
     document.querySelectorAll('.stay-summary-item').forEach(el => el.classList.remove('invalid'));
@@ -2580,11 +2555,10 @@
   }
 
   function validateStep2(){
-    const ids = ['name','phone','booking-for-other','want-direct-refund','main-guest-name','main-guest-phone','guest-names','purpose','howheard','refund-account-number','refund-bank-name','refund-account-name'];
+    const ids = ['name','phone','booking-for-other','main-guest-name','main-guest-phone','guest-names','purpose','howheard','refund-account-number','refund-bank-name','refund-account-name'];
     ids.forEach(id => setFieldInvalid(id, false));
 
     const bookingForOther = document.getElementById('booking-for-other').value === 'yes';
-    const wantsDirectRefund = document.getElementById('want-direct-refund').value === 'yes';
     let firstInvalidEl = null;
     let hasError = false;
     const flag = (id) => { setFieldInvalid(id, true); firstInvalidEl = firstInvalidEl || document.getElementById(id); hasError = true; };
@@ -2592,12 +2566,8 @@
     if (!document.getElementById('name').value) flag('name');
     if (!document.getElementById('phone').value) flag('phone');
     if (!document.getElementById('booking-for-other').value) flag('booking-for-other');
-    if (!document.getElementById('want-direct-refund').value) flag('want-direct-refund');
     if (bookingForOther && !document.getElementById('main-guest-name').value) flag('main-guest-name');
     if (bookingForOther && !document.getElementById('main-guest-phone').value) flag('main-guest-phone');
-    if (wantsDirectRefund && !document.getElementById('refund-account-number').value.trim()) flag('refund-account-number');
-    if (wantsDirectRefund && !document.getElementById('refund-bank-name').value.trim()) flag('refund-bank-name');
-    if (wantsDirectRefund && !document.getElementById('refund-account-name').value.trim()) flag('refund-account-name');
     if (!document.getElementById('guest-names').value.trim()) flag('guest-names');
     if (!document.getElementById('purpose').value) flag('purpose');
 
