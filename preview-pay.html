@@ -1426,13 +1426,6 @@
               <div class="tw-opt-sub">Local and international payments via Flutterwave</div>
             </div>
           </div>
-          <div id="tw-flw-box" class="hidden">
-            <div class="tw-pills">
-              <button type="button" class="tw-pill selected" id="tw-pill-flw-ngn" onclick="twSelectFlwCurrency('NGN')">Local · Naira (&#8358;)</button>
-              <button type="button" class="tw-pill" id="tw-pill-flw-ghs" onclick="twSelectFlwCurrency('GHS')">International · Cedis (GH&#8373;)</button>
-            </div>
-            <p class="hidden" id="tw-flw-ghs-line" style="font-size:13.5px;color:var(--ink-soft);margin:6px 0 0;">Pay with Mobile Money — the exact cedis amount will be shown before you are taken to pay.</p>
-          </div>
         </div>
 
         <div class="panel-nav">
@@ -2005,21 +1998,13 @@
      original flow), 'transfer', or 'flutterwave'. */
   window.twPayWith = 'paystack';
   window.twTransferOrigin = 'ng';
-  window.twFlwCurrency = 'NGN';
   function twSelectPayMethod(m){
     window.twPayWith = m === 'transfer' ? 'transfer' : m === 'flutterwave' ? 'flutterwave' : 'paystack';
     document.getElementById('tw-opt-card').classList.toggle('selected', window.twPayWith === 'paystack');
     document.getElementById('tw-opt-transfer').classList.toggle('selected', window.twPayWith === 'transfer');
     document.getElementById('tw-opt-flutterwave').classList.toggle('selected', window.twPayWith === 'flutterwave');
     document.getElementById('tw-transfer-box').classList.toggle('hidden', window.twPayWith !== 'transfer');
-    document.getElementById('tw-flw-box').classList.toggle('hidden', window.twPayWith !== 'flutterwave');
     document.getElementById('tw-card-refund-note').classList.toggle('hidden', window.twPayWith !== 'paystack');
-  }
-  function twSelectFlwCurrency(c){
-    window.twFlwCurrency = c === 'GHS' ? 'GHS' : 'NGN';
-    document.getElementById('tw-pill-flw-ngn').classList.toggle('selected', window.twFlwCurrency === 'NGN');
-    document.getElementById('tw-pill-flw-ghs').classList.toggle('selected', window.twFlwCurrency === 'GHS');
-    document.getElementById('tw-flw-ghs-line').classList.toggle('hidden', window.twFlwCurrency !== 'GHS');
   }
   function twSelectTransferOrigin(o){
     window.twTransferOrigin = o === 'intl' ? 'intl' : 'ng';
@@ -2429,18 +2414,12 @@
 
   async function twServerCheckoutFlw(payload){
     try{
-      const flwBody = Object.assign({}, payload);
-      if (window.twFlwCurrency === 'GHS') flwBody.currency = 'GHS';
-      const res = await fetch(BOOKING_API_URL + '/api/bookings/flutterwave', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(flwBody) });
+      const res = await fetch(BOOKING_API_URL + '/api/bookings/flutterwave', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
       const data = await res.json().catch(function(){ return {}; });
       if (res.status === 200 || res.status === 201){
         twActive = data;
         try{ sessionStorage.setItem('tw_flw_ref', data.reference); }catch(e){}
-        if (data.charge_currency === 'GHS' && data.charge_amount){
-          twShowStatus('Your dates are held for 20 minutes while you pay. Taking you to Flutterwave\u2019s secure payment page \u2014 you will pay GH\u20B5' + Number(data.charge_amount).toLocaleString('en-GB') + ' by Mobile Money\u2026', false);
-        } else {
-          twShowStatus('Your dates are held for 20 minutes while you pay. Taking you to Flutterwave\u2019s secure payment page\u2026', false);
-        }
+        twShowStatus('Your dates are held for 20 minutes while you pay. Taking you to Flutterwave\u2019s secure payment page\u2026', false);
         window.location.href = data.payment_link;
         return;
       }
@@ -2512,10 +2491,10 @@
 
   function resetForm(){
     twStopPolling(); twActive = null; twConfirmedShown = false;
-    window.twPayWith = 'paystack'; window.twTransferOrigin = 'ng'; window.twFlwCurrency = 'NGN';
+    window.twPayWith = 'paystack'; window.twTransferOrigin = 'ng';
     try{ sessionStorage.removeItem('tw_transfer_ref'); }catch(e){}
     try{ sessionStorage.removeItem('tw_flw_ref'); }catch(e){}
-    twSelectPayMethod('card'); twSelectTransferOrigin('ng'); twSelectFlwCurrency('NGN');
+    twSelectPayMethod('card'); twSelectTransferOrigin('ng');
     const tsb = document.getElementById('tw-pay-status'); if (tsb) tsb.remove();
     twResetPayButton();
     ['name','phone','email','notes','guest-names','main-guest-name','main-guest-phone','refund-account-number','refund-bank-name','refund-account-name'].forEach(id => document.getElementById(id).value = '');
