@@ -118,7 +118,7 @@
       "name": "What are the check-in and check-out times at T.W Residence?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "Check-in is at 3:00 PM and check-out is at 10:00 AM. Check-outs are not available on Sundays."
+        "text": "Check-in is at 3:00 PM and check-out is at 10:00 AM."
       }
     },
     {
@@ -778,7 +778,6 @@
   .cal-cell.past{color:#CBB99B;cursor:not-allowed;}
   .cal-cell.booked{color:#C4A090;cursor:not-allowed;}
   .cal-cell.booked .cal-cell-day{text-decoration:line-through;}
-  .cal-cell.sunday-closed{color:#C4A090;cursor:not-allowed;font-style:italic;}
   .cal-cell.selected{background:var(--wine);color:#fff;font-weight:600;}
   .cal-cell.in-range{background:var(--blush);border-radius:0;}
   .cal-cell.empty{cursor:default;}
@@ -1091,7 +1090,7 @@
       </details>
       <details class="faq-item">
         <summary>What are the check-in and check-out times?</summary>
-        <p>Check-in is at 3:00 PM and check-out is at 10:00 AM. Please note that check-outs are not available on Sundays.</p>
+        <p>Check-in is at 3:00 PM and check-out is at 10:00 AM.</p>
       </details>
       <details class="faq-more"><summary>Show 10 more questions</summary><details class="faq-item">
         <summary>Is there a security deposit or caution fee?</summary>
@@ -1164,7 +1163,7 @@
         <div class="terms-group-title">Check-In & Check-Out</div>
         <div class="terms-group-list">
           <div>Check-in: 3:00 PM · Check-out: 10:00 AM</div>
-          <div>No checkouts available on Sundays</div>
+          <div>Check-out is available every day, including Sundays</div>
           <div>Bookings must be made at least 24 hours before check-in</div>
           <div>Maximum stay: 30 nights</div>
         </div>
@@ -1669,11 +1668,6 @@
     { start: '2026-10-26', end: '2026-11-07' }, // Olajide, checkout Nov 6, Nov 6 also kept blocked (no new check-in that day)
   ];
 
-  // One-off exceptions to the "no Sunday checkout" rule.
-  const SUNDAY_CHECKOUT_EXCEPTIONS = [
-    '2026-09-27',
-  ];
-
   function isDateManuallyBlocked(dateStr){
     // end date is checkout day — bookable for a new guest, so it's excluded (same convention as the Google Calendar sync)
     return MANUALLY_BLOCKED_RANGES.some(r => dateStr >= r.start && dateStr < r.end);
@@ -1831,20 +1825,17 @@
       const isBooked = isDateBooked(dateStr);
       const isSelected = dateStr === selectedCheckin || dateStr === selectedCheckout;
       const isInRange = selectedCheckin && selectedCheckout && dateStr > selectedCheckin && dateStr < selectedCheckout;
-      const isSundayException = SUNDAY_CHECKOUT_EXCEPTIONS.includes(dateStr);
-      const isSundayCheckout = mode === 'checkout' && new Date(dateStr + 'T00:00:00').getDay() === 0 && !isSundayException;
 
       let cls = 'cal-cell';
       if (isPast) cls += ' past';
       else if (isBooked) cls += ' booked';
-      else if (isSundayCheckout) cls += ' sunday-closed';
       else if (isSelected) cls += ' selected';
       else if (isInRange) cls += ' in-range';
 
       // Dates beyond the 30-night max stay stay visible and clickable while browsing —
       // selectDate() below rejects the pick with a message rather than the calendar
       // pre-emptively greying out entire future months.
-      const clickable = !isPast && !isBooked && !isSundayCheckout;
+      const clickable = !isPast && !isBooked;
       const priceLabel = isPast ? '' : `<div class="cal-cell-price">${fmtShort(getPriceForDate(dateStr))}</div>`;
       html += `<div class="${cls}" ${clickable ? `onclick="selectDate('${dateStr}')"` : ''}><div class="cal-cell-day">${d}</div>${priceLabel}</div>`;
     }
@@ -1856,7 +1847,7 @@
         <div class="cal-legend-item"><div class="cal-legend-dot" style="background:var(--wine)"></div>Selected</div>
       </div>
       ${mode === 'checkin' ? `<div style="text-align:center;font-size:11.5px;color:var(--ink-soft);margin-top:8px;">Same-day check-in isn’t available.</div>` : ''}
-      ${mode === 'checkout' ? `<div style="text-align:center;font-size:11.5px;color:var(--ink-soft);margin-top:8px;">No checkouts available on Sundays. Maximum stay: ${MAX_NIGHTS} nights.</div>` : ''}
+      ${mode === 'checkout' ? `<div style="text-align:center;font-size:11.5px;color:var(--ink-soft);margin-top:8px;">Maximum stay: ${MAX_NIGHTS} nights.</div>` : ''}
     </div>`;
 
     document.getElementById('stay-calendar').innerHTML = html;
@@ -1887,10 +1878,6 @@
     if (mode === 'checkin'){
       markCheckin(dateStr);
     } else {
-      if (dayOfWeek === 0 && !SUNDAY_CHECKOUT_EXCEPTIONS.includes(dateStr)){
-        alert('Sunday check-out is not available. Please select a different date.');
-        return;
-      }
       if (dateStr <= selectedCheckin){
         markCheckin(dateStr);
         renderCalendar();
