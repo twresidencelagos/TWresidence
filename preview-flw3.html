@@ -1415,14 +1415,7 @@
             <div class="tw-radio"></div>
             <div>
               <div class="tw-opt-name">Flutterwave</div>
-              <div class="tw-opt-sub">Local and international payments via Flutterwave</div>
-            </div>
-          </div>
-          <div id="tw-flw-box" class="hidden">
-            <div class="tw-pills">
-              <button type="button" class="tw-pill selected" id="tw-pill-flw-local" onclick="twSelectFlwChannel('local')">Local</button>
-              <button type="button" class="tw-pill" id="tw-pill-flw-intl" onclick="twSelectFlwChannel('international')">International</button>
-              <button type="button" class="tw-pill" id="tw-pill-flw-momo" onclick="twSelectFlwChannel('momo')">Mobile Money</button>
+              <div class="tw-opt-sub">Local, international, mobile money payments via Flutterwave</div>
             </div>
           </div>
           <p id="tw-flw-refund-note" class="hidden" style="font-size:13px;color:var(--ink-soft);margin:0 0 10px;">Your caution fee will be refunded via Flutterwave.</p>
@@ -1997,22 +1990,14 @@
   /* Which payment method the guest chose on step 3: 'paystack' (card, the
      original flow), 'transfer', or 'flutterwave'. */
   window.twPayWith = 'paystack';
-  window.twFlwChannel = 'local';
   function twSelectPayMethod(m){
     window.twPayWith = m === 'transfer' ? 'transfer' : m === 'flutterwave' ? 'flutterwave' : 'paystack';
     document.getElementById('tw-opt-card').classList.toggle('selected', window.twPayWith === 'paystack');
     document.getElementById('tw-opt-transfer').classList.toggle('selected', window.twPayWith === 'transfer');
     document.getElementById('tw-opt-flutterwave').classList.toggle('selected', window.twPayWith === 'flutterwave');
-    document.getElementById('tw-flw-box').classList.toggle('hidden', window.twPayWith !== 'flutterwave');
     document.getElementById('tw-transfer-box').classList.toggle('hidden', window.twPayWith !== 'transfer');
     document.getElementById('tw-card-refund-note').classList.toggle('hidden', window.twPayWith !== 'paystack');
     document.getElementById('tw-flw-refund-note').classList.toggle('hidden', window.twPayWith !== 'flutterwave');
-  }
-  function twSelectFlwChannel(c){
-    window.twFlwChannel = c === 'international' ? 'international' : c === 'momo' ? 'momo' : 'local';
-    document.getElementById('tw-pill-flw-local').classList.toggle('selected', window.twFlwChannel === 'local');
-    document.getElementById('tw-pill-flw-intl').classList.toggle('selected', window.twFlwChannel === 'international');
-    document.getElementById('tw-pill-flw-momo').classList.toggle('selected', window.twFlwChannel === 'momo');
   }
 
   function validateBeforePayment(){
@@ -2144,7 +2129,7 @@
         terms_confirmed: termsConfirmed, no_party_confirmed: noPartyConfirmed
       };
       if (window.twPayWith === 'transfer') twServerCheckoutTransfer(payload);
-      else if (window.twPayWith === 'flutterwave') twServerCheckoutFlw(payload, window.twFlwChannel === 'momo' ? 'GHS' : undefined, window.twFlwChannel);
+      else if (window.twPayWith === 'flutterwave') twServerCheckoutFlw(payload);
       else twServerCheckout(payload);
       return false;
     }
@@ -2494,10 +2479,10 @@
 
   function resetForm(){
     twStopPolling(); twActive = null; twConfirmedShown = false;
-    window.twPayWith = 'paystack'; window.twFlwChannel = 'local';
+    window.twPayWith = 'paystack';
     try{ sessionStorage.removeItem('tw_transfer_ref'); }catch(e){}
     try{ sessionStorage.removeItem('tw_flw_ref'); }catch(e){}
-    twSelectPayMethod('card'); twSelectFlwChannel('local');
+    twSelectPayMethod('card');
     const tsb = document.getElementById('tw-pay-status'); if (tsb) tsb.remove();
     twResetPayButton();
     ['name','phone','email','notes','guest-names','main-guest-name','main-guest-phone','refund-account-number','refund-bank-name','refund-account-name'].forEach(id => document.getElementById(id).value = '');
