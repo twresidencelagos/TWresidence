@@ -1437,6 +1437,7 @@
               <div class="tw-opt-sub">Pay in cedis (GH&#8373;) via Flutterwave</div>
             </div>
           </div>
+          <p id="tw-flw-refund-note" class="hidden" style="font-size:13px;color:var(--ink-soft);margin:0 0 10px;">Your caution fee will be refunded via Flutterwave.</p>
         </div>
 
         <div class="panel-nav">
@@ -2017,6 +2018,7 @@
     document.getElementById('tw-opt-mobilemoney').classList.toggle('selected', window.twPayWith === 'mobilemoney');
     document.getElementById('tw-transfer-box').classList.toggle('hidden', window.twPayWith !== 'transfer');
     document.getElementById('tw-card-refund-note').classList.toggle('hidden', window.twPayWith !== 'paystack');
+    document.getElementById('tw-flw-refund-note').classList.toggle('hidden', !(window.twPayWith === 'flutterwave' || window.twPayWith === 'mobilemoney'));
   }
   function twSelectTransferOrigin(o){
     window.twTransferOrigin = o === 'intl' ? 'intl' : 'ng';
