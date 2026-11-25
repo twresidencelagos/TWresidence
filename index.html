@@ -126,7 +126,7 @@
       "name": "Is there a security deposit or caution fee?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "Yes, a refundable caution fee of ₦100,000 applies to every booking."
+        "text": "Yes, a refundable caution fee of ₦150,000 applies to every booking."
       }
     },
     {
@@ -1094,7 +1094,7 @@
       </details>
       <details class="faq-more"><summary>Show 10 more questions</summary><details class="faq-item">
         <summary>Is there a security deposit or caution fee?</summary>
-        <p>Yes, a refundable caution fee of ₦100,000 applies to every booking.</p>
+        <p>Yes, a refundable caution fee of ₦150,000 applies to every booking.</p>
       </details>
       <details class="faq-item">
         <summary>Does T.W Residence offer a discount for longer stays?</summary>
@@ -1145,7 +1145,7 @@
     </div>
     <ul class="key-rules">
       <li><b>Full payment</b> confirms your booking</li>
-      <li><b>₦100,000</b> refundable caution fee</li>
+      <li><b>₦150,000</b> refundable caution fee</li>
       <li><b>Check-in 3 PM</b> · check-out 10 AM</li>
       <li><b>No parties, pets or smoking</b> indoors</li>
     </ul>
@@ -1156,7 +1156,7 @@
         <div class="terms-group-list">
           <div>Full payment required to confirm booking</div>
           <div>Published pricing is fixed — not open to negotiation</div>
-          <div>Refundable caution fee: <span class="caution-amount-text">₦100,000</span></div>
+          <div>Refundable caution fee: <span class="caution-amount-text">₦150,000</span></div>
         </div>
       </div>
       <div class="terms-group">
@@ -1273,7 +1273,7 @@
           <div class="estimate-title">Estimated Cost</div>
           <div class="estimate-row"><span id="nights-label"></span><span class="estimate-total" id="subtotal-amount"></span></div>
           <div class="estimate-row promo-row hidden" id="promo-row"><span>Promo (<span id="promo-code-label"></span>)</span><span id="promo-discount-amount"></span></div>
-          <div class="estimate-row"><span>Refundable caution fee</span><span class="caution-amount-text">₦100,000</span></div>
+          <div class="estimate-row"><span>Refundable caution fee</span><span class="caution-amount-text">₦150,000</span></div>
           <div class="estimate-row"><strong>Total due</strong><span class="estimate-total" id="total-amount"></span></div>
           <div class="long-stay-note hidden" id="long-stay-note"></div>
         </div>
@@ -1362,7 +1362,7 @@
           <div class="terms-box-title">Booking Terms</div>
           <div class="terms">
             <div>Full payment required to confirm booking</div>
-            <div>Refundable caution fee: <span class="caution-amount-text">₦100,000</span></div>
+            <div>Refundable caution fee: <span class="caution-amount-text">₦150,000</span></div>
             <div>Check-in: 3:00 PM · Check-out: 10:00 AM</div>
             <div>No pets · Non-smoking indoors</div>
             <div>No parties or events</div>
@@ -1376,7 +1376,7 @@
 
         <div class="field full checkbox-row" id="no-party-confirm-row" style="flex-direction:row;align-items:flex-start;gap:10px;padding:4px;border-radius:6px;">
           <input type="checkbox" id="no-party-confirm" required style="margin-top:3px;width:16px;height:16px;flex:0 0 auto;">
-          <label for="no-party-confirm" style="font-size:13px;font-weight:500;color:var(--ink-soft);letter-spacing:normal;">I confirm this stay is not for a party, event, or gathering, and I will not exceed the registered guest count. I understand that if more guests than were booked and paid for are found at check-in or during the stay, the full refundable caution fee (₦100,000) will be forfeited, in addition to any deductions for cleaning and damages. *</label>
+          <label for="no-party-confirm" style="font-size:13px;font-weight:500;color:var(--ink-soft);letter-spacing:normal;">I confirm this stay is not for a party, event, or gathering, and I will not exceed the registered guest count. I understand that if more guests than were booked and paid for are found at check-in or during the stay, the full refundable caution fee (₦150,000) will be forfeited, in addition to any deductions for cleaning and damages. *</label>
         </div>
 
         <div class="field full hidden" id="pay-method-block">
@@ -1511,11 +1511,11 @@
 </script>
 
 <script>
-  const CAUTION_FEE = 100000;
+  const CAUTION_FEE = 150000;
 
-  // Caution fee (owner ruling, 2026-11-24): ₦100,000 for every stay. The
-  // ₦200,000 window for 26–30 Nov 2026 stays was removed; the booking engine
-  // applies the identical rule.
+  // Caution fee (owner ruling, 2026-11-25): ₦150,000 for every stay,
+  // raised from ₦100,000 (the 26–30 Nov 2026 ₦200,000 window was removed
+  // the day before); the booking engine applies the identical rule.
   function twCautionFor(ci, co){
     return CAUTION_FEE;
   }
